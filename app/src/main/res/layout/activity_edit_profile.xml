@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.editProfile.EditProfileViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10"
+        tools:context="com.framgia.englishconversation.screen.editProfile.EditProfileActivity">
+
+        <RelativeLayout
+            android:id="@+id/relative_avatar"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_150"
+            android:layout_marginTop="@dimen/dp_10">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="@dimen/dp_2"
+                bind:imageUri="@{viewModel.photoUri}" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_alignParentRight="true"
+                android:onClick="@{() -> viewModel.onSelectImageClick()}"
+                app:srcCompat="@drawable/ic_edit" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative_avatar"
+                android:layout_marginTop="@dimen/dp_30"
+                android:text="@string/title_welcome"
+                android:textColor="@color/color_orange"
+                android:textSize="@dimen/sp_20"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    app:srcCompat="@drawable/ic_person" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:lines="1"
+                    android:text="@{viewModel.userEmail}"
+                    android:textColor="@android:color/darker_gray" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative_avatar"
+                android:layout_marginTop="@dimen/dp_30"
+                android:text="@string/title_edit"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/dp_20">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:hint="@string/user_name"
+                    android:inputType="text"
+                    android:padding="@dimen/dp_10"
+                    android:shadowColor="@android:color/white"
+                    android:text="@={viewModel.userName}"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textColorLink="@android:color/white" />
+
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/dp_10"
+            android:backgroundTint="@android:color/holo_orange_dark"
+            android:color="@color/colorPrimary"
+            android:onClick="@{() -> viewModel.onSaveUserClick()}"
+            android:text="@string/action_save"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</layout>

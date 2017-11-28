@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <import type="java.util.List"/>
+        <import type="com.framgia.englishconversation.data.model.MediaModel"/>
+        <variable
+            name="listData"
+            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;"
+            />
+    </data>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_300"
+        bind:cardCornerRadius="@dimen/dp_1"
+        bind:cardElevation="@dimen/dp_5"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_300"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_5"
+            bind:imageUrl="@{listData[0].url}"
+            />
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+def APP_ID = "com.framgia.englishconversation";
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion "25.0.2"
+  defaultConfig {
+    applicationId "${APP_ID}"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode rootProject.ext.versionCode
+    versionName rootProject.ext.versionName
+
+    vectorDrawables.useSupportLibrary = true
+  }
+
+  dataBinding {
+    enabled = true
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  dexOptions {
+    jumboMode = true
+  }
+}
+
+repositories {
+  maven {
+    url "https://jitpack.io"
+  }
+}
+
+dependencies {
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+  Map<String, String> dependencies = rootProject.ext.dependencies
+  compile dependencies.supportDesign
+  compile dependencies.constraintLayout
+  compile dependencies.cardView
+  compile dependencies.vector
+
+  compile dependencies.rxJava
+  compile dependencies.rxAndroid
+  compile dependencies.retrofit2
+  compile dependencies.retrofit2Adapter
+  compile dependencies.retrofitGson
+  compile dependencies.loggingInterceptor
+
+  compile dependencies.glide
+  compile dependencies.circleImage
+
+  compile dependencies.omRecorder
+  compile dependencies.audiovisualization
+
+  compile dependencies.googleAuth
+  compile dependencies.googlePlace
+
+  compile dependencies.facebookAuth
+
+  compile dependencies.firebaseAuth
+  compile dependencies.firebaseStorage
+  compile dependencies.firebaseDataBase
+
+  compile project(':multipleimageselect')
+  testCompile dependencies.junit
+  testCompile dependencies.mockito
+
+  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+
+}
+apply plugin: 'com.google.gms.google-services'
+
