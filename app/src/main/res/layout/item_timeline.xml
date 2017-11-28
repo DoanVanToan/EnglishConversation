@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools"
+    >
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.framgia.englishconversation.utils.Constant.Timeline"/>
+        <variable
+            name="timelineModel"
+            type="com.framgia.englishconversation.data.model.TimelineModel"
+            />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                bind:imageError="@{@drawable/ic_person_black_24dp}"
+                bind:imageUrl="@{timelineModel.createdUser.photoUrl}"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_10"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:text="@{timelineModel.createdUser.userName}"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_5"
+                    bind:milisecond="@{timelineModel.createdAt}"
+                    android:textColor="@color/color_grey_700"
+                    android:textSize="@dimen/sp_13"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_5"
+            android:background="@color/color_brown_50"
+            android:visibility="@{timelineModel.viewType == Timeline.NO_IMAGE? View.VISIBLE: View.GONE}"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="5"
+            android:padding="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:text="@{timelineModel.content}"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_14"
+            />
+
+        <include
+            layout="@layout/item_post_first_type"
+            bind:listData="@{timelineModel.images}"
+            android:visibility="@{timelineModel.viewType == Timeline.ONE_IMAGE? View.VISIBLE: View.GONE}"
+            />
+
+        <include
+            layout="@layout/item_post_second_type"
+            bind:listData="@{timelineModel.images}"
+            android:visibility="@{timelineModel.viewType == Timeline.TWO_IMAGE? View.VISIBLE: View.GONE}"
+            />
+
+        <include
+            layout="@layout/item_post_thrid_type"
+            bind:listData="@{timelineModel.images}"
+            android:visibility="@{timelineModel.viewType == Timeline.THREE_IMAGE? View.VISIBLE: View.GONE}"
+            />
+
+        <include
+            layout="@layout/item_post_four_type"
+            bind:listData="@{timelineModel.images}"
+            android:visibility="@{timelineModel.viewType >= Timeline.FOUR_IMAGE? View.VISIBLE: View.GONE}"
+            />
+
+    </LinearLayout>
+</layout>

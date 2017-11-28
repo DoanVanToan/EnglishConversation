@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
+    >
+    <data>
+        <import type="com.framgia.englishconversation.data.model.PostType"/>
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
+            />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_brown_50"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:onClick="@{() ->viewModel.onCreateNewPostClick(PostType.TEXT_CONTENT)}"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_10"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
+                bind:imageError="@{@drawable/ic_person_black_24dp}"
+                bind:imageUrl="@{viewModel.userUrl}"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_10"
+                android:text="@string/title_timeline_header"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_20"
+                />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="@color/color_brown_50"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            >
+            <LinearLayout
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() ->viewModel.onCreateNewPostClick(PostType.VIDEO)}"
+                android:padding="@dimen/dp_10"
+                >
+                <ImageView
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:padding="@dimen/dp_1"
+                    app:srcCompat="@drawable/ic_video"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/timeline_hearder_video"
+                    android:textColor="@color/color_grey_700"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp_5"
+                android:background="@color/color_brown_50"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() ->viewModel.onCreateNewPostClick(PostType.IMAGE)}"
+                android:padding="@dimen/dp_10"
+                >
+                <ImageView
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:padding="@dimen/dp_1"
+                    app:srcCompat="@drawable/ic_photo"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/timeline_hearder_photo"
+                    android:textColor="@color/color_grey_700"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp_5"
+                android:background="@color/color_brown_50"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() ->viewModel.onCreateNewPostClick(PostType.LOCATION)}"
+                android:padding="@dimen/dp_10"
+                >
+                <ImageView
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:padding="@dimen/dp_1"
+                    app:srcCompat="@drawable/ic_location"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/timeline_hearder_location"
+                    android:textColor="@color/color_grey_700"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
+

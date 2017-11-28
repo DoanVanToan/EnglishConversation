@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#607D8B</color>
+    <color name="colorPrimaryDark">#546E7A</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="color_orange">#ff6a00</color>
+    <color name="color_grey_700">#616161</color>
+    <color name="color_grey_400">#bdbdbd</color>
+    <color name="color_brown_50">#efebe9</color>
+    <color name="color_red_500">#d63232</color>
+    <color name="color_green_500">#8BC34A</color>
+    <color name="color_indogo_acceent_700">#304FFE</color>
+</resources>
