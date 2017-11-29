@@ -13,21 +13,13 @@
             type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_300"
-        bind:cardCornerRadius="@dimen/dp_1"
-        bind:cardElevation="@dimen/dp_4">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_300"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:contentDescription="@string/description_image_posted"
-            android:orientation="horizontal"
-            bind:imageUrl="@{listData[0].url}" />
-
-    </android.support.v7.widget.CardView>
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
+        android:contentDescription="@string/description_image_posted"
+        android:orientation="horizontal"
+        bind:imageUrl="@{listData[0].url}" />
 
 </layout>

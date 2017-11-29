@@ -3,8 +3,10 @@ package com.framgia.englishconversation.screen.timeline;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineBinding;
+
 import java.util.List;
 
 /**

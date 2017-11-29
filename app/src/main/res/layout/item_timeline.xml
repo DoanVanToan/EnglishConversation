@@ -33,16 +33,17 @@
                 android:padding="@dimen/dp_8">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="@dimen/dp_48"
-                    android:layout_height="@dimen/dp_48"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginRight="@dimen/dp_8"
                     bind:imageError="@{@drawable/ic_person_black_24dp}"
                     bind:imageUrl="@{timelineModel.createdUser.photoUrl}" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/dp_8">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -57,7 +58,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lines="1"
-                        android:paddingTop="@dimen/dp_8"
                         android:textColor="@color/color_grey_700"
                         android:textSize="@dimen/sp_12"
                         bind:milisecond="@{timelineModel.createdAt}" />
@@ -101,6 +101,107 @@
                 layout="@layout/item_post_four_type"
                 android:visibility="@{timelineModel.viewType >= Timeline.FOUR_IMAGE? View.VISIBLE: View.GONE}"
                 bind:listData="@{timelineModel.images}" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_2"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:background="@color/color_brown_50" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_8">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_8"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:text="@string/title_vote"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:text="@string/title_comment"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_2"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:background="@color/color_brown_50" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_vote"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_48"
+                    android:layout_marginStart="@dimen/dp_48"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:contentDescription="@string/description_voted"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_vote" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_8"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:text="@string/title_vote"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_vote"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_48"
+                    android:layout_marginEnd="@dimen/dp_48"
+                    android:text="@string/title_comment"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:contentDescription="@string/description_voted"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginRight="@dimen/dp_8"
+                    app:layout_constraintRight_toLeftOf="@id/text_comment"
+                    app:srcCompat="@drawable/ic_comment" />
+
+            </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
 
