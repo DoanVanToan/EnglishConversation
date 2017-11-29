@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         bind:cardCornerRadius="@dimen/dp_1"
-        bind:cardElevation="@dimen/dp_5"
+        bind:cardElevation="@dimen/dp_8"
         >
         <LinearLayout
             android:layout_width="match_parent"

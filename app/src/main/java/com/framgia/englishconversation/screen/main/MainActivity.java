@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
+
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
@@ -18,10 +16,8 @@ import com.framgia.englishconversation.utils.navigator.Navigator;
 /**
  * Main Screen.
  */
-public class MainActivity extends BaseActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
     private MainContract.ViewModel mViewModel;
-    private BottomNavigationView mNavigationView;
     private ViewPager mViewPager;
 
     public static Intent getInstance(Context context) {
@@ -42,9 +38,7 @@ public class MainActivity extends BaseActivity
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewModel((MainViewModel) mViewModel);
-        mNavigationView = binding.navigation;
         mViewPager = binding.viewPager;
-        mNavigationView.setOnNavigationItemSelectedListener(this);
         getSupportActionBar().hide();
     }
 
@@ -58,20 +52,5 @@ public class MainActivity extends BaseActivity
     protected void onStop() {
         mViewModel.onStop();
         super.onStop();
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigation_home:
-                mViewPager.setCurrentItem(0, true);
-                break;
-            case R.id.navigation_profile:
-                mViewPager.setCurrentItem(1, true);
-                break;
-            default:
-                break;
-        }
-        return false;
     }
 }
