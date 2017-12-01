@@ -56,4 +56,7 @@
     <string name="aar_recording">Recording</string>
     <string name="aar_playing">Playing</string>
     <string name="description_image_posted">Posted image</string>
+    <string name="description_voted">Voted</string>
+    <string name="title_vote">Vote</string>
+    <string name="title_comment">Comment</string>
 </resources>

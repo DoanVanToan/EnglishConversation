@@ -73,7 +73,7 @@ final class MainPresenter implements MainContract.Presenter {
             for (String provinder : provinders) {
                 switch (provinder) {
                     case GoogleAuthProvider.PROVIDER_ID:
-                        mRepository.signOut(mViewModel.getGoogleApiCliennt(), mSignOutCallback);
+                        mRepository.signOut(mViewModel.getGoogleApiClient(), mSignOutCallback);
                         break;
                     case FacebookAuthProvider.PROVIDER_ID:
                         mRepository.signOut(LoginManager.getInstance(), mSignOutCallback);

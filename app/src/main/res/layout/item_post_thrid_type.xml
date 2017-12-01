@@ -15,46 +15,39 @@
             type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        bind:cardCornerRadius="@dimen/dp_1"
-        bind:cardElevation="@dimen/dp_5">
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_8">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_200"
+            bind:imageUrl="@{listData[0].url}" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_8">
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/dp_200"
-                bind:imageUrl="@{listData[0].url}" />
+                android:layout_weight="1"
+                bind:imageUrl="@{listData[1].url}" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_200"
-                    android:layout_weight="1"
-                    bind:imageUrl="@{listData[1].url}" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_200"
-                    android:layout_marginLeft="@dimen/dp_5"
-                    android:layout_weight="1"
-                    bind:imageUrl="@{listData[2].url}" />
-
-            </LinearLayout>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_200"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_weight="1"
+                bind:imageUrl="@{listData[2].url}" />
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
+
 </layout>

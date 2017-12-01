@@ -1,10 +1,10 @@
 package com.framgia.englishconversation.screen.main;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import com.framgia.englishconversation.R;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+
 import com.framgia.englishconversation.screen.profile.ProfileFragment;
 import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 
@@ -12,11 +12,13 @@ import com.framgia.englishconversation.screen.timeline.TimelineFragment;
  * Created by toand on 5/13/2017.
  */
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
-    private static final int TAB_COUNT = 2;
-    public static final int TIME_LINE = 0;
-    public static final int PROFILE = 1;
+public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
+    public static final int NEW = 0;
+    public static final int TOP_VOTE = 1;
+    public static final int YOUR_POST = 2;
+    public static final int SETTING = 3;
+    private static final int TAB_COUNT = 4;
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -24,10 +26,15 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Log.d("MainPagerAdapter", "create Main pager adapter");
         switch (position) {
-            case TIME_LINE:
+            case NEW:
                 return TimelineFragment.newInstance();
-            case PROFILE:
+            case TOP_VOTE:
+                return TimelineFragment.newInstance();
+            case YOUR_POST:
+                return TimelineFragment.newInstance();
+            case SETTING:
                 return ProfileFragment.newInstance();
             default:
                 return null;

@@ -21,7 +21,7 @@ interface MainContract {
 
         void onSignOutFailed(String msg);
 
-        GoogleApiClient getGoogleApiCliennt();
+        GoogleApiClient getGoogleApiClient();
     }
 
     /**

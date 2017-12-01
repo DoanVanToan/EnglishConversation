@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.login.LoginViewModel"
-            />
+            type="com.framgia.englishconversation.screen.login.LoginViewModel" />
 
     </data>
 
@@ -16,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:context="com.framgia.englishconversation.screen.login.LoginActivity"
-        >
+        tools:context="com.framgia.englishconversation.screen.login.LoginActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,29 +22,24 @@
             android:background="@color/blue_grey_500"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
-            android:padding="@dimen/dp_10"
-            >
+            android:padding="@dimen/dp_10">
 
             <ImageView
                 android:layout_width="@dimen/dp_100"
                 android:layout_height="@dimen/dp_100"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher_round"
-                />
-
+                android:src="@mipmap/ic_launcher_round" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
@@ -61,15 +53,13 @@
                         android:textColor="@android:color/white"
                         android:textColorHighlight="@android:color/white"
                         android:textColorHint="@android:color/white"
-                        android:textColorLink="@android:color/white"
-                        />
+                        android:textColorLink="@android:color/white" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
@@ -83,8 +73,7 @@
                         android:textColor="@android:color/white"
                         android:textColorHighlight="@android:color/white"
                         android:textColorHint="@android:color/white"
-                        android:textColorLink="@android:color/white"
-                        />
+                        android:textColorLink="@android:color/white" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -95,8 +84,7 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:checked="@={viewModel.rememberAccount}"
                     android:text="@string/title_remember_account"
-                    android:textColor="@android:color/white"
-                    />
+                    android:textColor="@android:color/white" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -106,22 +94,19 @@
                     android:color="@color/blue_grey_500"
                     android:onClick="@{() -> viewModel.onLoginClick()}"
                     android:text="@string/action_login"
-                    android:textColor="@android:color/white"
-                    />
+                    android:textColor="@android:color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_20"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <View
                         android:layout_width="@dimen/dp_100"
                         android:layout_height="@dimen/dp_1"
-                        android:background="@android:color/white"
-                        />
+                        android:background="@android:color/white" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -130,14 +115,12 @@
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/title_or"
                         android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="@dimen/dp_100"
                         android:layout_height="@dimen/dp_1"
-                        android:background="@android:color/white"
-                        />
+                        android:background="@android:color/white" />
 
                 </LinearLayout>
 
@@ -145,8 +128,7 @@
                     android:id="@+id/sign_in_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    />
+                    android:layout_marginTop="@dimen/dp_20" />
 
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/login_button"
@@ -154,15 +136,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_1"
                     android:layout_marginRight="@dimen/dp_1"
-                    android:layout_marginTop="@dimen/dp_10"
-                    />
+                    android:layout_marginTop="@dimen/dp_10" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatButton
                     android:layout_width="0dp"
@@ -172,8 +152,7 @@
                     android:onClick="@{() -> viewModel.onForgotPasswordClick()}"
                     android:text="@string/forgot_password"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    />
+                    android:textColor="@android:color/white" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:layout_width="0dp"
@@ -184,8 +163,7 @@
                     android:onClick="@{()-> viewModel.onRegisterClick()}"
                     android:text="@string/title_register"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    />
+                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
