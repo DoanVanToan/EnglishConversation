@@ -25,7 +25,7 @@
     <string name="action_back"><![CDATA[<< Back]]></string>
     <string name="msg_reset_password_success">Reset password succesful, pls check your email to get a new password.</string>
     <string name="action_signout">Sign out</string>
-    <string name="action_save">Save</string>
+    <string name="action_save">POST</string>
     <string name="title_upload">Select avatar</string>
     <string name="empty_user_name">User name not be empty!</string>
     <string name="title_welcome">Welcome</string>
@@ -45,7 +45,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_profile">Profile</string>
     <string name="google_app_key">AIzaSyCcNwaKr23yRRFZS9ZcgoxWKyNTUNqNu6g</string>
-    <string name="title_create_post">Create new post!</string>
+    <string name="title_create_post">Post to timeline</string>
     <string name="item_format">+ %s</string>
     <string name="item_create_at">At %s</string>
     <string name="title_upload_percent">%s %</string>
@@ -59,4 +59,7 @@
     <string name="description_voted">Voted</string>
     <string name="title_vote">Vote</string>
     <string name="title_comment">Comment</string>
+    <string name="title_description">Description:</string>
+    <string name="hint_description">Put your post here</string>
+    <string name="subtitle_create_post">What are you thinking ?</string>
 </resources>

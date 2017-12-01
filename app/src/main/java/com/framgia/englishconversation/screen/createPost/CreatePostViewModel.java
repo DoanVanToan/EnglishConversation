@@ -1,6 +1,7 @@
 package com.framgia.englishconversation.screen.createPost;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +13,10 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.LocationModel;
@@ -34,14 +32,17 @@ import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static com.framgia.englishconversation.data.model.PostType.IMAGE;
-import static com.framgia.englishconversation.data.model.PostType.LOCATION;
-import static com.framgia.englishconversation.data.model.PostType.VIDEO;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
 import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
@@ -54,16 +55,15 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
  */
 
 public class CreatePostViewModel extends BaseObservable implements CreatePostContract.ViewModel {
-    public static final int PLACE_PICKER_REQUEST = 1;
-    public static final int SELECT_IMAGE_REQUEST = 2;
+
+    private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int SELECT_IMAGE_REQUEST = 2;
+    private static final int LIMIT_IMAGES = 10;
     private static final int REQUEST_RECORD_AUDIO = 3;
-
-    public static final int LIMIT_IMAGES = 10;
-
-    private final static String[] PERMISSION = new String[] {
-        Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private final static String[] PERMISSION = new String[]{
+            Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    private static final String TAG = "RecordingViewModel";
+    private static final String UPLOADING = "Uploading: ";
 
     private CreatePostContract.Presenter mPresenter;
     private UserModel mUser;
@@ -75,17 +75,19 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private int mCreateType;
     private CreatePostActivity mActivity;
     private Navigator mNavigator;
+    private ProgressDialog mProgressDialog;
 
     private TimelineModel mTimelineModel;
     private BroadcastReceiver mReceiver;
     private boolean mIsUploading;
 
-    public CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
-        @PostType int createType) {
+    CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
+                        @PostType int createType) {
         mActivity = activity;
         mNavigator = navigator;
         mCreateType = createType;
         mTimelineModel = new TimelineModel();
+        mProgressDialog = new ProgressDialog(mActivity);
         getData();
     }
 
@@ -95,38 +97,65 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (intent.getAction() == null) {
+                    return;
+                }
                 switch (intent.getAction()) {
                     case FirebaseUploadService.UPLOAD_PROGRESS:
+                        if (intent.getExtras() == null) {
+                            return;
+                        }
                         int percent =
-                            intent.getExtras().getInt(FirebaseUploadService.EXTRA_UPLOADED_PERCENT);
+                                intent.getExtras().getInt(
+                                        FirebaseUploadService.EXTRA_UPLOADED_PERCENT
+                                );
                         MediaModel mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
+                        if (mediaModel == null) {
+                            return;
+                        }
                         mediaModel.setUploadPercent(percent);
+                        String message = UPLOADING + percent;
+                        mProgressDialog.setMessage(message);
+                        mProgressDialog.show();
                         handleProgress(mediaModel);
                         break;
 
                     case FirebaseUploadService.UPLOAD_COMPLETE:
+                        if (intent.getExtras() == null) {
+                            return;
+                        }
                         mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
+                        if (mediaModel == null) {
+                            return;
+                        }
                         Uri downloadUri = (Uri) intent.getExtras().get(EXTRA_URI);
+                        if (downloadUri == null) {
+                            return;
+                        }
                         mediaModel.setUrl(downloadUri.toString());
                         handleFinnish(mediaModel);
                         break;
 
                     case FirebaseUploadService.UPLOAD_FINNISH_ALL:
                         mIsUploading = false;
-                        mActivity.hideBottomSheet();
                         mPresenter.createPost(mTimelineModel);
+                        mProgressDialog.dismiss();
                         break;
-
                     case FirebaseUploadService.UPLOAD_ERROR:
+                        if (intent.getExtras() == null) {
+                            return;
+                        }
                         mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
+                        if (mediaModel == null) {
+                            return;
+                        }
                         mNavigator.showToast(
-                            String.format(mActivity.getString(R.string.msg_upload_error),
-                                mediaModel.getName()));
+                                String.format(mActivity.getString(R.string.msg_upload_error), mediaModel.getName())
+                        );
                         break;
                 }
             }
         };
-
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(mActivity);
         manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
     }
@@ -171,15 +200,21 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mNavigator.startActivityForResult(intent, SELECT_IMAGE_REQUEST);
     }
 
-    public void getData() {
+    private void getData() {
         switch (mCreateType) {
-            case LOCATION:
+            case PostType.LOCATION:
                 openPlacePicker();
                 break;
-            case IMAGE:
+            case PostType.IMAGE:
                 selectImage();
                 break;
-            case VIDEO:
+            case PostType.VIDEO:
+                break;
+            case PostType.RECORD:
+                //TODO: action of recording audio
+                break;
+            case PostType.TEXT_CONTENT:
+                //TODO: action of conversation
                 break;
             default:
                 break;
@@ -201,7 +236,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 break;
             case SELECT_IMAGE_REQUEST:
                 List<Image> images =
-                    data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+                        data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
                 if (images == null || images.size() == 0) break;
                 addPostImage(images);
                 break;
@@ -212,7 +247,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 record.setId(UUID.randomUUID().toString());
                 record.setUrl(filePath);
                 record.setName(fileName);
-
                 addPostRecords(record);
                 break;
             default:
@@ -257,7 +291,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onGetCurrentUserSuccess(UserModel data) {
         mUser = data;
         setUserName(data.getUserName());
-        setUserUrl(data.getPhotoUrl().toString());
+        setUserUrl(data.getPhotoUrl());
     }
 
     @Override
@@ -267,11 +301,13 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onImagePickerClick() {
+        mActivity.fillColorSelectedButton(CreatePostActivity.PHOTO_POSITION);
         selectImage();
     }
 
     @Override
     public void onPlacePickerClick() {
+        mActivity.fillColorSelectedButton(CreatePostActivity.LOCATION_POSITION);
         openPlacePicker();
     }
 
@@ -290,44 +326,42 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         if (mIsUploading) return;
         mIsUploading = true;
         mActivity.startService(
-            new Intent(mActivity, FirebaseUploadService.class).putParcelableArrayListExtra(
-                EXTRA_FILES, (ArrayList<? extends Parcelable>) mediaModels)
-                .putExtra(EXTRA_FOLDER, POST_FOLDER)
-                .setAction(ACTION_UPLOAD_MULTI_FILE));
-
-        mActivity.showUploadProgressView(mediaModels);
+                new Intent(mActivity, FirebaseUploadService.class).putParcelableArrayListExtra(
+                        EXTRA_FILES, (ArrayList<? extends Parcelable>) mediaModels)
+                        .putExtra(EXTRA_FOLDER, POST_FOLDER)
+                        .setAction(ACTION_UPLOAD_MULTI_FILE));
     }
 
     public void onStartRecordClicked() {
         if (Utils.isAllowPermision(mActivity, PERMISSION)) {
+            mActivity.fillColorSelectedButton(CreatePostActivity.AUDIO_RECORD_POSITION);
             recordAudio();
         }
     }
 
-    public String getFileName() {
-        String fileName = String.valueOf(System.currentTimeMillis()) + ".wav";
-        return fileName;
+    private String getFileName() {
+        return String.valueOf(System.currentTimeMillis()) + ".wav";
     }
 
-    public void recordAudio() {
+    private void recordAudio() {
         String fileName = getFileName();
         String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + fileName;
         AndroidAudioRecorder.with(mActivity)
-            // Required
-            .setFileName(fileName)
-            .setFilePath(filePath)
-            .setColor(ContextCompat.getColor(mActivity, R.color.color_orange))
-            .setRequestCode(REQUEST_RECORD_AUDIO)
+                // Required
+                .setFileName(fileName)
+                .setFilePath(filePath)
+                .setColor(ContextCompat.getColor(mActivity, R.color.color_orange))
+                .setRequestCode(REQUEST_RECORD_AUDIO)
 
-            // Optional
-            .setSource(AudioSource.MIC)
-            .setChannel(AudioChannel.STEREO)
-            .setSampleRate(AudioSampleRate.HZ_48000)
-            .setAutoStart(false)
-            .setKeepDisplayOn(true)
+                // Optional
+                .setSource(AudioSource.MIC)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_48000)
+                .setAutoStart(false)
+                .setKeepDisplayOn(true)
 
-            // Start recording
-            .record();
+                // Start recording
+                .record();
     }
 
     @Override
@@ -342,7 +376,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        int[] grantResults) {
+                                           int[] grantResults) {
         if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermision(permissions, grantResults)) {
             recordAudio();
         }
