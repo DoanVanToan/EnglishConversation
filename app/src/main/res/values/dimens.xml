@@ -33,4 +33,7 @@
     <dimen name="aar_wave_height">60dp</dimen>
     <dimen name="aar_bubble_size">30dp</dimen>
     <dimen name="aar_footer_height">200dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_48">48dp</dimen>
 </resources>
