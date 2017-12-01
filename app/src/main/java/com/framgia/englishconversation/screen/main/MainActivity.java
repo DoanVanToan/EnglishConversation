@@ -70,7 +70,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void positionComponents(int position) {
-        mViewPager.setCurrentItem(position, true);
+        mViewPager.setCurrentItem(
+                position,
+                true);
     }
-
 }
