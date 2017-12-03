@@ -62,4 +62,7 @@
     <string name="title_description">Description:</string>
     <string name="hint_description">Put your post here</string>
     <string name="subtitle_create_post">What are you thinking ?</string>
+    <string name="title_for_recording_duration">Recording audio</string>
+    <string name="description_recording_audio_button">Recording audio button</string>
+    <string name="title_cancel">Cancel</string>
 </resources>
