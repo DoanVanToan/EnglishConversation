@@ -8,20 +8,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.RequestOptions;
 import com.framgia.englishconversation.R;
 
 import java.util.Calendar;
@@ -60,10 +54,9 @@ public final class BindingUtils {
     public static void loadImage(ImageView imageView, String url, Drawable error) {
         Glide.with(imageView.getContext())
                 .load(url)
-                .asBitmap()
-                .error(error)
-                .placeholder(error)
-                .centerCrop()
+                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.errorOf(error))
+                .apply(RequestOptions.placeholderOf(error))
                 .into(imageView);
     }
 
@@ -71,9 +64,8 @@ public final class BindingUtils {
     public static void loadImage(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
                 .load(url)
-                .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
-                .centerCrop()
+                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.placeholderOf(R.mipmap.ic_launcher))
                 .into(imageView);
     }
 
@@ -82,8 +74,8 @@ public final class BindingUtils {
         if (uri == null) return;
         Glide.with(imageView.getContext())
                 .load(uri.toString())
-                .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
+                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.placeholderOf(R.mipmap.ic_launcher))
                 .into(imageView);
     }
 

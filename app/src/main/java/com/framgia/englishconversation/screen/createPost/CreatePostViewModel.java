@@ -9,10 +9,9 @@ import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
@@ -24,14 +23,13 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.PostType;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.record.AndroidAudioRecorder;
 import com.framgia.englishconversation.record.Util;
-import com.framgia.englishconversation.record.model.AudioChannel;
-import com.framgia.englishconversation.record.model.AudioSampleRate;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.framgia.englishconversation.widget.dialog.recordingAudio.AudioRecorder;
+import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -65,6 +63,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     };
     private static final String UPLOADING = "Uploading: ";
 
+    private RecordingAudioDialog mRecordingAudioDialog;
+
     private CreatePostContract.Presenter mPresenter;
     private UserModel mUser;
     private String mUserUrl;
@@ -80,6 +80,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private TimelineModel mTimelineModel;
     private BroadcastReceiver mReceiver;
     private boolean mIsUploading;
+    private String mFileName;
+    private String mFilePath;
 
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
                         @PostType int createType) {
@@ -88,6 +90,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mCreateType = createType;
         mTimelineModel = new TimelineModel();
         mProgressDialog = new ProgressDialog(mActivity);
+        mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         getData();
     }
 
@@ -335,33 +338,21 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onStartRecordClicked() {
         if (Utils.isAllowPermision(mActivity, PERMISSION)) {
             mActivity.fillColorSelectedButton(CreatePostActivity.AUDIO_RECORD_POSITION);
-            recordAudio();
+            onRecordingAudio();
         }
     }
 
-    private String getFileName() {
-        return String.valueOf(System.currentTimeMillis()) + ".wav";
-    }
-
-    private void recordAudio() {
-        String fileName = getFileName();
-        String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + fileName;
-        AndroidAudioRecorder.with(mActivity)
-                // Required
-                .setFileName(fileName)
-                .setFilePath(filePath)
-                .setColor(ContextCompat.getColor(mActivity, R.color.color_orange))
-                .setRequestCode(REQUEST_RECORD_AUDIO)
-
-                // Optional
-                .setSource(AudioSource.MIC)
-                .setChannel(AudioChannel.STEREO)
-                .setSampleRate(AudioSampleRate.HZ_48000)
-                .setAutoStart(false)
-                .setKeepDisplayOn(true)
-
-                // Start recording
-                .record();
+    private void onRecordingAudio() {
+        if (mActivity.getExternalCacheDir() == null) {
+            return;
+        }
+        mFileName = "RecordingAudio_" + System.currentTimeMillis() + ".3gp";
+        mFilePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + mFileName;
+        AudioRecorder.with(mActivity, mRecordingAudioDialog)
+                .setFileName(mFileName)
+                .setFilePath(mFilePath)
+                .setAudioSource(AudioSource.MIC)
+                .showRecordingAudioFromActivity();
     }
 
     @Override
@@ -378,7 +369,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermision(permissions, grantResults)) {
-            recordAudio();
+            onRecordingAudio();
         }
     }
 
