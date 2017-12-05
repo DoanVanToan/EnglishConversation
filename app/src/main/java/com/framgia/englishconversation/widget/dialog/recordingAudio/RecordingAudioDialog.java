@@ -1,6 +1,7 @@
 package com.framgia.englishconversation.widget.dialog.recordingAudio;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.widget.dialog.BaseDialog;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by fs-sournary.
@@ -23,7 +25,9 @@ import java.io.IOException;
  * Description:
  */
 
-public class RecordingAudioDialog extends BaseDialog implements View.OnClickListener {
+public class RecordingAudioDialog extends BaseDialog {
+
+    private static final int SECOND_PER_MINUTE = 60;
 
     private MediaRecorder mMediaRecorder;
 
@@ -31,10 +35,10 @@ public class RecordingAudioDialog extends BaseDialog implements View.OnClickList
     private String mFilePath;
     private String mFileName;
     private AudioSource mAudioSource;
-    private boolean mIsRecording;
+    private OnRecordingAudioListener mOnRecordingAudioListener;
+    private DialogRecordingAudioBinding mBinding;
 
     public RecordingAudioDialog() {
-        mIsRecording = false;
     }
 
     public static RecordingAudioDialog newInstance() {
@@ -46,21 +50,20 @@ public class RecordingAudioDialog extends BaseDialog implements View.OnClickList
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        DialogRecordingAudioBinding binding = DataBindingUtil.inflate(
+        mBinding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.dialog_recording_audio,
                 null,
                 false
         );
         mRecordingAudioViewModel = new RecordingAudioViewModel(this);
-        binding.setViewModel(mRecordingAudioViewModel);
-        View view = binding.getRoot();
+        mBinding.setViewModel(mRecordingAudioViewModel);
+        View view = mBinding.getRoot();
         builder.setView(view);
         Bundle bundle = getArguments();
-        mFileName = bundle.getString(AudioRecorder.EXTRA_FILE_NAME);
-        mFilePath = bundle.getString(AudioRecorder.EXTRA_FILE_PATH);
-        mAudioSource = (AudioSource) bundle.getSerializable(AudioRecorder.EXTRA_AUDIO_SOURCE);
-        binding.textCancel.setOnClickListener(this);
+        mFileName = bundle.getString(RecordingAudioBuilder.EXTRA_FILE_NAME);
+        mFilePath = bundle.getString(RecordingAudioBuilder.EXTRA_FILE_PATH);
+        mAudioSource = (AudioSource) bundle.getSerializable(RecordingAudioBuilder.EXTRA_AUDIO_SOURCE);
         AlertDialog alertDialog = builder.create();
         if (alertDialog.getWindow() == null) {
             return alertDialog;
@@ -70,9 +73,19 @@ public class RecordingAudioDialog extends BaseDialog implements View.OnClickList
         return alertDialog;
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (!mRecordingAudioViewModel.isCancelClick()) {
+            mOnRecordingAudioListener.onRecordingAudioClick(mFilePath, mFileName);
+        } else {
+            mOnRecordingAudioListener.onRecordCancel();
+        }
+    }
+
     private void startRecordingAudio() {
         mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioEncoder(mAudioSource.getSource());
+        mMediaRecorder.setAudioSource(mAudioSource.getSource());
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mMediaRecorder.setOutputFile(mFilePath);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
@@ -94,6 +107,11 @@ public class RecordingAudioDialog extends BaseDialog implements View.OnClickList
         mMediaRecorder = null;
     }
 
+    public void releaseRecordingAudio() {
+        mMediaRecorder.release();
+        mMediaRecorder = null;
+    }
+
     public void onRecordingAudio(boolean isRecording) {
         if (isRecording) {
             stopRecordingAudio();
@@ -102,18 +120,22 @@ public class RecordingAudioDialog extends BaseDialog implements View.OnClickList
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.text_cancel:
-                mRecordingAudioViewModel.dismissDialog();
-                break;
-            case R.id.image_mic:
-                onRecordingAudio(mIsRecording);
-                mIsRecording = !mIsRecording;
-                break;
-            default:
-                break;
-        }
+    public void updateDuration(long duration) {
+        long s = duration % SECOND_PER_MINUTE;
+        long m = (duration / SECOND_PER_MINUTE) % SECOND_PER_MINUTE;
+        String format = String.format(Locale.getDefault(), "%02d:%02d", m, s);
+        mBinding.textRecordingDuration.setText(format);
     }
+
+    public void setOnRecordingAudioClickListener(OnRecordingAudioListener
+                                                         onRecordingAudioListener) {
+        mOnRecordingAudioListener = onRecordingAudioListener;
+    }
+
+    public interface OnRecordingAudioListener {
+        void onRecordingAudioClick(String filePath, String fileName);
+
+        void onRecordCancel();
+    }
+
 }

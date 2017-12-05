@@ -4,8 +4,8 @@ apply plugin: 'realm-android'
 def APP_ID = "com.framgia.englishconversation";
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion 26
+  buildToolsVersion "26.0.2"
   defaultConfig {
     applicationId "${APP_ID}"
     minSdkVersion rootProject.ext.minSdkVersion
@@ -34,6 +34,10 @@ android {
 repositories {
   maven {
     url "https://jitpack.io"
+  }
+  maven {
+    url 'https://maven.google.com/'
+    name 'Google'
   }
 }
 

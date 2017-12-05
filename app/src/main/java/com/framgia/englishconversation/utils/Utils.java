@@ -11,9 +11,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+
 import com.framgia.englishconversation.AppApplication;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 /**
  * Created by toand on 5/13/2017.
@@ -24,7 +27,7 @@ public class Utils {
         PackageInfo info;
         try {
             info = context.getPackageManager()
-                .getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+                    .getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md;
                 md = MessageDigest.getInstance("SHA");
@@ -45,9 +48,9 @@ public class Utils {
         boolean isAllowPermison = true;
         for (String s : permission) {
             if (ContextCompat.checkSelfPermission(activity, s)
-                != PackageManager.PERMISSION_GRANTED) {
+                    != PackageManager.PERMISSION_GRANTED) {
                 isAllowPermison = false;
-                ActivityCompat.requestPermissions(activity, new String[] { s }, 0);
+                ActivityCompat.requestPermissions(activity, new String[]{s}, 0);
             }
         }
         return isAllowPermison;
@@ -67,7 +70,9 @@ public class Utils {
         if (duration == -1) {
             return "00:00";
         }
-        return String.format("%d:%02d:%02d", duration / 3600, (duration % 3600) / 60,
-            (duration % 60));
+        int minute = (int) Math.floor(duration / 1000 / 60);
+        int second = (int) (duration / 1000 - minute * 60);
+        return String.format(Locale.getDefault(), "%02d:%02d", minute, second);
     }
+
 }

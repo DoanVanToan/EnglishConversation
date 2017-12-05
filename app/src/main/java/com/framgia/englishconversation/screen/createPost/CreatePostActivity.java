@@ -141,8 +141,13 @@ public class CreatePostActivity extends BaseActivity {
         for (MediaModel record : records) {
             RecordItemBinding recordItemBinding = RecordItemBinding.inflate(getLayoutInflater());
             recordItemBinding.setRecord(record);
+            recordItemBinding.setViewModel((CreatePostViewModel) mViewModel);
             mLinearRecords.addView(recordItemBinding.getRoot());
         }
+    }
+
+    public void clearViewInRecord() {
+        mLinearRecords.removeAllViews();
     }
 
     @Override

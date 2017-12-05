@@ -8,10 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+import android.widget.Toast;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
@@ -28,13 +29,14 @@ import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
-import com.framgia.englishconversation.widget.dialog.recordingAudio.AudioRecorder;
+import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -62,26 +64,28 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private static final String UPLOADING = "Uploading: ";
-
+    private static final String TOAST_MESSAGE =
+            "Sorry, you can not start recording audio mode. Please try again later!";
+    private static final String TOAST_CANCEL =
+            "You have just cancel the recording audio without saving!";
     private RecordingAudioDialog mRecordingAudioDialog;
-
     private CreatePostContract.Presenter mPresenter;
     private UserModel mUser;
     private String mUserUrl;
     private String mUserName;
     private String mAddress;
-
     @PostType
     private int mCreateType;
     private CreatePostActivity mActivity;
     private Navigator mNavigator;
     private ProgressDialog mProgressDialog;
-
     private TimelineModel mTimelineModel;
     private BroadcastReceiver mReceiver;
     private boolean mIsUploading;
     private String mFileName;
     private String mFilePath;
+    private MediaPlayer mMediaPlayer;
+    private boolean mIsPlaying;
 
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
                         @PostType int createType) {
@@ -92,6 +96,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mProgressDialog = new ProgressDialog(mActivity);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         getData();
+
     }
 
     @Override
@@ -163,6 +168,125 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+        switch (requestCode) {
+            case PLACE_PICKER_REQUEST:
+                Place place = PlacePicker.getPlace(data, mActivity);
+                LocationModel locationModel = new LocationModel();
+                locationModel.setAddress(place.getAddress().toString());
+                locationModel.setLat(place.getLatLng().latitude);
+                locationModel.setLng(place.getLatLng().longitude);
+                setAddress(place.getAddress().toString());
+                mTimelineModel.setLocation(locationModel);
+                break;
+            case SELECT_IMAGE_REQUEST:
+                List<Image> images =
+                        data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+                if (images == null || images.size() == 0) break;
+                addPostImage(images);
+                break;
+            case REQUEST_RECORD_AUDIO:
+                String filePath = Util.getResultFilePath(data);
+                String fileName = Util.getResultFileName(data);
+                MediaModel record = new MediaModel();
+                record.setId(UUID.randomUUID().toString());
+                record.setUrl(filePath);
+                record.setName(fileName);
+                addPostAudioRecord(record);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onGetCurrentUserSuccess(UserModel data) {
+        mUser = data;
+        setUserName(data.getUserName());
+        setUserUrl(data.getPhotoUrl());
+    }
+
+    @Override
+    public void onGetCurrentUserFailed(String msg) {
+
+    }
+
+    @Override
+    public void onImagePickerClick() {
+        mActivity.fillColorSelectedButton(CreatePostActivity.PHOTO_POSITION);
+        selectImage();
+    }
+
+    @Override
+    public void onPlacePickerClick() {
+        mActivity.fillColorSelectedButton(CreatePostActivity.LOCATION_POSITION);
+        openPlacePicker();
+    }
+
+    @Override
+    public void onCreatePost() {
+        updateTimelineModel();
+        if (mTimelineModel.getImages() != null && mTimelineModel.getImages().size() != 0) {
+            uploadFiles(mTimelineModel.getImages());
+        } else {
+            mPresenter.createPost(mTimelineModel);
+        }
+    }
+
+    @Override
+    public void uploadFiles(List<MediaModel> mediaModels) {
+        if (mIsUploading) return;
+        mIsUploading = true;
+        mActivity.startService(
+                new Intent(mActivity, FirebaseUploadService.class).putParcelableArrayListExtra(
+                        EXTRA_FILES, (ArrayList<? extends Parcelable>) mediaModels)
+                        .putExtra(EXTRA_FOLDER, POST_FOLDER)
+                        .setAction(ACTION_UPLOAD_MULTI_FILE));
+    }
+
+    @Override
+    public void onCreatePostSuccess() {
+        mNavigator.finishActivity();
+    }
+
+    @Override
+    public void onCreatePostFailed(String msg) {
+        mNavigator.showToast(msg);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermision(permissions, grantResults)) {
+            onRecordingAudio();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        mPresenter.onStop();
+        LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void setPresenter(CreatePostContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    private void addPostAudioRecord(MediaModel record) {
+        if (record == null) {
+            return;
+        }
+        if (mTimelineModel.getRecords() == null) {
+            mTimelineModel.setRecords(new ArrayList<MediaModel>());
+        }
+        mTimelineModel.getRecords().clear();
+        mTimelineModel.getRecords().add(record);
+        mActivity.addPostRecord(mTimelineModel.getRecords());
+    }
+
     private void updateTimelineModel() {
         mTimelineModel.setCreatedUser(mUser);
         mTimelineModel.setCreatedAt(System.currentTimeMillis());
@@ -224,50 +348,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) return;
-        switch (requestCode) {
-            case PLACE_PICKER_REQUEST:
-                Place place = PlacePicker.getPlace(data, mActivity);
-                LocationModel locationModel = new LocationModel();
-                locationModel.setAddress(place.getAddress().toString());
-                locationModel.setLat(place.getLatLng().latitude);
-                locationModel.setLng(place.getLatLng().longitude);
-                setAddress(place.getAddress().toString());
-                mTimelineModel.setLocation(locationModel);
-                break;
-            case SELECT_IMAGE_REQUEST:
-                List<Image> images =
-                        data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
-                if (images == null || images.size() == 0) break;
-                addPostImage(images);
-                break;
-            case REQUEST_RECORD_AUDIO:
-                String filePath = Util.getResultFilePath(data);
-                String fileName = Util.getResultFileName(data);
-                MediaModel record = new MediaModel();
-                record.setId(UUID.randomUUID().toString());
-                record.setUrl(filePath);
-                record.setName(fileName);
-                addPostRecords(record);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void addPostRecords(MediaModel record) {
-        if (record == null) {
-            return;
-        }
-        if (mTimelineModel.getRecords() == null) {
-            mTimelineModel.setRecords(new ArrayList<MediaModel>());
-        }
-        mTimelineModel.getRecords().add(record);
-        mActivity.addPostRecord(mTimelineModel.getRecords());
-    }
-
     private void addPostImage(List<Image> images) {
         if (images != null) {
             for (Image image : images) {
@@ -290,51 +370,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mActivity.addPostRecord(records);
     }
 
-    @Override
-    public void onGetCurrentUserSuccess(UserModel data) {
-        mUser = data;
-        setUserName(data.getUserName());
-        setUserUrl(data.getPhotoUrl());
-    }
-
-    @Override
-    public void onGetCurrentUserFailed(String msg) {
-
-    }
-
-    @Override
-    public void onImagePickerClick() {
-        mActivity.fillColorSelectedButton(CreatePostActivity.PHOTO_POSITION);
-        selectImage();
-    }
-
-    @Override
-    public void onPlacePickerClick() {
-        mActivity.fillColorSelectedButton(CreatePostActivity.LOCATION_POSITION);
-        openPlacePicker();
-    }
-
-    @Override
-    public void onCreatePost() {
-        updateTimelineModel();
-        if (mTimelineModel.getImages() != null && mTimelineModel.getImages().size() != 0) {
-            uploadFiles(mTimelineModel.getImages());
-        } else {
-            mPresenter.createPost(mTimelineModel);
-        }
-    }
-
-    @Override
-    public void uploadFiles(List<MediaModel> mediaModels) {
-        if (mIsUploading) return;
-        mIsUploading = true;
-        mActivity.startService(
-                new Intent(mActivity, FirebaseUploadService.class).putParcelableArrayListExtra(
-                        EXTRA_FILES, (ArrayList<? extends Parcelable>) mediaModels)
-                        .putExtra(EXTRA_FOLDER, POST_FOLDER)
-                        .setAction(ACTION_UPLOAD_MULTI_FILE));
-    }
-
     public void onStartRecordClicked() {
         if (Utils.isAllowPermision(mActivity, PERMISSION)) {
             mActivity.fillColorSelectedButton(CreatePostActivity.AUDIO_RECORD_POSITION);
@@ -348,29 +383,51 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
         mFileName = "RecordingAudio_" + System.currentTimeMillis() + ".3gp";
         mFilePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + mFileName;
-        AudioRecorder.with(mActivity, mRecordingAudioDialog)
+        RecordingAudioBuilder.with(mActivity, mRecordingAudioDialog)
                 .setFileName(mFileName)
                 .setFilePath(mFilePath)
                 .setAudioSource(AudioSource.MIC)
                 .showRecordingAudioFromActivity();
+        RecordingAudioDialog.OnRecordingAudioListener recordingAudioClickListener =
+                new RecordingAudioDialog.OnRecordingAudioListener() {
+                    @Override
+                    public void onRecordingAudioClick(String filePath, String fileName) {
+                        MediaModel record = new MediaModel();
+                        record.setId(UUID.randomUUID().toString());
+                        record.setUrl(filePath);
+                        record.setName(fileName);
+                        addPostAudioRecord(record);
+                        initMedia(filePath);
+                    }
+
+                    @Override
+                    public void onRecordCancel() {
+                        Toast.makeText(mActivity, TOAST_CANCEL, Toast.LENGTH_SHORT).show();
+                    }
+                };
+        mRecordingAudioDialog.setOnRecordingAudioClickListener(recordingAudioClickListener);
     }
 
-    @Override
-    public void onCreatePostSuccess() {
-        mNavigator.finishActivity();
-    }
-
-    @Override
-    public void onCreatePostFailed(String msg) {
-        mNavigator.showToast(msg);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermision(permissions, grantResults)) {
-            onRecordingAudio();
+    private void initMedia(String filePath) {
+        setPlaying(false);
+        mMediaPlayer = new MediaPlayer();
+        try {
+            mMediaPlayer.setDataSource(filePath);
+            mMediaPlayer.prepare();
+            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    setPlaying(false);
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(mActivity, TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void releaseMedia() {
+        mMediaPlayer.release();
+        mMediaPlayer = null;
     }
 
     private boolean isEnablePermision(String[] permissions, int[] grantResults) {
@@ -380,17 +437,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             }
         }
         return true;
-    }
-
-    @Override
-    public void onStop() {
-        mPresenter.onStop();
-        LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
-    }
-
-    @Override
-    public void setPresenter(CreatePostContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Bindable
@@ -438,4 +484,29 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void setTimelineModel(TimelineModel timelineModel) {
         mTimelineModel = timelineModel;
     }
+
+    @Bindable
+    public boolean isPlaying() {
+        return mIsPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        mIsPlaying = playing;
+        notifyPropertyChanged(BR.playing);
+    }
+
+    public void onPlayingRecordingAudioClick() {
+        if (!mIsPlaying) {
+            mMediaPlayer.start();
+        } else {
+            mMediaPlayer.pause();
+        }
+        setPlaying(!mIsPlaying);
+    }
+
+    public void onDismissPlayingRecordAudioClick() {
+        mTimelineModel.getRecords().clear();
+        mActivity.clearViewInRecord();
+    }
+
 }

@@ -17,13 +17,13 @@
     <string name="empty_password_confirm">Empty confirm password</string>
     <string name="empty_password_confirm_incorrect">Password confirm is incorrect</string>
     <string name="msg_pls_register">Register account....</string>
-    <string name="msg_loading">Loading...</string>
+    <string name="msg_loading">Loading&#8230;</string>
     <string name="hint_email">Email</string>
     <string name="title_forgot_pasword">Forgot password?</string>
     <string name="forgot_pasword_description">We just need your register Email Id to send your password reset instructions.</string>
     <string name="action_reset_password">Reset password</string>
     <string name="action_back"><![CDATA[<< Back]]></string>
-    <string name="msg_reset_password_success">Reset password succesful, pls check your email to get a new password.</string>
+    <string name="msg_reset_password_success">Reset password succesfull, pls check your email to get a new password.</string>
     <string name="action_signout">Sign out</string>
     <string name="action_save">POST</string>
     <string name="title_upload">Select avatar</string>
@@ -31,7 +31,7 @@
     <string name="title_welcome">Welcome</string>
     <string name="title_edit">Pls enter your name and your photo to finish register account!</string>
     <string name="error_upload_file">Upload image error, pls try again!</string>
-    <string name="progress_uploading">Uploading...</string>
+    <string name="progress_uploading">Uploading&#8230;</string>
     <string name="title_or">Or</string>
     <string name="facebook_app_id">294623550995501</string>
     <string name="login_facebook_cancel">Login cancel!</string>
@@ -50,7 +50,7 @@
     <string name="item_create_at">At %s</string>
     <string name="title_upload_percent">%s %</string>
     <string name="msg_upload_error">Upload %s error!</string>
-    <string name="title_record">Recording...</string>
+    <string name="title_record">Recording&#8230;</string>
     <string name="aar_save">Save</string>
     <string name="aar_paused">Paused</string>
     <string name="aar_recording">Recording</string>
@@ -65,4 +65,5 @@
     <string name="title_for_recording_duration">Recording audio</string>
     <string name="description_recording_audio_button">Recording audio button</string>
     <string name="title_cancel">Cancel</string>
+    <string name="title_begin_recording_time">00:00</string>
 </resources>
