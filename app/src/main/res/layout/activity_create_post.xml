@@ -88,6 +88,7 @@
                     android:layout_height="@dimen/dp_30"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:padding="@dimen/dp_5"
+                    android:onClick="@{() -> viewModel.onVideoPickerClicked()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/image_photo"
                     app:layout_constraintTop_toTopOf="parent"
@@ -167,6 +168,7 @@
 
                 </android.support.constraint.ConstraintLayout>
 
+
                 <LinearLayout
                     android:id="@+id/linear_images"
                     android:layout_width="0dp"
@@ -176,12 +178,14 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/card_view_description" />
 
-                <LinearLayout
-                    android:id="@+id/linear_records"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_media"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_32"
+                    android:layout_marginTop="@dimen/dp_16"
                     android:orientation="vertical"
+                    app:layoutManager="LinearLayoutManager"
+                    bind:adapter="@{viewModel.adapter}"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/card_view_description" />

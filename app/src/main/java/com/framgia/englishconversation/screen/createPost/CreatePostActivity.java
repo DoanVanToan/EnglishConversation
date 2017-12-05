@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import com.framgia.englishconversation.databinding.ItemPostFirstTypeBinding;
 import com.framgia.englishconversation.databinding.ItemPostFourTypeBinding;
 import com.framgia.englishconversation.databinding.ItemPostSecondTypeBinding;
 import com.framgia.englishconversation.databinding.ItemPostThridTypeBinding;
+import com.framgia.englishconversation.databinding.ItemVideoBinding;
 import com.framgia.englishconversation.databinding.RecordItemBinding;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
@@ -49,7 +51,6 @@ public class CreatePostActivity extends BaseActivity {
     private CreatePostContract.ViewModel mViewModel;
 
     private LinearLayout mLinearImages;
-    private LinearLayout mLinearRecords;
     private ImageView[] mImageViews;
 
     public static Intent getInstance(Context context, @PostType int createType) {
@@ -65,15 +66,15 @@ public class CreatePostActivity extends BaseActivity {
 
         mViewModel = new CreatePostViewModel(this, new Navigator(this), mCreateType);
         AuthenicationRepository repository =
-                new AuthenicationRepository(new AuthenicationRemoteDataSource());
+            new AuthenicationRepository(new AuthenicationRemoteDataSource());
         TimelineRepository timelineRepository =
-                new TimelineRepository(new TimelineRemoteDataSource());
+            new TimelineRepository(new TimelineRemoteDataSource());
         CreatePostContract.Presenter presenter =
-                new CreatePostPresenter(mViewModel, repository, timelineRepository);
+            new CreatePostPresenter(mViewModel, repository, timelineRepository);
         mViewModel.setPresenter(presenter);
 
         ActivityCreatePostBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.activity_create_post);
+            DataBindingUtil.setContentView(this, R.layout.activity_create_post);
         binding.setViewModel((CreatePostViewModel) mViewModel);
 
         if (getSupportActionBar() != null) {
@@ -83,18 +84,13 @@ public class CreatePostActivity extends BaseActivity {
         }
 
         mLinearImages = binding.linearImages;
-        mLinearRecords = binding.linearRecords;
-        mImageViews = new ImageView[]{
-                binding.imageConversation,
-                binding.imageRecordAudio,
-                binding.imageVideo,
-                binding.imagePhoto,
-                binding.imageLocation
+        mImageViews = new ImageView[] {
+            binding.imageConversation, binding.imageRecordAudio, binding.imageVideo,
+            binding.imagePhoto, binding.imageLocation
         };
         int selectedColor = ContextCompat.getColor(this, R.color.color_indogo_acceent_700);
-        binding.imageConversation.getDrawable().setColorFilter(
-                selectedColor, PorterDuff.Mode.SRC_ATOP
-        );
+        binding.imageConversation.getDrawable()
+            .setColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void getData() {
@@ -110,26 +106,26 @@ public class CreatePostActivity extends BaseActivity {
         switch (models.size()) {
             case Constant.Timeline.ONE_IMAGE:
                 ItemPostFirstTypeBinding firstTypeBinding =
-                        ItemPostFirstTypeBinding.inflate(getLayoutInflater());
+                    ItemPostFirstTypeBinding.inflate(getLayoutInflater());
                 firstTypeBinding.setListData(models);
                 mLinearImages.addView(firstTypeBinding.getRoot());
                 break;
             case Constant.Timeline.TWO_IMAGE:
                 ItemPostSecondTypeBinding secondTypeBinding =
-                        ItemPostSecondTypeBinding.inflate(getLayoutInflater());
+                    ItemPostSecondTypeBinding.inflate(getLayoutInflater());
                 secondTypeBinding.setListData(models);
                 mLinearImages.addView(secondTypeBinding.getRoot());
                 break;
             case Constant.Timeline.THREE_IMAGE:
                 ItemPostThridTypeBinding thirdTypeBinding =
-                        ItemPostThridTypeBinding.inflate(getLayoutInflater());
+                    ItemPostThridTypeBinding.inflate(getLayoutInflater());
                 thirdTypeBinding.setListData(models);
                 mLinearImages.addView(thirdTypeBinding.getRoot());
                 break;
             case Constant.Timeline.FOUR_IMAGE:
             default:
                 ItemPostFourTypeBinding fourTypeBinding =
-                        ItemPostFourTypeBinding.inflate(getLayoutInflater());
+                    ItemPostFourTypeBinding.inflate(getLayoutInflater());
                 fourTypeBinding.setListData(models);
                 mLinearImages.addView(fourTypeBinding.getRoot());
                 break;
@@ -137,17 +133,23 @@ public class CreatePostActivity extends BaseActivity {
     }
 
     public void addPostRecord(List<MediaModel> records) {
-        mLinearRecords.removeAllViews();
-        for (MediaModel record : records) {
-            RecordItemBinding recordItemBinding = RecordItemBinding.inflate(getLayoutInflater());
-            recordItemBinding.setRecord(record);
-            recordItemBinding.setViewModel((CreatePostViewModel) mViewModel);
-            mLinearRecords.addView(recordItemBinding.getRoot());
-        }
+//        mLinearRecords.removeAllViews();
+//        for (MediaModel record : records) {
+//            RecordItemBinding recordItemBinding = RecordItemBinding.inflate(getLayoutInflater());
+//            recordItemBinding.setRecord(record);
+//            recordItemBinding.setViewModel((CreatePostViewModel) mViewModel);
+//            mLinearRecords.addView(recordItemBinding.getRoot());
+//        }
     }
 
     public void clearViewInRecord() {
-        mLinearRecords.removeAllViews();
+//        mLinearRecords.removeAllViews();
+    }
+    public void addVideo(Uri uri) {
+//        mLinearRecords.removeAllViews();
+//        ItemVideoBinding binding  = ItemVideoBinding.inflate(getLayoutInflater());
+//        mLinearRecords.addView(binding.getRoot());
+//        binding.setUri(uri);
     }
 
     @Override
@@ -189,27 +191,20 @@ public class CreatePostActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+        @NonNull int[] grantResults) {
         mViewModel.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void fillColorSelectedButton(int position) {
         int selectedColor = ContextCompat.getColor(this, R.color.color_indogo_acceent_700);
-        int unSelectedColor = ContextCompat.getColor(
-                this, android.R.color.black
-        );
+        int unSelectedColor = ContextCompat.getColor(this, android.R.color.black);
         for (int i = 0; i < mImageViews.length; i++) {
             if (i == position) {
-                mImageViews[i].setColorFilter(
-                        selectedColor, PorterDuff.Mode.SRC_ATOP
-                );
+                mImageViews[i].setColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP);
             } else {
-                mImageViews[i].setColorFilter(
-                        unSelectedColor, PorterDuff.Mode.SRC_ATOP
-                );
+                mImageViews[i].setColorFilter(unSelectedColor, PorterDuff.Mode.SRC_ATOP);
             }
         }
     }
-
 }

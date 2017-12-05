@@ -8,9 +8,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+
 import android.media.MediaPlayer;
+
+import android.media.MediaRecorder;
+
 import android.net.Uri;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
@@ -60,6 +65,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int SELECT_IMAGE_REQUEST = 2;
     private static final int LIMIT_IMAGES = 10;
     private static final int REQUEST_RECORD_AUDIO = 3;
+    private static final int REQUEST_RECORD_VIDEO = 4;
+
     private final static String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -68,6 +75,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             "Sorry, you can not start recording audio mode. Please try again later!";
     private static final String TOAST_CANCEL =
             "You have just cancel the recording audio without saving!";
+
     private RecordingAudioDialog mRecordingAudioDialog;
     private CreatePostContract.Presenter mPresenter;
     private UserModel mUser;
@@ -87,6 +95,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private MediaPlayer mMediaPlayer;
     private boolean mIsPlaying;
 
+    private MediaAdapter mAdapter;
+
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
                         @PostType int createType) {
         mActivity = activity;
@@ -95,6 +105,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mTimelineModel = new TimelineModel();
         mProgressDialog = new ProgressDialog(mActivity);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
+        mAdapter = new MediaAdapter();
         getData();
 
     }
@@ -190,15 +201,26 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             case REQUEST_RECORD_AUDIO:
                 String filePath = Util.getResultFilePath(data);
                 String fileName = Util.getResultFileName(data);
-                MediaModel record = new MediaModel();
+                MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
                 record.setId(UUID.randomUUID().toString());
                 record.setUrl(filePath);
                 record.setName(fileName);
                 addPostAudioRecord(record);
                 break;
+            case REQUEST_RECORD_VIDEO:
+                updateVideoMedia(data.getData());
+                break;
             default:
                 break;
         }
+    }
+
+    private void updateVideoMedia(Uri uri){
+        mTimelineModel.getMedias().clear();
+        MediaModel mediaModel = new MediaModel(MediaModel.MediaType.VIDEO) ;
+        mediaModel.setUri(uri);
+        mTimelineModel.getMedias().add(mediaModel);
+        mAdapter.setData(mTimelineModel.getMedias());
     }
 
     @Override
@@ -228,8 +250,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     @Override
     public void onCreatePost() {
         updateTimelineModel();
-        if (mTimelineModel.getImages() != null && mTimelineModel.getImages().size() != 0) {
-            uploadFiles(mTimelineModel.getImages());
+        if (mTimelineModel.getMedias() != null && mTimelineModel.getMedias().size() != 0) {
+            uploadFiles(mTimelineModel.getMedias());
         } else {
             mPresenter.createPost(mTimelineModel);
         }
@@ -279,12 +301,12 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         if (record == null) {
             return;
         }
-        if (mTimelineModel.getRecords() == null) {
-            mTimelineModel.setRecords(new ArrayList<MediaModel>());
+        if (mTimelineModel.getMedias() == null) {
+            mTimelineModel.setMedias(new ArrayList<MediaModel>());
         }
-        mTimelineModel.getRecords().clear();
-        mTimelineModel.getRecords().add(record);
-        mActivity.addPostRecord(mTimelineModel.getRecords());
+        mTimelineModel.getMedias().clear();
+        mTimelineModel.getMedias().add(record);
+        mActivity.addPostRecord(mTimelineModel.getMedias());
     }
 
     private void updateTimelineModel() {
@@ -293,7 +315,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     private void handleProgress(MediaModel mediaModel) {
-        for (MediaModel model : mTimelineModel.getImages()) {
+        for (MediaModel model : mTimelineModel.getMedias()) {
             if (model.getId().equals(mediaModel.getId())) {
                 model.setUploadPercent(mediaModel.getUploadPercent());
                 return;
@@ -302,7 +324,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     private void handleFinnish(MediaModel mediaModel) {
-        for (MediaModel model : mTimelineModel.getImages()) {
+        for (MediaModel model : mTimelineModel.getMedias()) {
             if (model.getId().equals(mediaModel.getId())) {
                 model.setUrl(mediaModel.getUrl());
                 return;
@@ -348,26 +370,45 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
+    private void addPostRecords(MediaModel record) {
+        if (record == null) {
+            return;
+        }
+        if (mTimelineModel.getMedias() == null) {
+            mTimelineModel.setMedias(new ArrayList<MediaModel>());
+        }
+        mTimelineModel.getMedias().add(record);
+        mActivity.addPostRecord(mTimelineModel.getMedias());
+    }
+
     private void addPostImage(List<Image> images) {
         if (images != null) {
             for (Image image : images) {
-                MediaModel mediaModel = new MediaModel();
+                MediaModel mediaModel = new MediaModel(MediaModel.MediaType.IMAGE);
                 mediaModel.setId(String.valueOf(image.id));
                 mediaModel.setType(IMAGE);
                 mediaModel.setUrl(image.path);
                 mediaModel.setName(image.name);
 
-                if (mTimelineModel.getImages() == null) {
-                    mTimelineModel.setImages(new ArrayList<MediaModel>());
+                if (mTimelineModel.getMedias() == null) {
+                    mTimelineModel.setMedias(new ArrayList<MediaModel>());
                 }
-                mTimelineModel.getImages().add(mediaModel);
+                mTimelineModel.getMedias().add(mediaModel);
             }
         }
-        mActivity.addImagePost(mTimelineModel.getImages());
+        mActivity.addImagePost(mTimelineModel.getMedias());
     }
 
     private void addPostRecord(List<MediaModel> records) {
         mActivity.addPostRecord(records);
+    }
+
+    public void onVideoPickerClicked(){
+        mActivity.fillColorSelectedButton(CreatePostActivity.VIDEO_RECORD_POSITION);
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (intent.resolveActivity(mActivity.getPackageManager())!=null){
+            mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
+        }
     }
 
     public void onStartRecordClicked() {
@@ -392,7 +433,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 new RecordingAudioDialog.OnRecordingAudioListener() {
                     @Override
                     public void onRecordingAudioClick(String filePath, String fileName) {
-                        MediaModel record = new MediaModel();
+                        MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
                         record.setId(UUID.randomUUID().toString());
                         record.setUrl(filePath);
                         record.setName(fileName);
@@ -495,6 +536,16 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         notifyPropertyChanged(BR.playing);
     }
 
+    @Bindable
+    public MediaAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void setAdapter(MediaAdapter adapter) {
+        mAdapter = adapter;
+        notifyPropertyChanged(BR.adapter);
+    }
+
     public void onPlayingRecordingAudioClick() {
         if (!mIsPlaying) {
             mMediaPlayer.start();
@@ -505,7 +556,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onDismissPlayingRecordAudioClick() {
-        mTimelineModel.getRecords().clear();
+        mTimelineModel.getMedias().clear();
         mActivity.clearViewInRecord();
     }
 
