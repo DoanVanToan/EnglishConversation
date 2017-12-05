@@ -12,7 +12,7 @@ import com.framgia.englishconversation.record.model.AudioSource;
  * Description:
  */
 
-public class AudioRecorder {
+public class RecordingAudioBuilder {
 
     public static final String EXTRA_FILE_NAME =
             "com.framgia.englishconversation.intent.extra.EXTRA_FILE_NAME";
@@ -20,6 +20,7 @@ public class AudioRecorder {
             "com.framgia.englishconversation.intent.extra.EXTRA_FILE_PATH";
     public static final String EXTRA_AUDIO_SOURCE =
             "com.framgia.englishconversation.intent.extra.EXTRA_AUDIO_SOURCE";
+
     public static final String TAG_RECORDING_AUDIO = "RecordingAudioDialog";
 
     private String mFileName;
@@ -29,7 +30,11 @@ public class AudioRecorder {
     private AppCompatActivity mActivity;
     private DialogFragment mDialog;
 
-    public AudioRecorder(AppCompatActivity activity, DialogFragment dialog) {
+    public static RecordingAudioBuilder with(AppCompatActivity activity, DialogFragment dialog) {
+        return new RecordingAudioBuilder(activity, dialog);
+    }
+
+    public RecordingAudioBuilder(AppCompatActivity activity, DialogFragment dialog) {
         mActivity = activity;
         mDialog = dialog;
         if (activity.getExternalCacheDir() == null) {
@@ -39,21 +44,17 @@ public class AudioRecorder {
         mFilePath = activity.getExternalCacheDir().getAbsolutePath() + "/" + mFileName;
     }
 
-    public static AudioRecorder with(AppCompatActivity activity, DialogFragment dialog) {
-        return new AudioRecorder(activity, dialog);
-    }
-
-    public AudioRecorder setFileName(String fileName) {
+    public RecordingAudioBuilder setFileName(String fileName) {
         mFileName = fileName;
         return this;
     }
 
-    public AudioRecorder setFilePath(String filePath) {
+    public RecordingAudioBuilder setFilePath(String filePath) {
         mFilePath = filePath;
         return this;
     }
 
-    public AudioRecorder setAudioSource(AudioSource audioSource) {
+    public RecordingAudioBuilder setAudioSource(AudioSource audioSource) {
         mAudioSource = audioSource;
         return this;
     }
