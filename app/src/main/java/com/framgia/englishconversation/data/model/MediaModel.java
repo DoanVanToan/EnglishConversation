@@ -8,6 +8,8 @@ import android.support.annotation.IntDef;
 import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
 
+import static com.framgia.englishconversation.data.model.MediaModel.MediaType.AUDIO;
+import static com.framgia.englishconversation.data.model.MediaModel.MediaType.CONVERSATION;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.IMAGE;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.VIDEO;
 
@@ -63,11 +65,12 @@ public class MediaModel extends BaseObservable implements Parcelable {
         parcel.writeString(mName);
     }
 
-    @IntDef({ IMAGE, VIDEO })
+    @IntDef({ IMAGE, VIDEO, AUDIO, CONVERSATION })
     @interface MediaType {
         int IMAGE = 0;
         int VIDEO = 1;
-        int MP4 = 3;
+        int AUDIO = 2;
+        int CONVERSATION = 3;
     }
 
     @Bindable
