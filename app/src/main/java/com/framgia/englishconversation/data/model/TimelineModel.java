@@ -23,10 +23,8 @@ public class TimelineModel extends BaseObservable {
     private long mModifiedAt;
     @SerializedName("location")
     private LocationModel mLocation;
-    @SerializedName("images")
-    private List<MediaModel> mImages;
-    @SerializedName("records")
-    private List<MediaModel> mRecords;
+    @SerializedName("medias")
+    private List<MediaModel> mMedias;
     @SerializedName("comments")
     private List<Comment> mComments;
     @SerializedName("likes")
@@ -97,13 +95,13 @@ public class TimelineModel extends BaseObservable {
     }
 
     @Bindable
-    public List<MediaModel> getImages() {
-        return mImages;
+    public List<MediaModel> getMedias() {
+        return mMedias;
     }
 
-    public void setImages(List<MediaModel> images) {
-        mImages = images;
-        notifyPropertyChanged(BR.images);
+    public void setMedias(List<MediaModel> medias) {
+        mMedias = medias;
+        notifyPropertyChanged(BR.medias);
     }
 
     @Bindable
@@ -147,18 +145,8 @@ public class TimelineModel extends BaseObservable {
     }
 
     @Bindable
-    public List<MediaModel> getRecords() {
-        return mRecords;
-    }
-
-    public void setRecords(List<MediaModel> records) {
-        mRecords = records;
-        notifyPropertyChanged(BR.records);
-    }
-
-    @Bindable
     public int getViewType() {
-        return getImages() != null ? getImages().size() : 0;
+        return getMedias() != null ? getMedias().size() : 0;
     }
 
     @Override
