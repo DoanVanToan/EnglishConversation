@@ -108,8 +108,10 @@ public class RecordingAudioDialog extends BaseDialog {
     }
 
     public void releaseRecordingAudio() {
-        mMediaRecorder.release();
-        mMediaRecorder = null;
+        if (mMediaRecorder != null) {
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
     }
 
     public void onRecordingAudio(boolean isRecording) {

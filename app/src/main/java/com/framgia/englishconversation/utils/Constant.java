@@ -1,5 +1,7 @@
 package com.framgia.englishconversation.utils;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  */
@@ -16,4 +18,11 @@ public class Constant {
 
         public static final String POST = "post";
     }
+    public static final int MILLISECONDS_PER_MINUTE = 1000;
+    public static final int ONE_HUNDRED_PERCENT = 100;
+    public static final int ZERO_PERCENT = 0;
+    public static final int CONVERTER_NUMBER_TO_TRUE_MILLI = 100;
+    public static final int CONVERTER_NUMBER_TO_TRUE_SECOND = 10;
+    public static final int SECOND_PER_MINUTE = 60;
+
 }
