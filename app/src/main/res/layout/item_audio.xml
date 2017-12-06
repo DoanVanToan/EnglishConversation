@@ -22,14 +22,14 @@
 
         <ImageView
             android:id="@+id/image_cancel"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
             android:layout_marginEnd="@dimen/dp_8"
-            android:onClick="@{() -> viewModel.onDismissPlayingRecordAudioClick()}"
+            android:onClick="@{() -> viewModel.onDeleteItemMediaClicked(record)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cancel" />
+            app:srcCompat="@drawable/com_facebook_close"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"

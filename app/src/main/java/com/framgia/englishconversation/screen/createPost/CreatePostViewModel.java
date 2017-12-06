@@ -32,6 +32,7 @@ import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.Util;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.FirebaseUploadService;
+import com.framgia.englishconversation.utils.FileUtils;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
@@ -105,7 +106,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mTimelineModel = new TimelineModel();
         mProgressDialog = new ProgressDialog(mActivity);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
-        mAdapter = new MediaAdapter();
+        mAdapter = new MediaAdapter(this);
         getData();
 
     }
@@ -151,7 +152,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                         if (downloadUri == null) {
                             return;
                         }
-                        mediaModel.setUrl(downloadUri.toString());
                         handleFinnish(mediaModel);
                         break;
 
@@ -215,10 +215,11 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
-    private void updateVideoMedia(Uri uri){
+    private void updateVideoMedia(Uri uri) {
         mTimelineModel.getMedias().clear();
-        MediaModel mediaModel = new MediaModel(MediaModel.MediaType.VIDEO) ;
-        mediaModel.setUri(uri);
+        MediaModel mediaModel = new MediaModel(MediaModel.MediaType.VIDEO);
+        mediaModel.setUrl(FileUtils.getFilePath(mActivity, uri));
+        mediaModel.setId(UUID.randomUUID().toString());
         mTimelineModel.getMedias().add(mediaModel);
         mAdapter.setData(mTimelineModel.getMedias());
     }
@@ -306,7 +307,26 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
         mTimelineModel.getMedias().clear();
         mTimelineModel.getMedias().add(record);
-        mActivity.addPostRecord(mTimelineModel.getMedias());
+        mAdapter.setData(mTimelineModel.getMedias());
+    }
+
+    private void addPostImage(List<Image> images) {
+        if (images == null) {
+            return;
+        }
+
+        if (mTimelineModel.getMedias() == null) {
+            mTimelineModel.setMedias(new ArrayList<MediaModel>());
+        }
+
+        for (Image image : images) {
+            MediaModel mediaModel = new MediaModel(MediaModel.MediaType.IMAGE);
+            mediaModel.setId(String.valueOf(image.id));
+            mediaModel.setUrl(image.path);
+            mediaModel.setName(image.name);
+            mTimelineModel.getMedias().add(mediaModel);
+        }
+        mAdapter.setData(mTimelineModel.getMedias());
     }
 
     private void updateTimelineModel() {
@@ -343,6 +363,11 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
+    public void onDeleteItemMediaClicked(MediaModel mediaModel) {
+        mTimelineModel.getMedias().remove(mediaModel);
+        mAdapter.removeItem(mediaModel);
+    }
+
     private void selectImage() {
         Intent intent = new Intent(mActivity, AlbumSelectActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, LIMIT_IMAGES);
@@ -370,43 +395,10 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
-    private void addPostRecords(MediaModel record) {
-        if (record == null) {
-            return;
-        }
-        if (mTimelineModel.getMedias() == null) {
-            mTimelineModel.setMedias(new ArrayList<MediaModel>());
-        }
-        mTimelineModel.getMedias().add(record);
-        mActivity.addPostRecord(mTimelineModel.getMedias());
-    }
-
-    private void addPostImage(List<Image> images) {
-        if (images != null) {
-            for (Image image : images) {
-                MediaModel mediaModel = new MediaModel(MediaModel.MediaType.IMAGE);
-                mediaModel.setId(String.valueOf(image.id));
-                mediaModel.setType(IMAGE);
-                mediaModel.setUrl(image.path);
-                mediaModel.setName(image.name);
-
-                if (mTimelineModel.getMedias() == null) {
-                    mTimelineModel.setMedias(new ArrayList<MediaModel>());
-                }
-                mTimelineModel.getMedias().add(mediaModel);
-            }
-        }
-        mActivity.addImagePost(mTimelineModel.getMedias());
-    }
-
-    private void addPostRecord(List<MediaModel> records) {
-        mActivity.addPostRecord(records);
-    }
-
-    public void onVideoPickerClicked(){
+    public void onVideoPickerClicked() {
         mActivity.fillColorSelectedButton(CreatePostActivity.VIDEO_RECORD_POSITION);
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (intent.resolveActivity(mActivity.getPackageManager())!=null){
+        if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
             mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
         }
     }
@@ -556,8 +548,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onDismissPlayingRecordAudioClick() {
+        // TODO: 12/6/17
         mTimelineModel.getMedias().clear();
-        mActivity.clearViewInRecord();
     }
 
 }

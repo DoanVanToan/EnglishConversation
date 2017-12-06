@@ -83,9 +83,9 @@ public final class BindingUtils {
             .into(imageView);
     }
 
-    @BindingAdapter({ "bind:videoUri" })
-    public static void loadVideoUri(VideoView videoView, Uri uri) {
-        videoView.setVideoURI(uri);
+    @BindingAdapter({ "bind:videoPath" })
+    public static void loadVideoUri(VideoView videoView, String  path) {
+        videoView.setVideoPath(path);
         MediaController mediaController = new MediaController(videoView.getContext());
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);

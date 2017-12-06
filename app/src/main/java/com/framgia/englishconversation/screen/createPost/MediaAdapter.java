@@ -1,62 +1,18 @@
 package com.framgia.englishconversation.screen.createPost;
 
-import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
-import com.darsh.multipleimageselect.helpers.Constants;
-import com.darsh.multipleimageselect.models.Image;
-import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
-import com.framgia.englishconversation.data.model.LocationModel;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.PostType;
-import com.framgia.englishconversation.data.model.TimelineModel;
-import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.databinding.ItemAudioBinding;
+import com.framgia.englishconversation.databinding.ItemImageBinding;
 import com.framgia.englishconversation.databinding.ItemVideoBinding;
-import com.framgia.englishconversation.record.Util;
-import com.framgia.englishconversation.record.model.AudioSource;
-import com.framgia.englishconversation.service.FirebaseUploadService;
-import com.framgia.englishconversation.utils.Utils;
-import com.framgia.englishconversation.utils.navigator.Navigator;
-import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
-import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import static android.app.Activity.RESULT_OK;
-import static com.framgia.englishconversation.data.model.PostType.IMAGE;
-import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService
-        .ACTION_UPLOAD_MULTI_FILE;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_MEDIA_MODEL;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_URI;
 
 /**
  * Exposes the data to be used in the CreatePost screen.
@@ -64,9 +20,15 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
 
 public class MediaAdapter extends RecyclerView.Adapter {
     private List<MediaModel> mMediaModels;
+    private CreatePostViewModel mViewModel;
 
-    public MediaAdapter() {
+    public MediaAdapter(CreatePostViewModel viewModel) {
+        mViewModel = viewModel;
         mMediaModels = new ArrayList<>();
+    }
+
+    public void setViewModel(CreatePostViewModel viewModel) {
+        mViewModel = viewModel;
     }
 
     public void updateData(List<MediaModel> mediaModels) {
@@ -77,9 +39,15 @@ public class MediaAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setData(List<MediaModel> mediaModels){
+    public void setData(List<MediaModel> mediaModels) {
         mMediaModels.clear();
         updateData(mediaModels);
+    }
+
+    public void removeItem(MediaModel mediaModel) {
+        mMediaModels.remove(mediaModel);
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -91,12 +59,20 @@ public class MediaAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.IMAGE:
-
-                break;
+                ItemImageBinding imageBinding = DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        R.layout.item_image,
+                        parent,
+                        false);
+                return new ImageViewHolder(imageBinding);
             case MediaModel.MediaType.AUDIO:
-
-                break;
-            case MediaModel.MediaType.VIDEO:
+                ItemAudioBinding audioBinding = DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        R.layout.item_audio,
+                        parent,
+                        false);
+                return new AudioViewHolder(audioBinding);
+       case MediaModel.MediaType.VIDEO:
                 ItemVideoBinding binding = DataBindingUtil.inflate(
                         LayoutInflater.from(parent.getContext()),
                         R.layout.item_video,
@@ -107,17 +83,18 @@ public class MediaAdapter extends RecyclerView.Adapter {
                 return null;
 
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case MediaModel.MediaType.IMAGE:
-
+                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
+                imageViewHolder.bindData(mMediaModels.get(position));
                 break;
             case MediaModel.MediaType.AUDIO:
-
+                AudioViewHolder audioViewHolder = (AudioViewHolder) holder;
+                audioViewHolder.bindData(mMediaModels.get(position));
                 break;
             case MediaModel.MediaType.VIDEO:
                 VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
@@ -142,10 +119,40 @@ public class MediaAdapter extends RecyclerView.Adapter {
         }
 
         public void bindData(MediaModel video) {
-            mVideoBinding.setUri(video.getUri());
+            mVideoBinding.setMediaModel(video);
+            mVideoBinding.setViewModel(mViewModel);
             mVideoBinding.executePendingBindings();
         }
     }
 
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
+        private ItemImageBinding mImageBinding;
+
+        public ImageViewHolder(ItemImageBinding binding) {
+            super(binding.getRoot());
+            mImageBinding = binding;
+        }
+
+        public void bindData(MediaModel video) {
+            mImageBinding.setMediaModel(video);
+            mImageBinding.setViewModel(mViewModel);
+            mImageBinding.executePendingBindings();
+        }
+    }
+
+    public class AudioViewHolder extends RecyclerView.ViewHolder {
+        private ItemAudioBinding mImageBinding;
+
+        public AudioViewHolder(ItemAudioBinding binding) {
+            super(binding.getRoot());
+            mImageBinding = binding;
+        }
+
+        public void bindData(MediaModel video) {
+            mImageBinding.setRecord(video);
+            mImageBinding.setViewModel(mViewModel);
+            mImageBinding.executePendingBindings();
+        }
+    }
 
 }

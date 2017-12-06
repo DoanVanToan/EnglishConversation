@@ -23,7 +23,6 @@ public class MediaModel extends BaseObservable implements Parcelable {
     private String mId;
     @SerializedName("url")
     private String mUrl;
-    private Uri mUri;
     @SerializedName("type")
     @MediaType
     private int mType;
@@ -47,6 +46,9 @@ public class MediaModel extends BaseObservable implements Parcelable {
             return new MediaModel[size];
         }
     };
+
+    public MediaModel() {
+    }
 
     protected MediaModel(Parcel in) {
         mId = in.readString();
@@ -101,18 +103,7 @@ public class MediaModel extends BaseObservable implements Parcelable {
         return mType;
     }
 
-    @Bindable
-    public Uri getUri() {
-        return mUri;
-    }
-
-    public void setUri(Uri uri) {
-        mUri = uri;
-        notifyPropertyChanged(BR.uri);
-    }
-
     public void setType(int type) {
-
         mType = type;
         notifyPropertyChanged(BR.type);
     }

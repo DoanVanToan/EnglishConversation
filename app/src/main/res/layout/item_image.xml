@@ -1,21 +1,20 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    >
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <variable
+            name="mediaModel"
+            type="com.framgia.englishconversation.data.model.MediaModel"/>
         <variable
             name="viewModel"
             type="com.framgia.englishconversation.screen.createPost.CreatePostViewModel"/>
-        <variable
-            name="mediaModel"
-            type="com.framgia.englishconversation.data.model.MediaModel"
-            />
     </data>
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
 
-        <VideoView
+    <android.support.constraint.ConstraintLayout 
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
             android:id="@+id/video_view"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_200"
@@ -23,13 +22,13 @@
             android:layout_marginEnd="@dimen/dp_12"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_12"
+            app:imageUrl="@{mediaModel.url}"
             android:layout_marginStart="@dimen/dp_8"
-            bind:videoPath="@{mediaModel.url}"
             android:layout_marginTop="@dimen/dp_12"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
         <ImageView
@@ -37,10 +36,11 @@
             android:id="@+id/image_close"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:srcCompat="@drawable/com_facebook_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/com_facebook_close"
             />
 
     </android.support.constraint.ConstraintLayout>
+    
 </layout>

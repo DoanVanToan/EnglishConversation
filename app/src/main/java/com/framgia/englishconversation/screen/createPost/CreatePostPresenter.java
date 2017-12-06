@@ -1,5 +1,7 @@
 package com.framgia.englishconversation.screen.createPost;
 
+import android.text.TextUtils;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
@@ -19,8 +21,8 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
     private TimelineRepository mTimelineRepository;
 
     public CreatePostPresenter(CreatePostContract.ViewModel viewModel,
-            AuthenicationRepository authenicationRepository,
-            TimelineRepository timelineRepository) {
+                               AuthenicationRepository authenicationRepository,
+                               TimelineRepository timelineRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
@@ -44,6 +46,10 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
 
     @Override
     public void createPost(TimelineModel timelineModel) {
+        if (TextUtils.isEmpty(timelineModel.getContent())
+                && (timelineModel.getMedias() == null || timelineModel.getMedias().size() == 0)) {
+            return;
+        }
         mTimelineRepository.createNewPost(timelineModel, new DataCallback() {
             @Override
             public void onGetDataSuccess(Object data) {
