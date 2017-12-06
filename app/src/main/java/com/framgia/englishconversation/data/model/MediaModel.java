@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
+
 import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
 
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.AUDIO;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.CONVERSATION;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.IMAGE;
+import static com.framgia.englishconversation.data.model.MediaModel.MediaType.ONLY_TEXT;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.VIDEO;
 
 /**
@@ -70,12 +72,13 @@ public class MediaModel extends BaseObservable implements Parcelable {
         parcel.writeString(mName);
     }
 
-    @IntDef({ IMAGE, VIDEO, AUDIO, CONVERSATION })
+    @IntDef({IMAGE, VIDEO, AUDIO, CONVERSATION, ONLY_TEXT})
     public @interface MediaType {
         int IMAGE = 0;
         int VIDEO = 1;
         int AUDIO = 2;
         int CONVERSATION = 3;
+        int ONLY_TEXT = 4;
     }
 
     @Bindable
@@ -127,6 +130,4 @@ public class MediaModel extends BaseObservable implements Parcelable {
         mUploadPercent = uploadPercent;
         notifyPropertyChanged(BR.uploadPercent);
     }
-
-
 }

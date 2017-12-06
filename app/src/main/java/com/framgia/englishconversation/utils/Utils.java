@@ -67,6 +67,10 @@ public class Utils {
 
     public static String getFormatTimeFile(String filePath) {
         int duration = getFileDuration(filePath);
+        return getFormatTimeFile(duration);
+    }
+
+    public static String getFormatTimeFile(long duration) {
         if (duration == -1) {
             return "00:00";
         }

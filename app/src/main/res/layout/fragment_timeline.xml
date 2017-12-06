@@ -29,7 +29,9 @@
                 layout="@layout/timeline_header"
                 bind:viewModel="@{viewModel}"
                 />
+
             <android.support.v7.widget.RecyclerView
+                bind:scrollEnabled="@{false}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 bind:recyclerAdapter="@{viewModel.adapter}"
