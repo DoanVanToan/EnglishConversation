@@ -3,6 +3,7 @@ package com.framgia.englishconversation.screen.createPost;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.englishconversation.R;
@@ -18,7 +19,7 @@ import java.util.List;
  * Exposes the data to be used in the CreatePost screen.
  */
 
-public class MediaAdapter extends RecyclerView.Adapter {
+public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHolder> {
     private List<MediaModel> mMediaModels;
     private CreatePostViewModel mViewModel;
 
@@ -56,7 +57,7 @@ public class MediaAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.IMAGE:
                 ItemImageBinding imageBinding = DataBindingUtil.inflate(
@@ -86,23 +87,8 @@ public class MediaAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
-            case MediaModel.MediaType.IMAGE:
-                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
-                imageViewHolder.bindData(mMediaModels.get(position));
-                break;
-            case MediaModel.MediaType.AUDIO:
-                AudioViewHolder audioViewHolder = (AudioViewHolder) holder;
-                audioViewHolder.bindData(mMediaModels.get(position));
-                break;
-            case MediaModel.MediaType.VIDEO:
-                VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
-                videoViewHolder.bindData(mMediaModels.get(position));
-                break;
-            default:
-                break;
-        }
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+        holder.bindData(mMediaModels.get(position));
     }
 
     @Override
@@ -110,7 +96,10 @@ public class MediaAdapter extends RecyclerView.Adapter {
         return mMediaModels != null ? mMediaModels.size() : 0;
     }
 
-    public class VideoViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Viewholder to display video
+     */
+    public class VideoViewHolder extends BaseViewHolder {
         private ItemVideoBinding mVideoBinding;
 
         public VideoViewHolder(ItemVideoBinding binding) {
@@ -118,6 +107,7 @@ public class MediaAdapter extends RecyclerView.Adapter {
             mVideoBinding = binding;
         }
 
+        @Override
         public void bindData(MediaModel video) {
             mVideoBinding.setMediaModel(video);
             mVideoBinding.setViewModel(mViewModel);
@@ -125,7 +115,10 @@ public class MediaAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Viewholder to display image
+     */
+    public class ImageViewHolder extends BaseViewHolder {
         private ItemImageBinding mImageBinding;
 
         public ImageViewHolder(ItemImageBinding binding) {
@@ -133,6 +126,7 @@ public class MediaAdapter extends RecyclerView.Adapter {
             mImageBinding = binding;
         }
 
+        @Override
         public void bindData(MediaModel video) {
             mImageBinding.setMediaModel(video);
             mImageBinding.setViewModel(mViewModel);
@@ -140,7 +134,10 @@ public class MediaAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class AudioViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Viewholder to display audio
+     */
+    public class AudioViewHolder extends BaseViewHolder {
         private ItemAudioBinding mImageBinding;
 
         public AudioViewHolder(ItemAudioBinding binding) {
@@ -148,11 +145,24 @@ public class MediaAdapter extends RecyclerView.Adapter {
             mImageBinding = binding;
         }
 
+        @Override
         public void bindData(MediaModel video) {
             mImageBinding.setRecord(video);
             mImageBinding.setViewModel(mViewModel);
             mImageBinding.executePendingBindings();
         }
+    }
+
+    /**
+     * Base create post viewholder
+     */
+    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+
+        public BaseViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public abstract void bindData(MediaModel video);
     }
 
 }

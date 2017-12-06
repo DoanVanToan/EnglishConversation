@@ -41,6 +41,14 @@ public final class BindingUtils {
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * setNested scrollenable For RecyclerView
+     */
+    @BindingAdapter({ "scrollEnabled" })
+    public static void setRecyclerViewSrollEnable(RecyclerView recyclerView, boolean isEnabled) {
+        recyclerView.setNestedScrollingEnabled(isEnabled);
+    }
+
     @BindingAdapter({ "bind:adapter" })
     public static void setViewPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
         viewPager.setAdapter(adapter);

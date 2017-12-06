@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+
 import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
 
@@ -151,21 +152,31 @@ public class TimelineModel extends BaseObservable {
     }
 
     @Bindable
+    public int getPostType() {
+        if (mMedias == null || mMedias.size() == 0) {
+            return MediaModel.MediaType.ONLY_TEXT;
+        }
+        return mMedias.get(0).getType();
+    }
+
+
+    @Bindable
     public int getViewType() {
         return getMedias() != null ? getMedias().size() : 0;
     }
 
+
     @Override
     public String toString() {
         return "TimelineModel{"
-            + "mId='"
-            + mId
-            + '\''
-            + ", mContent='"
-            + mContent
-            + '\''
-            + ", mCreatedUser="
-            + mCreatedUser
-            + '}';
+                + "mId='"
+                + mId
+                + '\''
+                + ", mContent='"
+                + mContent
+                + '\''
+                + ", mCreatedUser="
+                + mCreatedUser
+                + '}';
     }
 }
