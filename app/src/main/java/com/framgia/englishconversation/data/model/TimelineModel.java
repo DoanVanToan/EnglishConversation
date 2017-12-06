@@ -26,7 +26,7 @@ public class TimelineModel extends BaseObservable {
     @SerializedName("location")
     private LocationModel mLocation;
     @SerializedName("medias")
-    private List<MediaModel> mMedias;
+    private List<MediaModel> mMedias = new ArrayList<>();
     @SerializedName("comments")
     private List<Comment> mComments;
     @SerializedName("likes")
@@ -37,7 +37,7 @@ public class TimelineModel extends BaseObservable {
     private List<UserModel> mReportUser;
 
     public TimelineModel() {
-        mMedias = new ArrayList<>();
+
     }
 
     @Bindable
