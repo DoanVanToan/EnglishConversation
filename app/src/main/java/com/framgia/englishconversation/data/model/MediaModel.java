@@ -2,12 +2,15 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
 import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
 
+import static com.framgia.englishconversation.data.model.MediaModel.MediaType.AUDIO;
+import static com.framgia.englishconversation.data.model.MediaModel.MediaType.CONVERSATION;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.IMAGE;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.VIDEO;
 
@@ -20,6 +23,7 @@ public class MediaModel extends BaseObservable implements Parcelable {
     private String mId;
     @SerializedName("url")
     private String mUrl;
+    private Uri mUri;
     @SerializedName("type")
     @MediaType
     private int mType;
@@ -28,7 +32,8 @@ public class MediaModel extends BaseObservable implements Parcelable {
     @SerializedName("upload_percent")
     private int mUploadPercent;
 
-    public MediaModel() {
+    public MediaModel(@MediaType int mediatype) {
+        mType = mediatype;
     }
 
     public static final Creator<MediaModel> CREATOR = new Creator<MediaModel>() {
@@ -63,11 +68,12 @@ public class MediaModel extends BaseObservable implements Parcelable {
         parcel.writeString(mName);
     }
 
-    @IntDef({ IMAGE, VIDEO })
-    @interface MediaType {
+    @IntDef({ IMAGE, VIDEO, AUDIO, CONVERSATION })
+    public @interface MediaType {
         int IMAGE = 0;
         int VIDEO = 1;
-        int MP4 = 3;
+        int AUDIO = 2;
+        int CONVERSATION = 3;
     }
 
     @Bindable
@@ -95,7 +101,18 @@ public class MediaModel extends BaseObservable implements Parcelable {
         return mType;
     }
 
+    @Bindable
+    public Uri getUri() {
+        return mUri;
+    }
+
+    public void setUri(Uri uri) {
+        mUri = uri;
+        notifyPropertyChanged(BR.uri);
+    }
+
     public void setType(int type) {
+
         mType = type;
         notifyPropertyChanged(BR.type);
     }
@@ -119,4 +136,6 @@ public class MediaModel extends BaseObservable implements Parcelable {
         mUploadPercent = uploadPercent;
         notifyPropertyChanged(BR.uploadPercent);
     }
+
+
 }

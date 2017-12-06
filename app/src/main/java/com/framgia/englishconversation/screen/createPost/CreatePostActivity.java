@@ -51,7 +51,6 @@ public class CreatePostActivity extends BaseActivity {
     private CreatePostContract.ViewModel mViewModel;
 
     private LinearLayout mLinearImages;
-    private LinearLayout mLinearRecords;
     private ImageView[] mImageViews;
 
     public static Intent getInstance(Context context, @PostType int createType) {
@@ -85,7 +84,6 @@ public class CreatePostActivity extends BaseActivity {
         }
 
         mLinearImages = binding.linearImages;
-        mLinearRecords = binding.linearRecords;
         mImageViews = new ImageView[] {
             binding.imageConversation, binding.imageRecordAudio, binding.imageVideo,
             binding.imagePhoto, binding.imageLocation
@@ -135,23 +133,23 @@ public class CreatePostActivity extends BaseActivity {
     }
 
     public void addPostRecord(List<MediaModel> records) {
-        mLinearRecords.removeAllViews();
-        for (MediaModel record : records) {
-            RecordItemBinding recordItemBinding = RecordItemBinding.inflate(getLayoutInflater());
-            recordItemBinding.setRecord(record);
-            recordItemBinding.setViewModel((CreatePostViewModel) mViewModel);
-            mLinearRecords.addView(recordItemBinding.getRoot());
-        }
+//        mLinearRecords.removeAllViews();
+//        for (MediaModel record : records) {
+//            RecordItemBinding recordItemBinding = RecordItemBinding.inflate(getLayoutInflater());
+//            recordItemBinding.setRecord(record);
+//            recordItemBinding.setViewModel((CreatePostViewModel) mViewModel);
+//            mLinearRecords.addView(recordItemBinding.getRoot());
+//        }
     }
 
     public void clearViewInRecord() {
-        mLinearRecords.removeAllViews();
+//        mLinearRecords.removeAllViews();
     }
     public void addVideo(Uri uri) {
-        mLinearRecords.removeAllViews();
-        ItemVideoBinding binding  = ItemVideoBinding.inflate(getLayoutInflater());
-        mLinearRecords.addView(binding.getRoot());
-        binding.setUri(uri);
+//        mLinearRecords.removeAllViews();
+//        ItemVideoBinding binding  = ItemVideoBinding.inflate(getLayoutInflater());
+//        mLinearRecords.addView(binding.getRoot());
+//        binding.setUri(uri);
     }
 
     @Override

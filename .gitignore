@@ -45,6 +45,8 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+.DS_Store
+
 # Freeline
 freeline.py
 freeline/

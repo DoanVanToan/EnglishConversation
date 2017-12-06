@@ -4,6 +4,8 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +35,10 @@ public class TimelineModel extends BaseObservable {
     private List<UserModel> mDishLikeUser;
     @SerializedName("report")
     private List<UserModel> mReportUser;
+
+    public TimelineModel() {
+        mMedias = new ArrayList<>();
+    }
 
     @Bindable
     public String getId() {
