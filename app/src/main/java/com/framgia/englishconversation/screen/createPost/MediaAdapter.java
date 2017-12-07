@@ -20,10 +20,11 @@ import java.util.List;
  */
 
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHolder> {
+
     private List<MediaModel> mMediaModels;
     private CreatePostViewModel mViewModel;
 
-    public MediaAdapter(CreatePostViewModel viewModel) {
+    MediaAdapter(CreatePostViewModel viewModel) {
         mViewModel = viewModel;
         mMediaModels = new ArrayList<>();
     }
@@ -32,7 +33,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
         mViewModel = viewModel;
     }
 
-    public void updateData(List<MediaModel> mediaModels) {
+    private void updateData(List<MediaModel> mediaModels) {
         if (mediaModels == null) {
             return;
         }
@@ -45,10 +46,9 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
         updateData(mediaModels);
     }
 
-    public void removeItem(MediaModel mediaModel) {
+    void removeItem(MediaModel mediaModel) {
         mMediaModels.remove(mediaModel);
         notifyDataSetChanged();
-
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
     public class VideoViewHolder extends BaseViewHolder {
         private ItemVideoBinding mVideoBinding;
 
-        public VideoViewHolder(ItemVideoBinding binding) {
+        VideoViewHolder(ItemVideoBinding binding) {
             super(binding.getRoot());
             mVideoBinding = binding;
         }
@@ -121,7 +121,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
     public class ImageViewHolder extends BaseViewHolder {
         private ItemImageBinding mImageBinding;
 
-        public ImageViewHolder(ItemImageBinding binding) {
+        ImageViewHolder(ItemImageBinding binding) {
             super(binding.getRoot());
             mImageBinding = binding;
         }
@@ -140,7 +140,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
     public class AudioViewHolder extends BaseViewHolder {
         private ItemAudioBinding mImageBinding;
 
-        public AudioViewHolder(ItemAudioBinding binding) {
+        AudioViewHolder(ItemAudioBinding binding) {
             super(binding.getRoot());
             mImageBinding = binding;
         }
@@ -153,16 +153,14 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
         }
     }
 
-    /**
-     * Base create post viewholder
-     */
     public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
-        public BaseViewHolder(View itemView) {
+        BaseViewHolder(View itemView) {
             super(itemView);
         }
 
         public abstract void bindData(MediaModel video);
     }
+
 
 }

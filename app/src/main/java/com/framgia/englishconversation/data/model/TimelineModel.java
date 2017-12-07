@@ -3,8 +3,8 @@ package com.framgia.englishconversation.data.model;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.List;
  */
 
 public class TimelineModel extends BaseObservable {
+
     @SerializedName("id")
     private String mId;
     @SerializedName("content")
@@ -36,9 +37,10 @@ public class TimelineModel extends BaseObservable {
     private List<UserModel> mDishLikeUser;
     @SerializedName("report")
     private List<UserModel> mReportUser;
+    @SerializedName("conversations")
+    private List<ConversationModel> mConversationModelList;
 
     public TimelineModel() {
-
     }
 
     @Bindable
@@ -152,6 +154,16 @@ public class TimelineModel extends BaseObservable {
     }
 
     @Bindable
+    public List<ConversationModel> getConversationModelList() {
+        return mConversationModelList;
+    }
+
+    public void setConversationModelList(List<ConversationModel> conversationModelList) {
+        mConversationModelList = conversationModelList;
+        notifyPropertyChanged(BR.conversationModelList);
+    }
+
+    @Bindable
     public int getPostType() {
         if (mMedias == null || mMedias.size() == 0) {
             return MediaModel.MediaType.ONLY_TEXT;
@@ -159,12 +171,10 @@ public class TimelineModel extends BaseObservable {
         return mMedias.get(0).getType();
     }
 
-
     @Bindable
     public int getViewType() {
         return getMedias() != null ? getMedias().size() : 0;
     }
-
 
     @Override
     public String toString() {
