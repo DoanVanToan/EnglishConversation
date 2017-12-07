@@ -73,7 +73,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
                         parent,
                         false);
                 return new AudioViewHolder(audioBinding);
-       case MediaModel.MediaType.VIDEO:
+            case MediaModel.MediaType.VIDEO:
                 ItemVideoBinding binding = DataBindingUtil.inflate(
                         LayoutInflater.from(parent.getContext()),
                         R.layout.item_video,
@@ -156,7 +156,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
     /**
      * Base create post viewholder
      */
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+    public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
         public BaseViewHolder(View itemView) {
             super(itemView);

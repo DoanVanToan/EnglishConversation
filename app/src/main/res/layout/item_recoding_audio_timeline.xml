@@ -2,34 +2,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="com.framgia.englishconversation.utils.Utils" />
-
-        <variable
-            name="record"
-            type="com.framgia.englishconversation.data.model.MediaModel" />
-
-        <variable
-            name="viewModel"
-            type="com.framgia.englishconversation.screen.createPost.CreatePostViewModel" />
-
-    </data>
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_cancel"
-            android:layout_width="@dimen/dp_30"
-            android:layout_height="@dimen/dp_30"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
             android:layout_marginEnd="@dimen/dp_8"
-            android:onClick="@{() -> viewModel.onDeleteItemMediaClicked(record)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/com_facebook_close"/>
+            app:srcCompat="@drawable/ic_cancel" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
@@ -46,8 +31,6 @@
                 android:layout_width="@dimen/dp_24"
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginStart="@dimen/dp_8"
-                android:onClick="@{() -> viewModel.onPlayingAudioClick()}"
-                android:src="@{viewModel.playing ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +40,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
-                android:text="@{viewModel.timeInProgressAudio}"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -65,14 +47,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
-                android:id="@+id/progress_bar"
+                android:id="@+id/progressBar2"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_4"
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginStart="@dimen/dp_8"
                 android:background="@android:color/white"
-                android:progress="@{viewModel.progressAudio}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/text_duration"
                 app:layout_constraintStart_toEndOf="@id/image_playing_audio"

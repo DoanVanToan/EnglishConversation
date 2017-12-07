@@ -69,7 +69,6 @@ public class CreatePostActivity extends BaseActivity {
             getSupportActionBar().setSubtitle(R.string.subtitle_create_post);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
         mImageViews = new ImageView[]{
                 binding.imageConversation, binding.imageRecordAudio, binding.imageVideo,
                 binding.imagePhoto, binding.imageLocation
