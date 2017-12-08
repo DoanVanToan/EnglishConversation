@@ -164,6 +164,24 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     }
 
     /**
+     * display timeline model with conversation
+     */
+
+    public class ConversationViewHolder extends BaseTimelineViewHolder {
+        private ItemTimelineVideoBinding mBinding;
+
+        public ConversationViewHolder(ItemTimelineVideoBinding itemView) {
+            super(itemView.getRoot());
+            mBinding = itemView;
+        }
+
+        @Override
+        public void bindData(TimelineModel model) {
+            mBinding.setTimelineModel(model);
+            mBinding.executePendingBindings();
+        }
+    }
+    /**
      * Base timeline model
      */
     public abstract class BaseTimelineViewHolder extends RecyclerView.ViewHolder {

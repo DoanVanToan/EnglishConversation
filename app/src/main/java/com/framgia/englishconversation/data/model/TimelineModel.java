@@ -38,7 +38,7 @@ public class TimelineModel extends BaseObservable {
     @SerializedName("report")
     private List<UserModel> mReportUser;
     @SerializedName("conversations")
-    private List<ConversationModel> mConversationModelList;
+    private List<ConversationModel> mConversations;
 
     public TimelineModel() {
     }
@@ -154,13 +154,13 @@ public class TimelineModel extends BaseObservable {
     }
 
     @Bindable
-    public List<ConversationModel> getConversationModelList() {
-        return mConversationModelList;
+    public List<ConversationModel> getConversations() {
+        return mConversations;
     }
 
-    public void setConversationModelList(List<ConversationModel> conversationModelList) {
-        mConversationModelList = conversationModelList;
-        notifyPropertyChanged(BR.conversationModelList);
+    public void setConversations(List<ConversationModel> conversations) {
+        mConversations = conversations;
+        notifyPropertyChanged(BR.conversations);
     }
 
     @Bindable

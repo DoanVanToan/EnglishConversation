@@ -28,7 +28,7 @@ public class ConversationAdapter extends
         BaseRecyclerViewAdapter<ConversationAdapter.BaseConversationViewHolder> {
 
     private static final int INITIAL_ITEM_COUNT = 3;
-    private List<ConversationModel> mConversationModelList;
+    private List<ConversationModel> mData;
     private CreatePostViewModel mCreatePostViewModel;
 
     public ConversationAdapter(@NonNull Context context,
@@ -49,7 +49,7 @@ public class ConversationAdapter extends
                                 parent,
                                 false
                         );
-                return new LeftConversationViewHolder(leftBinding.getRoot());
+                return new LeftConversationViewHolder(leftBinding);
             case GravityType.RIGHT:
                 ItemRightConventionBinding rightBinding =
                         DataBindingUtil.inflate(
@@ -58,7 +58,7 @@ public class ConversationAdapter extends
                                 parent,
                                 false
                         );
-                return new RightConversationViewHolder(rightBinding.getRoot());
+                return new RightConversationViewHolder(rightBinding);
             default:
                 return null;
         }
@@ -66,27 +66,27 @@ public class ConversationAdapter extends
 
     @Override
     public void onBindViewHolder(BaseConversationViewHolder holder, int position) {
-        holder.bindView(mConversationModelList.get(position));
+        holder.bindView(mData.get(position));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mConversationModelList.get(position).getGravity();
+        return mData.get(position).getGravity();
     }
 
     @Override
     public int getItemCount() {
-        return mConversationModelList.size();
+        return mData != null ? mData.size() : 0;
     }
 
     /**
      * Init data with 3 item.
      */
     private void initDefaultData() {
-        mConversationModelList = new ArrayList<>();
+        mData = new ArrayList<>();
         ConversationModel conversationModel = new ConversationModel();
         for (int i = 0; i < INITIAL_ITEM_COUNT; i++) {
-            mConversationModelList.add(conversationModel);
+            mData.add(conversationModel);
         }
     }
 
@@ -94,7 +94,7 @@ public class ConversationAdapter extends
         if (conversationModelsList == null) {
             return;
         }
-        mConversationModelList.addAll(conversationModelsList);
+        mData.addAll(conversationModelsList);
         notifyDataSetChanged();
     }
 
@@ -105,15 +105,15 @@ public class ConversationAdapter extends
 
         private ItemLeftConversationBinding mLeftBinding;
 
-        LeftConversationViewHolder(View itemView) {
-            super(itemView);
-            mLeftBinding = DataBindingUtil.bind(itemView);
+        LeftConversationViewHolder(ItemLeftConversationBinding binding) {
+            super(binding.getRoot());
+            mLeftBinding = binding;
         }
 
         @Override
         public void bindView(ConversationModel conversationModel) {
             mLeftBinding.setViewModel(mCreatePostViewModel);
-            mLeftBinding.setConversation(conversationModel);
+            mLeftBinding.setConversations(conversationModel);
             mLeftBinding.executePendingBindings();
         }
     }
@@ -125,15 +125,15 @@ public class ConversationAdapter extends
 
         private ItemRightConventionBinding mRightBinding;
 
-        RightConversationViewHolder(View itemView) {
-            super(itemView);
-            mRightBinding = DataBindingUtil.bind(itemView);
+        RightConversationViewHolder(ItemRightConventionBinding binding) {
+            super(binding.getRoot());
+            mRightBinding = binding;
         }
 
         @Override
         public void bindView(ConversationModel conversationModel) {
             mRightBinding.setViewModel(mCreatePostViewModel);
-            mRightBinding.setConversation(conversationModel);
+            mRightBinding.setConversations(conversationModel);
             mRightBinding.executePendingBindings();
         }
     }

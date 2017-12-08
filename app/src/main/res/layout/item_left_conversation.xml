@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="conversation"
+            name="conversations"
             type="com.framgia.englishconversation.data.model.ConversationModel" />
 
         <variable
@@ -17,9 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_56"
+        android:paddingRight="@dimen/dp_56"
         android:layout_marginStart="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_8"
-        android:minHeight="@dimen/dp_72">
+        android:layout_marginTop="@dimen/dp_8">
 
         <ImageView
             android:id="@+id/image_recording_audio"
@@ -29,32 +33,39 @@
             android:contentDescription="@string/description_recording_audio_convention"
             android:src="@drawable/ic_audio_convention"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/edit_conversation"
-            android:layout_width="@dimen/dp_200"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:background="@drawable/bg_recording_audio_layout"
-            android:padding="@dimen/dp_8"
+            android:padding="@dimen/dp_4"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView4"
             app:layout_constraintStart_toEndOf="@id/image_recording_audio"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="@dimen/dp_32"
-            android:layout_marginStart="@dimen/dp_8"
+            android:id="@+id/imageView4"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_8"
             android:background="@drawable/bg_button_conversation"
             android:contentDescription="@string/description_delete_conversation"
             android:padding="@dimen/dp_8"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_conversation"
+            app:layout_constraintEnd_toStartOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.48"
             app:srcCompat="@drawable/ic_cancel" />
 
         <ImageView
+            android:padding="@dimen/dp_2"
+            android:id="@+id/imageView5"
             android:layout_width="@dimen/dp_24"
             android:layout_height="@dimen/dp_24"
             android:contentDescription="@string/description_transform_content_conversation"
