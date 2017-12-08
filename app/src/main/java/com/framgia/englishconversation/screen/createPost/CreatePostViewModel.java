@@ -421,7 +421,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
-    public void onConventionClicked(){
+    public void onConventionClicked() {
         mActivity.fillColorSelectedButton(CreatePostActivity.CONVERSATION_POSITION);
 
     }
@@ -484,6 +484,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     private void releaseMedia() {
+        if (mMediaPlayer == null) {
+            return;
+        }
         mMediaPlayer.release();
         mMediaPlayer = null;
     }
