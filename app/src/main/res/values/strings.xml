@@ -69,4 +69,5 @@
     <string name="description_recording_audio_convention">Recording audio convention</string>
     <string name="description_delete_conversation">Deleting a conversations</string>
     <string name="description_transform_content_conversation">Transform content conversations</string>
+    <string name="action_view_all">See more ...</string>
 </resources>
