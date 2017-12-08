@@ -9,6 +9,7 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemAudioBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
+import com.framgia.englishconversation.databinding.ItemTimelineConversationBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
@@ -76,6 +77,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
                                 false);
                 return new ImageViewHolder(imageBinding);
             case MediaModel.MediaType.CONVERSATION:
+                ItemTimelineConversationBinding  conversationBinding =
+                        ItemTimelineConversationBinding.inflate(
+                                LayoutInflater.from(parent.getContext()),
+                                parent,
+                                false);
+                return new ConversationViewHolder(conversationBinding);
             default:
                 return null;
         }
@@ -168,9 +175,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
      */
 
     public class ConversationViewHolder extends BaseTimelineViewHolder {
-        private ItemTimelineVideoBinding mBinding;
+        private ItemTimelineConversationBinding mBinding;
 
-        public ConversationViewHolder(ItemTimelineVideoBinding itemView) {
+        public ConversationViewHolder(ItemTimelineConversationBinding itemView) {
             super(itemView.getRoot());
             mBinding = itemView;
         }
