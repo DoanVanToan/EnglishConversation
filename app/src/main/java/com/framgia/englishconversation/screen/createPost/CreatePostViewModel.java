@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Toast;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
@@ -417,6 +419,11 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
             mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
         }
+    }
+
+    public void onConventionClicked(){
+        mActivity.fillColorSelectedButton(CreatePostActivity.CONVERSATION_POSITION);
+
     }
 
     public void onStartRecordClicked() {
