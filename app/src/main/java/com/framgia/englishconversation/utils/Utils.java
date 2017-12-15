@@ -84,5 +84,9 @@ public class Utils {
         long m = (duration / Constant.SECOND_PER_MINUTE) % Constant.SECOND_PER_MINUTE;
         return String.format(Locale.getDefault(), "%02d:%02d", m, s);
     }
+    
+    public static long generateOppositeNumber(long number){
+        return -number;
+    }
 
 }
