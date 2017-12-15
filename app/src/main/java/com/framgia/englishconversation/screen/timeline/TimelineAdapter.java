@@ -4,16 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
-import com.framgia.englishconversation.databinding.ItemAudioBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineConversationBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
-
 import java.util.List;
 
 /**
@@ -35,8 +32,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     }
 
     public void updateData(TimelineModel timeline) {
-        mData.add(timeline);
-        notifyItemInserted(getItemCount() - 1);
+        mData.add(0, timeline);
+        notifyItemInserted(0);
     }
 
     @Override

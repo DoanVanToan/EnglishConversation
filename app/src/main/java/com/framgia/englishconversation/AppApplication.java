@@ -1,8 +1,10 @@
 package com.framgia.englishconversation;
 
 import android.app.Application;
+import com.crashlytics.android.Crashlytics;
 import com.framgia.englishconversation.data.source.local.realm.DataLocalMigration;
 import com.framgia.englishconversation.data.source.remote.api.service.AppServiceClient;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -22,6 +24,7 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         AppServiceClient.initialize(this);
         initAndMigrateRealmIfNeeded();
         sApplication = this;
