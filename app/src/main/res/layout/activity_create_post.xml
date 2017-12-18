@@ -8,6 +8,9 @@
 
         <import type="android.view.View" />
 
+        <import type="com.framgia.englishconversation.screen.createPost.AdapterType" />
+
+
         <variable
             name="viewModel"
             type="com.framgia.englishconversation.screen.createPost.CreatePostViewModel" />
@@ -37,32 +40,38 @@
                     android:id="@+id/image_avatar"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40"
-                    android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:imageError="@{@drawable/ic_person_black_24dp}"
-                    bind:imageUrl="@{viewModel.userUrl}" />
+                    bind:imageUrl="@{viewModel.user.photoUrl}" />
 
                 <TextView
                     android:id="@+id/text_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_8"
                     android:layout_marginStart="@dimen/dp_8"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="@{viewModel.userName}"
+                    android:text="@{viewModel.user.userName}"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/sp_16"
                     android:textStyle="bold"
                     app:layout_constraintLeft_toRightOf="@id/image_avatar"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.user.email}"
+                    app:layout_constraintStart_toStartOf="@id/text_username"
+                    app:layout_constraintTop_toBottomOf="@id/text_username" />
+
                 <ImageView
                     android:id="@+id/image_location"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:contentDescription="@string/description_location"
                     android:onClick="@{() -> viewModel.onPlacePickerClick()}"
                     android:padding="@dimen/dp_5"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -72,9 +81,10 @@
 
                 <ImageView
                     android:id="@+id/image_photo"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:contentDescription="@string/description_pick_images"
                     android:onClick="@{() -> viewModel.onImagePickerClick()}"
                     android:padding="@dimen/dp_5"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -84,10 +94,11 @@
 
                 <ImageView
                     android:id="@+id/image_video"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:onClick="@{() -> viewModel.onVideoPickerClicked()}"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:contentDescription="@string/description_record_video"
+                    android:onClick="@{() -> viewModel.onVideoPickerClick()}"
                     android:padding="@dimen/dp_5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/image_photo"
@@ -96,10 +107,11 @@
 
                 <ImageView
                     android:id="@+id/image_record_audio"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:onClick="@{() -> viewModel.onStartRecordClicked()}"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:contentDescription="@string/description_record_audio"
+                    android:onClick="@{() -> viewModel.onRecordAudioClick()}"
                     android:padding="@dimen/dp_5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/image_video"
@@ -108,10 +120,11 @@
 
                 <ImageView
                     android:id="@+id/image_conversation"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:onClick="@{() -> viewModel.onStartRecordClicked()}"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:contentDescription="@string/description_conversation"
+                    android:onClick="@{() -> viewModel.onCreateConventionClick()}"
                     android:padding="@dimen/dp_5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/image_record_audio"
@@ -184,10 +197,10 @@
                     android:layout_marginTop="@dimen/dp_16"
                     android:orientation="vertical"
                     app:layoutManager="LinearLayoutManager"
-                    bind:adapter="@{viewModel.adapter}"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_view_description" />
+                    app:layout_constraintTop_toBottomOf="@id/card_view_description"
+                    bind:adapter="@{viewModel.adapterType == AdapterType.CONVERSATION ? viewModel.conversationAdapter : viewModel.mediaAdapter}" />
 
             </android.support.constraint.ConstraintLayout>
 
