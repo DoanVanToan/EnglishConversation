@@ -89,6 +89,9 @@ public class FirebaseUploadService extends BaseStorageService {
     }
 
     private void uploadFromMediaModel(final MediaModel mediaModel, String folder) {
+        if (mediaModel == null){
+            return;
+        }
         final Uri fileUri = Uri.fromFile(new File(mediaModel.getUrl()));
 
         taskStarted();

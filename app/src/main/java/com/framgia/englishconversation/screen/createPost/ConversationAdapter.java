@@ -27,12 +27,14 @@ import java.util.List;
 public class ConversationAdapter extends
         BaseRecyclerViewAdapter<ConversationAdapter.BaseConversationViewHolder> {
 
+    private static final int GRAVITY_AMOUNT = 2;
     private static final int INITIAL_ITEM_COUNT = 3;
+
     private List<ConversationModel> mData;
     private CreatePostViewModel mCreatePostViewModel;
 
-    public ConversationAdapter(@NonNull Context context,
-                               CreatePostViewModel createPostViewModel) {
+    ConversationAdapter(@NonNull Context context,
+                        CreatePostViewModel createPostViewModel) {
         super(context);
         mCreatePostViewModel = createPostViewModel;
         initDefaultData();
@@ -84,18 +86,40 @@ public class ConversationAdapter extends
      */
     private void initDefaultData() {
         mData = new ArrayList<>();
-        ConversationModel conversationModel = new ConversationModel();
         for (int i = 0; i < INITIAL_ITEM_COUNT; i++) {
-            mData.add(conversationModel);
+            int gravity = (i % GRAVITY_AMOUNT == 0) ? GravityType.LEFT : GravityType.RIGHT;
+            mData.add(new ConversationModel(gravity));
         }
     }
 
-    private void updateData(List<ConversationModel> conversationModelsList) {
-        if (conversationModelsList == null) {
+    public List<ConversationModel> getData() {
+        return mData;
+    }
+
+    void addData(ConversationModel conversationModel) {
+        if (conversationModel == null) {
             return;
         }
-        mData.addAll(conversationModelsList);
-        notifyDataSetChanged();
+        mData.add(conversationModel);
+        notifyItemInserted(mData.size());
+    }
+
+    void changeGravity(ConversationModel conversationModel, int position) {
+        if (position < INITIAL_ITEM_COUNT) {
+            return;
+        }
+        int gravity = conversationModel.getGravity() == GravityType.LEFT
+                ? GravityType.RIGHT : GravityType.LEFT;
+        conversationModel.setGravity(gravity);
+        notifyItemChanged(position);
+    }
+
+    void deleteConversation(int position) {
+        if (position < INITIAL_ITEM_COUNT) {
+            return;
+        }
+        mData.remove(position);
+        notifyItemRemoved(position);
     }
 
     /**
@@ -114,6 +138,7 @@ public class ConversationAdapter extends
         public void bindView(ConversationModel conversationModel) {
             mLeftBinding.setViewModel(mCreatePostViewModel);
             mLeftBinding.setConversations(conversationModel);
+            mLeftBinding.setPosition(getAdapterPosition());
             mLeftBinding.executePendingBindings();
         }
     }
@@ -133,6 +158,7 @@ public class ConversationAdapter extends
         @Override
         public void bindView(ConversationModel conversationModel) {
             mRightBinding.setViewModel(mCreatePostViewModel);
+            mRightBinding.setPosition(getAdapterPosition());
             mRightBinding.setConversations(conversationModel);
             mRightBinding.executePendingBindings();
         }

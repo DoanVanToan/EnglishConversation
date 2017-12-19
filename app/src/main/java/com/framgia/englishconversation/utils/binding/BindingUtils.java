@@ -9,14 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
-
 import android.widget.VideoView;
+
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
 
@@ -33,66 +33,66 @@ public final class BindingUtils {
     }
 
     /**
-     * setAdapter For RecyclerView
+     * setMediaAdapter For RecyclerView
      */
-    @BindingAdapter({ "recyclerAdapter" })
+    @BindingAdapter({"recyclerAdapter"})
     public static void setAdapterForRecyclerView(RecyclerView recyclerView,
-        RecyclerView.Adapter adapter) {
+                                                 RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
     }
 
     /**
      * setNested scrollenable For RecyclerView
      */
-    @BindingAdapter({ "scrollEnabled" })
+    @BindingAdapter({"scrollEnabled"})
     public static void setRecyclerViewSrollEnable(RecyclerView recyclerView, boolean isEnabled) {
         recyclerView.setNestedScrollingEnabled(isEnabled);
     }
 
-    @BindingAdapter({ "bind:adapter" })
+    @BindingAdapter({"bind:adapter"})
     public static void setViewPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
         viewPager.setAdapter(adapter);
     }
 
-    @BindingAdapter({ "bind:onTabSelected" })
+    @BindingAdapter({"bind:onTabSelected"})
     public static void setOnTabSelectedListener(TabLayout tabLayout,
-        TabLayout.OnTabSelectedListener listener) {
+                                                TabLayout.OnTabSelectedListener listener) {
         tabLayout.addOnTabSelectedListener(listener);
     }
 
-    @BindingAdapter({ "bind:imageUrl", "bind:imageError" })
+    @BindingAdapter({"bind:imageUrl", "bind:imageError"})
     public static void loadImage(ImageView imageView, String url, Drawable error) {
         Glide.with(imageView.getContext())
-            .load(url)
-            .asBitmap()
-            .error(error)
-            .placeholder(error)
-            .centerCrop()
-            .into(imageView);
+                .load(url)
+                .asBitmap()
+                .error(error)
+                .placeholder(error)
+                .centerCrop()
+                .into(imageView);
     }
 
     @BindingAdapter("bind:imageUrl")
     public static void loadImage(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
-            .load(url)
-            .asBitmap()
-            .placeholder(R.mipmap.ic_launcher)
-            .centerCrop()
-            .into(imageView);
+                .load(url)
+                .asBitmap()
+                .placeholder(R.mipmap.ic_launcher)
+                .centerCrop()
+                .into(imageView);
     }
 
     @BindingAdapter("bind:imageUri")
     public static void loadImage(final ImageView imageView, Uri uri) {
         if (uri == null) return;
         Glide.with(imageView.getContext())
-            .load(uri.toString())
-            .asBitmap()
-            .placeholder(R.mipmap.ic_launcher)
-            .into(imageView);
+                .load(uri.toString())
+                .asBitmap()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(imageView);
     }
 
-    @BindingAdapter({ "bind:videoPath" })
-    public static void loadVideoUri(VideoView videoView, String  path) {
+    @BindingAdapter({"bind:videoPath"})
+    public static void loadVideoUri(VideoView videoView, String path) {
         videoView.setVideoPath(path);
         MediaController mediaController = new MediaController(videoView.getContext());
         mediaController.setAnchorView(videoView);
@@ -100,15 +100,15 @@ public final class BindingUtils {
         videoView.start();
     }
 
-    @BindingAdapter({ "spinnerAdapter" })
+    @BindingAdapter({"spinnerAdapter"})
     public static void setAdapterForSpinner(AppCompatSpinner spinner,
-        ArrayAdapter<String> adapter) {
+                                            ArrayAdapter<String> adapter) {
         spinner.setAdapter(adapter);
     }
 
     @BindingAdapter("layoutManager")
     public static void setLayoutManager(RecyclerView recyclerView,
-        LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
+                                        LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
     }
 
@@ -120,7 +120,13 @@ public final class BindingUtils {
     @BindingAdapter("bind:milisecond")
     public static void setDate(TextView view, long milisecond) {
         String niceDateStr = String.valueOf(DateUtils.getRelativeTimeSpanString(milisecond,
-            Calendar.getInstance().getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS));
+                Calendar.getInstance().getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS));
         view.setText(niceDateStr);
     }
+
+    @BindingAdapter("bind:onTouchListen")
+    public static void setOnTouchListener(EditText editText, View.OnTouchListener listener) {
+        editText.setOnTouchListener(listener);
+    }
+
 }

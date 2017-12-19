@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
@@ -11,6 +12,7 @@ import com.framgia.englishconversation.databinding.ItemTimelineConversationBindi
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     public TimelineAdapter(List<TimelineModel> items) {
         mData = items;
     }
-
 
     public void updateData(List<TimelineModel> timelines) {
         if (timelines == null) return;
@@ -73,15 +74,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
                                 parent,
                                 false);
                 return new ImageViewHolder(imageBinding);
-            case MediaModel.MediaType.CONVERSATION:
-                ItemTimelineConversationBinding  conversationBinding =
+            default:
+                ItemTimelineConversationBinding conversationBinding =
                         ItemTimelineConversationBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
                                 parent,
                                 false);
                 return new ConversationViewHolder(conversationBinding);
-            default:
-                return null;
         }
     }
 
@@ -185,6 +184,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
             mBinding.executePendingBindings();
         }
     }
+
     /**
      * Base timeline model
      */
