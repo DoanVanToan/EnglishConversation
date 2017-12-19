@@ -31,6 +31,9 @@ ext {
 
                   omRecorder        : 'com.kailashdabhi:om-recorder:1.1.0',
                   audiovisualization: 'com.cleveroad:audiovisualization:1.0.0',
+      
+                  exoPlayerCore     : 'com.google.android.exoplayer:exoplayer-core:2.6.0',
+                  exoPlayerUi       : 'com.google.android.exoplayer:exoplayer-ui:2.6.0',
 
                   dagger2           : 'com.google.dagger:dagger:2.8',
                   dagger2Compile    : 'com.google.dagger:dagger-compiler:2.8',
