@@ -30,108 +30,132 @@
                 layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}" />
 
-            <android.support.constraint.ConstraintLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_8"
-                android:paddingTop="@dimen/dp_8"
-                android:paddingBottom="@dimen/dp_8"
-                android:paddingEnd="@dimen/dp_56"
-                android:paddingRight="@dimen/dp_56"
-                android:layout_marginStart="@dimen/dp_8"
-                android:layout_marginTop="@dimen/dp_8">
-
-                <ImageView
-                    android:id="@+id/image_first_audio"
-                    android:layout_width="@dimen/dp_32"
-                    android:layout_height="@dimen/dp_32"
-                    android:background="@drawable/bg_button_conversation"
-                    android:contentDescription="@string/description_recording_audio_convention"
-                    android:src="@drawable/ic_audio_convention"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/text_first_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@{timelineModel.conversations[0].content}"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:background="@drawable/bg_recording_audio_layout"
-                    android:padding="@dimen/dp_4"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/image_first_audio"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp_56"
-                android:paddingStart="@dimen/dp_56"
-                android:layout_marginStart="@dimen/dp_8"
-                android:layout_marginTop="@dimen/dp_8">
-
-                <TextView
-                    android:id="@+id/text_second_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_8"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginStart="8dp"
-                    android:text="@{timelineModel.conversations[1].content}"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="@drawable/bg_recording_audio_layout"
-                    android:padding="@dimen/dp_4"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/image_second_audio"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/image_second_audio"
-                    android:layout_width="@dimen/dp_32"
-                    android:layout_height="@dimen/dp_32"
-                    android:layout_marginBottom="@dimen/dp_8"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="@drawable/bg_button_conversation"
-                    android:contentDescription="@string/description_recording_audio_convention"
-                    android:src="@drawable/ic_audio_convention"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="@dimen/dp_2"
                 android:layout_marginBottom="@dimen/dp_8"
-                android:text="@string/action_view_all"
-                android:textColor="@android:color/holo_green_dark"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:background="@color/color_brown_50" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/dp_8"
-                android:background="@drawable/bg_recording_audio_layout"
-                android:padding="@dimen/dp_4"
-                bind:ignore="HardcodedText" />
+                android:layout_marginStart="@dimen/dp_8"
+                android:background="@drawable/bg_timeline_conversation"
+                android:padding="@dimen/dp_4">
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/constraint_first_conversation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_56"
+                    android:layout_marginStart="@dimen/dp_4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/image_first_audio"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:background="@drawable/ic_audio_conversation"
+                        android:contentDescription="@string/description_recording_audio_convention"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <TextView
+                        android:id="@+id/text_first_content"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:layout_marginStart="@dimen/dp_4"
+                        android:background="@drawable/bg_recording_audio_layout"
+                        android:padding="@dimen/dp_4"
+                        android:text="@{timelineModel.conversations[0].content}"
+                        android:textColor="@android:color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/image_first_audio"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_4"
+                    android:layout_marginStart="@dimen/dp_56"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/constraint_first_conversation">
+
+                    <TextView
+                        android:id="@+id/text_second_content"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_4"
+                        android:background="@drawable/bg_recording_audio_layout"
+                        android:gravity="end"
+                        android:padding="@dimen/dp_4"
+                        android:text="@{timelineModel.conversations[1].content}"
+                        android:textColor="@android:color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/image_second_audio"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/image_second_audio"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:background="@drawable/ic_audio_conversation"
+                        android:contentDescription="@string/description_recording_audio_convention"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_2"
                 android:layout_marginLeft="@dimen/dp_8"
                 android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
                 android:background="@color/color_brown_50" />
 
-            <include
-                layout="@layout/item_footer_timeline"
-                bind:timelineModel="@{timelineModel}" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_0"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:background="@drawable/bg_recording_audio_layout"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_4"
+                    android:text="@string/action_view_all"
+                    android:textColor="@android:color/holo_green_dark"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:ignore="HardcodedText" />
+
+                <include
+                    layout="@layout/item_footer_timeline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    bind:timelineModel="@{timelineModel}" />
+
+            </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

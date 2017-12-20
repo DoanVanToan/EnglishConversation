@@ -25,7 +25,6 @@ import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.GravityType;
 import com.framgia.englishconversation.data.model.LocationModel;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.PostType;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.Util;
@@ -69,7 +68,6 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
 
 public class CreatePostViewModel extends BaseObservable implements CreatePostContract.ViewModel {
 
-    private static final int INDEX_BEBIN_CONVERSATION = 0;
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int SELECT_IMAGE_REQUEST = 2;
     private static final int REQUEST_RECORD_AUDIO = 3;
@@ -78,9 +76,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int PERIOD_TIME = 1;
     private final static String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int SIZE_CONVERSATION_DEFAULT = 0;
 
-    @PostType
-    private int mCreateType;
     @AdapterType
     private int mAdapterType;
     private String mAddress;
@@ -103,11 +100,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private MediaAdapter mMediaAdapter;
     private ConversationAdapter mConversationAdapter;
 
-    CreatePostViewModel(CreatePostActivity activity, Navigator navigator,
-                        @PostType int createType) {
+    CreatePostViewModel(CreatePostActivity activity, Navigator navigator) {
         mActivity = activity;
         mNavigator = navigator;
-        mCreateType = createType;
         mAdapterType = AdapterType.CONVERSATION;
         mTimelineModel = new TimelineModel();
         mProgressDialog = new ProgressDialog(mActivity);
@@ -115,7 +110,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mCompositeDisposable = new CompositeDisposable();
         mMediaAdapter = new MediaAdapter(this);
         mConversationAdapter = new ConversationAdapter(mActivity, this);
-        getData();
     }
 
     @Override
@@ -142,7 +136,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                         String message = mActivity.getString(R.string.prefix_uploading) + percent;
                         mProgressDialog.setMessage(message);
                         mProgressDialog.show();
-                        handleProgress(mediaModel);
+                        updateUploadProgress(mediaModel);
                         break;
                     case FirebaseUploadService.UPLOAD_COMPLETE:
                         if (intent.getExtras() == null) {
@@ -157,7 +151,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                             return;
                         }
                         mediaModel.setUrl(downloadUri.toString());
-                        handleFinnish(mediaModel);
+                        handleFinish(mediaModel);
                         break;
                     case FirebaseUploadService.UPLOAD_FINNISH_ALL:
                         mIsUploading = false;
@@ -224,11 +218,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
     }
 
-    @Bindable
-    public String getAddress() {
-        return mAddress;
-    }
-
     private void setAddress(String address) {
         mAddress = address;
         notifyPropertyChanged(BR.address);
@@ -247,19 +236,37 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onCreatePost() {
-        List<MediaModel> mediaTimeLineList = new ArrayList<>();
-        if (mAdapterType == AdapterType.CONVERSATION) {
-            handleUploadConversation(mediaTimeLineList);
-        } else {
-            mediaTimeLineList.addAll(mTimelineModel.getMedias());
-        }
         updateTimelineModel();
-        if (mTimelineModel.getMedias() != null && mTimelineModel.getMedias().size() != 0
-                || mTimelineModel.getConversations() != null) {
-            uploadFiles(mediaTimeLineList);
-        } else {
-            mPresenter.createPost(mTimelineModel);
+        if (mAdapterType == AdapterType.CONVERSATION) {
+            mTimelineModel.setConversations(mConversationAdapter.getValidatedData());
         }
+        switch (mTimelineModel.getPostType()) {
+            case MediaModel.MediaType.CONVERSATION:
+                List<MediaModel> conversationMedias =
+                        getConversationMedias(mTimelineModel.getConversations());
+                if (conversationMedias == null || conversationMedias.isEmpty()) {
+                    mPresenter.createPost(mTimelineModel);
+                } else {
+                    uploadFiles(conversationMedias);
+                }
+                break;
+            case MediaModel.MediaType.ONLY_TEXT:
+                mPresenter.createPost(mTimelineModel);
+                break;
+            default:
+                uploadFiles(mTimelineModel.getMedias());
+                break;
+        }
+    }
+
+    private List<MediaModel> getConversationMedias(List<ConversationModel> conversations) {
+        List<MediaModel> result = new ArrayList<>();
+        for (ConversationModel conversationModel : conversations) {
+            if (conversationModel != null && conversationModel.getMediaModel() != null) {
+                result.add(conversationModel.getMediaModel());
+            }
+        }
+        return result;
     }
 
     @Override
@@ -304,22 +311,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     @Override
     public void setPresenter(CreatePostContract.Presenter presenter) {
         mPresenter = presenter;
-    }
-
-    private void handleUploadConversation(List<MediaModel> mediaModelList) {
-        int size = mConversationAdapter.getData().size();
-        ConversationModel lastConversation = mConversationAdapter.getData().get(size - 1);
-        List<ConversationModel> conversationModelList =
-                (lastConversation.getContent() != null || lastConversation.getMediaModel() != null)
-                        ? mConversationAdapter.getData()
-                        : mConversationAdapter.getData().subList(INDEX_BEBIN_CONVERSATION, size - 1);
-        for (int i = 0; i < conversationModelList.size(); i++) {
-            if (conversationModelList.get(i).getMediaModel() != null ||
-                    conversationModelList.get(i).getContent() != null) {
-                mediaModelList.add(conversationModelList.get(i).getMediaModel());
-            }
-        }
-        mTimelineModel.setConversations(conversationModelList);
     }
 
     private boolean isEnablePermission(String[] permissions, int[] grantResults) {
@@ -374,7 +365,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mTimelineModel.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
     }
 
-    private boolean progressMediaUpload(MediaModel mediaTimeLine, MediaModel model) {
+    private boolean updatePercentUpload(MediaModel mediaTimeLine, MediaModel model) {
         if (mediaTimeLine != null && mediaTimeLine.getId().equals(model.getId())) {
             mediaTimeLine.setUploadPercent(model.getUploadPercent());
             return true;
@@ -382,37 +373,53 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         return false;
     }
 
-    private void handleProgress(MediaModel model) {
-        if (mAdapterType != AdapterType.CONVERSATION) {
-            for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
-                if (progressMediaUpload(mediaTimeLine, model)) return;
-            }
-        } else {
-            for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
-                MediaModel mediaTimeLine = conversationModel.getMediaModel();
-                if (progressMediaUpload(mediaTimeLine, model)) return;
-            }
+    private void updateUploadProgress(MediaModel model) {
+        switch (mAdapterType) {
+            case AdapterType.CONVERSATION:
+                for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+                    MediaModel mediaTimeLine = conversationModel.getMediaModel();
+                    if (updatePercentUpload(mediaTimeLine, model)) {
+                        return;
+                    }
+                }
+                break;
+            case AdapterType.MEDIA:
+                for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
+                    if (updatePercentUpload(mediaTimeLine, model)) {
+                        return;
+                    }
+                }
+            default:
+                break;
         }
     }
 
-    private boolean finishMediaUpload(MediaModel mediaTimeLine, MediaModel model) {
-        if (mediaTimeLine.getId().equals(model.getId())) {
+    private boolean updateMediaAfterUploadSuccessful(MediaModel mediaTimeLine, MediaModel model) {
+        if (mediaTimeLine != null && mediaTimeLine.getId().equals(model.getId())) {
             mediaTimeLine.setUrl(model.getUrl());
             return true;
         }
         return false;
     }
 
-    private void handleFinnish(MediaModel model) {
-        if (mAdapterType != AdapterType.CONVERSATION) {
-            for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
-                if (finishMediaUpload(mediaTimeLine, model)) return;
-            }
-        } else {
-            for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
-                MediaModel mediaTimeLine = conversationModel.getMediaModel();
-                if (progressMediaUpload(mediaTimeLine, model)) return;
-            }
+    private void handleFinish(MediaModel model) {
+        switch (mAdapterType) {
+            case AdapterType.CONVERSATION:
+                for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+                    MediaModel mediaTimeLine = conversationModel.getMediaModel();
+                    if (updateMediaAfterUploadSuccessful(mediaTimeLine, model)) {
+                        return;
+                    }
+                }
+                break;
+            case AdapterType.MEDIA:
+                for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
+                    if (updateMediaAfterUploadSuccessful(mediaTimeLine, model)) {
+                        return;
+                    }
+                }
+            default:
+                break;
         }
     }
 
@@ -436,27 +443,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onDeleteItemMediaClicked(MediaModel mediaModel) {
         mTimelineModel.getMedias().remove(mediaModel);
         mMediaAdapter.removeItem(mediaModel);
-    }
-
-    private void getData() {
-        switch (mCreateType) {
-            case PostType.LOCATION:
-                openPlacePicker();
-                break;
-            case PostType.IMAGE:
-                selectImage();
-                break;
-            case PostType.VIDEO:
-                break;
-            case PostType.RECORD:
-                //TODO: action of recording audio
-                break;
-            case PostType.TEXT_CONTENT:
-                //TODO: action of conversation
-                break;
-            default:
-                break;
-        }
     }
 
     private void initMedia(String filePath) {
@@ -647,7 +633,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         return mIsPlaying;
     }
 
-    private void setPlaying(boolean playing) {
+    public void setPlaying(boolean playing) {
         mIsPlaying = playing;
         notifyPropertyChanged(BR.playing);
     }
@@ -657,7 +643,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         return mProgressAudio;
     }
 
-    private void setProgressAudio(int progressAudio) {
+    public void setProgressAudio(int progressAudio) {
         mProgressAudio = progressAudio;
         notifyPropertyChanged(BR.progressAudio);
     }
@@ -667,7 +653,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         return mTimeInProgressAudio;
     }
 
-    private void setTimeInProgressAudio(String timeInProgressAudio) {
+    public void setTimeInProgressAudio(String timeInProgressAudio) {
         mTimeInProgressAudio = timeInProgressAudio;
         notifyPropertyChanged(BR.timeInProgressAudio);
     }

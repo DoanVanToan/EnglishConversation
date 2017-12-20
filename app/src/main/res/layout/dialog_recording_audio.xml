@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_32"
-            android:text="@string/title_begin_recording_time"
+            android:text="@{viewModel.recordTime}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_25"
             android:textStyle="bold"

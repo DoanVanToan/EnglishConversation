@@ -46,7 +46,7 @@
                 android:layout_width="@dimen/dp_24"
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginStart="@dimen/dp_8"
-                android:onClick="@{() -> viewModel.onPlayingAudioClick()}"
+                android:onClick="@{() -> viewModel.onPlayAudioClick()}"
                 android:src="@{viewModel.playing ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

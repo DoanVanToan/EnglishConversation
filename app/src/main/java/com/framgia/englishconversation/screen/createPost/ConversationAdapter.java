@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +97,17 @@ public class ConversationAdapter extends
         return mData;
     }
 
-    void addData(ConversationModel conversationModel) {
+    public List<ConversationModel> getValidatedData() {
+        List<ConversationModel> result = new ArrayList<>();
+        for (ConversationModel model : mData) {
+            if (model.getMediaModel() != null || !TextUtils.isEmpty(model.getContent())) {
+                result.add(model);
+            }
+        }
+        return result;
+    }
+
+    public void addData(ConversationModel conversationModel) {
         if (conversationModel == null) {
             return;
         }
@@ -104,10 +115,7 @@ public class ConversationAdapter extends
         notifyItemInserted(mData.size());
     }
 
-    void changeGravity(ConversationModel conversationModel, int position) {
-        if (position < INITIAL_ITEM_COUNT) {
-            return;
-        }
+    public void changeGravity(ConversationModel conversationModel, int position) {
         int gravity = conversationModel.getGravity() == GravityType.LEFT
                 ? GravityType.RIGHT : GravityType.LEFT;
         conversationModel.setGravity(gravity);
@@ -115,9 +123,6 @@ public class ConversationAdapter extends
     }
 
     void deleteConversation(int position) {
-        if (position < INITIAL_ITEM_COUNT) {
-            return;
-        }
         mData.remove(position);
         notifyItemRemoved(position);
     }

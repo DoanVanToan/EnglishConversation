@@ -4,12 +4,13 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
+
 import com.framgia.englishconversation.BR;
-import com.framgia.englishconversation.data.model.PostType;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 
 /**
@@ -53,8 +54,8 @@ public class TimelineViewModel extends BaseObservable implements TimelineContrac
     }
 
     @Override
-    public void onCreateNewPostClick(@PostType int createType) {
-        mNavigator.startActivity(CreatePostActivity.getInstance(mContext, createType));
+    public void onCreateNewPostClick() {
+        mNavigator.startActivity(CreatePostActivity.getInstance(mContext));
     }
 
     @Override

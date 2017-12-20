@@ -2,7 +2,6 @@ package com.framgia.englishconversation.screen.timeline;
 
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
-import com.framgia.englishconversation.data.model.PostType;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 
@@ -16,7 +15,7 @@ interface TimelineContract {
     interface ViewModel extends BaseViewModel<Presenter> {
         void onGetUserSuccess(UserModel data);
 
-        void onCreateNewPostClick(@PostType int createType);
+        void onCreateNewPostClick();
 
         void onChildAdded(TimelineModel timeline);
     }

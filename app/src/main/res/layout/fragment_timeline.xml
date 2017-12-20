@@ -34,7 +34,7 @@
                 bind:scrollEnabled="@{false}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                bind:recyclerAdapter="@{viewModel.adapter}"
+                bind:adapter="@{viewModel.adapter}"
                 bind:layoutManager="LinearLayoutManager"
                 />
         </LinearLayout>
