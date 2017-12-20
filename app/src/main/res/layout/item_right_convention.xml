@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="conversations"
             type="com.framgia.englishconversation.data.model.ConversationModel" />
+
+        <variable
+            name="position"
+            type="int" />
 
         <variable
             name="viewModel"
@@ -17,10 +23,9 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_56"
-        android:paddingStart="@dimen/dp_56"
-        android:layout_marginStart="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_8">
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_56">
 
         <ImageView
             android:id="@+id/image_delete_conversation"
@@ -29,9 +34,8 @@
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
-            android:background="@drawable/bg_button_conversation"
             android:contentDescription="@string/description_delete_conversation"
-            android:padding="@dimen/dp_8"
+            android:onClick="@{() -> viewModel.onDeleteConversationClick(position)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView6"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,36 +46,42 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_8"
-            android:padding="@dimen/dp_4"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
             android:background="@drawable/bg_recording_audio_layout"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dp_48"
+            android:padding="@dimen/dp_4"
+            android:text="@={conversations.content}"
+            android:textSize="@dimen/sp_14"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_recording_audio"
             app:layout_constraintStart_toEndOf="@+id/image_delete_conversation"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:onTouchListen="@{viewModel.getTouchListener(position)}" />
 
         <ImageView
             android:id="@+id/image_recording_audio"
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="@dimen/dp_32"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
-            android:background="@drawable/bg_button_conversation"
+            android:background="@drawable/ic_audio_conversation"
             android:contentDescription="@string/description_recording_audio_convention"
-            android:src="@drawable/ic_audio_convention"
+            android:onClick="@{() -> viewModel.onAudioConversationClick(conversations)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView6"
-            android:padding="@dimen/dp_4"
             android:layout_width="@dimen/dp_24"
             android:layout_height="@dimen/dp_24"
             android:contentDescription="@string/description_transform_content_conversation"
+            android:onClick="@{() -> viewModel.onGravityChangeClick(conversations, position)}"
+            android:padding="@dimen/dp_2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
