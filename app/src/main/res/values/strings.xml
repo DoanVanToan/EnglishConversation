@@ -69,5 +69,17 @@
     <string name="description_recording_audio_convention">Recording audio convention</string>
     <string name="description_delete_conversation">Deleting a conversations</string>
     <string name="description_transform_content_conversation">Transform content conversations</string>
-    <string name="action_view_all">See more ...</string>
+    <string name="action_view_all">See more &#8230;</string>
+    <string name="description_location">Pick a location</string>
+    <string name="description_record_audio">Record an audio</string>
+    <string name="description_record_video">Record a video</string>
+    <string name="description_pick_images">Pick all images what you want to post</string>
+    <string name="description_conversation">Create a conversation</string>
+    <string name="error_init_media">Sorry, you can not start recording audio mode. Please try again later!</string>
+    <string name="message_record_cancel">You have just cancel the recording audio without saving!</string>
+    <string name="message_error_audio_update">Sorry, An error has just occurred. Please try again!</string>
+    <string name="message_error_prepare">Sorry, you can not start recording audio mode. Please try again later!</string>
+    <string name="prefix_audio_file_name">RecordingAudio_</string>
+    <string name="prefix_uploading">Uploading: </string>
+    <string name="msg_get_user_info_failed"> .Please try to login again!</string>
 </resources>
