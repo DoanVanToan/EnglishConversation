@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-
+import android.view.MenuItem;
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
-import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.ActivityForgotPasswordBinding;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
@@ -28,8 +28,8 @@ public class ForgotPasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ForgotPasswordViewModel(this, new Navigator(this));
-        AuthenicationRepository repository = new AuthenicationRepository(
-                new AuthenicationRemoteDataSource());
+        AuthenicationRepository repository =
+                new AuthenicationRepository(new AuthenicationRemoteDataSource());
 
         ForgotPasswordContract.Presenter presenter =
                 new ForgotPasswordPresenter(mViewModel, repository);
@@ -38,7 +38,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         ActivityForgotPasswordBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_forgot_password);
         binding.setViewModel((ForgotPasswordViewModel) mViewModel);
-        getSupportActionBar().hide();
+        getSupportActionBar(R.string.forgot_password);
     }
 
     @Override
@@ -51,5 +51,14 @@ public class ForgotPasswordActivity extends BaseActivity {
     protected void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

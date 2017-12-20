@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Color Default-->
+    <color name="colorPrimary">#02B17A</color>
+    <color name="colorPrimaryDark">#029466</color>
+    <color name="colorAccent">#F5F5F5</color>
+    <!---->
+
+    <color name="color_grey_200">#EEEEEE</color>
+    <color name="color_grey_300">#E0E0E0</color>
     <color name="blue_grey_500">#607D8B</color>
     <color name="blue_grey_700">#455A64</color>
     <color name="yellow_a400">#FFEA00</color>
