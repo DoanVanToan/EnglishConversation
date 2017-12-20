@@ -2,10 +2,10 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.framgia.englishconversation.BR;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by framgia on 16/05/2017.
  */
 
-public class TimelineModel extends BaseObservable {
+public class TimelineModel extends BaseObservable implements Parcelable {
 
     @SerializedName("id")
     private String mId;
@@ -189,4 +189,113 @@ public class TimelineModel extends BaseObservable {
                 + mCreatedUser
                 + '}';
     }
+
+    protected TimelineModel(Parcel in) {
+        mId = in.readString();
+        mContent = in.readString();
+        mCreatedUser = (UserModel) in.readValue(UserModel.class.getClassLoader());
+        mCreatedAt = in.readLong();
+        mModifiedAt = in.readLong();
+        mLocation = (LocationModel) in.readValue(LocationModel.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            mMedias = new ArrayList<MediaModel>();
+            in.readList(mMedias, MediaModel.class.getClassLoader());
+        } else {
+            mMedias = null;
+        }
+        if (in.readByte() == 0x01) {
+            mComments = new ArrayList<Comment>();
+            in.readList(mComments, Comment.class.getClassLoader());
+        } else {
+            mComments = null;
+        }
+        if (in.readByte() == 0x01) {
+            mLikeUser = new ArrayList<UserModel>();
+            in.readList(mLikeUser, UserModel.class.getClassLoader());
+        } else {
+            mLikeUser = null;
+        }
+        if (in.readByte() == 0x01) {
+            mDishLikeUser = new ArrayList<UserModel>();
+            in.readList(mDishLikeUser, UserModel.class.getClassLoader());
+        } else {
+            mDishLikeUser = null;
+        }
+        if (in.readByte() == 0x01) {
+            mReportUser = new ArrayList<UserModel>();
+            in.readList(mReportUser, UserModel.class.getClassLoader());
+        } else {
+            mReportUser = null;
+        }
+        if (in.readByte() == 0x01) {
+            mConversations = new ArrayList<ConversationModel>();
+            in.readList(mConversations, ConversationModel.class.getClassLoader());
+        } else {
+            mConversations = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mContent);
+        dest.writeValue(mCreatedUser);
+        dest.writeLong(mCreatedAt);
+        dest.writeLong(mModifiedAt);
+        dest.writeValue(mLocation);
+        if (mMedias == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mMedias);
+        }
+        if (mComments == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mComments);
+        }
+        if (mLikeUser == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mLikeUser);
+        }
+        if (mDishLikeUser == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mDishLikeUser);
+        }
+        if (mReportUser == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mReportUser);
+        }
+        if (mConversations == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mConversations);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<TimelineModel> CREATOR = new Parcelable.Creator<TimelineModel>() {
+        @Override
+        public TimelineModel createFromParcel(Parcel in) {
+            return new TimelineModel(in);
+        }
+
+        @Override
+        public TimelineModel[] newArray(int size) {
+            return new TimelineModel[size];
+        }
+    };
 }

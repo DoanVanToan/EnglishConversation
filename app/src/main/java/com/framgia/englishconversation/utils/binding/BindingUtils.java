@@ -19,7 +19,8 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
-
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import java.util.Calendar;
 
 /**
@@ -35,32 +36,32 @@ public final class BindingUtils {
     /**
      * setMediaAdapter For RecyclerView
      */
-    @BindingAdapter({"recyclerAdapter"})
+    @BindingAdapter({ "recyclerAdapter" })
     public static void setAdapterForRecyclerView(RecyclerView recyclerView,
-                                                 RecyclerView.Adapter adapter) {
+            RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
     }
 
     /**
      * setNested scrollenable For RecyclerView
      */
-    @BindingAdapter({"scrollEnabled"})
+    @BindingAdapter({ "scrollEnabled" })
     public static void setRecyclerViewSrollEnable(RecyclerView recyclerView, boolean isEnabled) {
         recyclerView.setNestedScrollingEnabled(isEnabled);
     }
 
-    @BindingAdapter({"bind:adapter"})
+    @BindingAdapter({ "bind:adapter" })
     public static void setViewPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
         viewPager.setAdapter(adapter);
     }
 
-    @BindingAdapter({"bind:onTabSelected"})
+    @BindingAdapter({ "bind:onTabSelected" })
     public static void setOnTabSelectedListener(TabLayout tabLayout,
-                                                TabLayout.OnTabSelectedListener listener) {
+            TabLayout.OnTabSelectedListener listener) {
         tabLayout.addOnTabSelectedListener(listener);
     }
 
-    @BindingAdapter({"bind:imageUrl", "bind:imageError"})
+    @BindingAdapter({ "bind:imageUrl", "bind:imageError" })
     public static void loadImage(ImageView imageView, String url, Drawable error) {
         Glide.with(imageView.getContext())
                 .load(url)
@@ -91,7 +92,7 @@ public final class BindingUtils {
                 .into(imageView);
     }
 
-    @BindingAdapter({"bind:videoPath"})
+    @BindingAdapter({ "bind:videoPath" })
     public static void loadVideoUri(VideoView videoView, String path) {
         videoView.setVideoPath(path);
         MediaController mediaController = new MediaController(videoView.getContext());
@@ -100,15 +101,15 @@ public final class BindingUtils {
         videoView.start();
     }
 
-    @BindingAdapter({"spinnerAdapter"})
+    @BindingAdapter({ "spinnerAdapter" })
     public static void setAdapterForSpinner(AppCompatSpinner spinner,
-                                            ArrayAdapter<String> adapter) {
+            ArrayAdapter<String> adapter) {
         spinner.setAdapter(adapter);
     }
 
     @BindingAdapter("layoutManager")
     public static void setLayoutManager(RecyclerView recyclerView,
-                                        LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
+            LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
     }
 
@@ -128,5 +129,10 @@ public final class BindingUtils {
     public static void setOnTouchListener(EditText editText, View.OnTouchListener listener) {
         editText.setOnTouchListener(listener);
     }
-
+    
+    @BindingAdapter("videoPlayer")
+    public static void setVideoPlayer(SimpleExoPlayerView exoPlayerView,
+            SimpleExoPlayer exoPlayer) {
+        exoPlayerView.setPlayer(exoPlayer);
+    }
 }

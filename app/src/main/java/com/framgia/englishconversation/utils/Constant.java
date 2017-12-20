@@ -23,5 +23,8 @@ public class Constant {
 
         public static final String POST = "post";
     }
-
+    
+    public static final String USER_AGENT = "user-agent";
+    public static final String ARGUMENT_TIMELINE = "ARGUMENT_TIMELINE";
+    public static final int INDEX_FIRST_ITEM = 0;
 }

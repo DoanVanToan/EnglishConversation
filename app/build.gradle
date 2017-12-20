@@ -24,6 +24,7 @@ android {
     versionName rootProject.ext.versionName
 
     vectorDrawables.useSupportLibrary = true
+    multiDexEnabled true
   }
 
   dataBinding {
@@ -80,6 +81,9 @@ dependencies {
   compile dependencies.firebaseAuth
   compile dependencies.firebaseStorage
   compile dependencies.firebaseDataBase
+
+  compile dependencies.exoPlayerCore
+  compile dependencies.exoPlayerUi
 
   compile project(':multipleimageselect')
   testCompile dependencies.junit

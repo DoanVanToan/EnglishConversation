@@ -11,4 +11,6 @@
     <color name="color_green_500">#8BC34A</color>
     <color name="color_indogo_acceent_700">#304FFE</color>
     <color name="light_blue_900">#01579B</color>
+    <color name="color_black_translucent">#80000000</color>
+    <color name="color_grey">#FFBEBEBE</color>
 </resources>
