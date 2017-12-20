@@ -1,174 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.login.LoginViewModel" />
-
+            type="com.framgia.englishconversation.screen.login.LoginViewModel"
+            />
     </data>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:context="com.framgia.englishconversation.screen.login.LoginActivity">
+        tools:context="com.framgia.englishconversation.screen.login.LoginActivity"
+        >
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/blue_grey_500"
+            android:background="@android:color/white"
             android:fitsSystemWindows="true"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_10">
-
-            <ImageView
-                android:layout_width="@dimen/dp_100"
-                android:layout_height="@dimen/dp_100"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher_round" />
-
+            >
             <LinearLayout
+                android:id="@+id/layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseCompoundDrawables"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="@dimen/dp_100"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:src="@mipmap/ic_launcher_round"
+                    tools:ignore="ContentDescription"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/dp_5"
+                    android:fontFamily="serif-monospace"
+                    android:gravity="center_horizontal"
+                    android:text="@string/title_app_name_two_line"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TextInputLayout
+                android:layout_margin="@dimen/dp_4"
+                android:padding="@dimen/dp_2"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_header"
+                >
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dp_5"
+                    android:background="@drawable/border_layout_green"
+                    android:padding="@dimen/dp_5"
+                    >
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/text_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_15"
+                        app:layout_constraintTop_toTopOf="parent"
+                        >
+                        <android.support.v7.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:hint="@string/hint_email"
+                            android:inputType="textEmailAddress"
+                            android:padding="@dimen/dp_10"
+                            android:shadowColor="@android:color/white"
+                            android:text="@={viewModel.email}"
+                            android:textColor="@color/color_red_500"
+                            android:textColorHighlight="@android:color/white"
+                            android:textColorHint="@android:color/white"
+                            android:textColorLink="@android:color/white"
+                            tools:ignore="UnusedAttribute"
+                            />
+                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/text_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:shadowColor="@color/blue_grey_500"
+                        android:textColorHint="@color/color_grey_300"
+                        app:layout_constraintTop_toBottomOf="@+id/text_email"
+                        >
+                        <android.support.v7.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            android:padding="@dimen/dp_10"
+                            android:shadowColor="@android:color/white"
+                            android:text="@={viewModel.password}"
+                            android:textColor="@android:color/white"
+                            android:textColorHighlight="@android:color/white"
+                            android:textColorHint="@android:color/white"
+                            android:textColorLink="@android:color/white"
+                            tools:ignore="UnusedAttribute"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/checkbox_remember_me"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:checked="@={viewModel.rememberAccount}"
+                        android:text="@string/title_remember_account"
+                        android:textColor="@android:color/white"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/text_password"
+                        />
+
+                    <Button
+                        android:id="@+id/button_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_10"
-                        android:hint="@string/hint_email"
-                        android:inputType="textEmailAddress"
-                        android:padding="@dimen/dp_10"
-                        android:shadowColor="@android:color/white"
-                        android:text="@={viewModel.email}"
-                        android:textColor="@android:color/white"
-                        android:textColorHighlight="@android:color/white"
-                        android:textColorHint="@android:color/white"
-                        android:textColorLink="@android:color/white" />
+                        android:background="@drawable/border_button_white_click"
+                        android:color="@color/blue_grey_500"
+                        android:onClick="@{() -> viewModel.onLoginClick()}"
+                        android:text="@string/action_login"
+                        android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_remember_me"
+                        />
 
-                </android.support.design.widget.TextInputLayout>
+                    <View
+                        android:id="@+id/view_bellow_button_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:layout_margin="@dimen/dp_15"
+                        android:background="@android:color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/button_login"
+                        />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <com.google.android.gms.common.SignInButton
+                        android:id="@+id/sign_in_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_20"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:padding="@dimen/dp_10"
-                        android:shadowColor="@android:color/white"
-                        android:text="@={viewModel.password}"
-                        android:textColor="@android:color/white"
-                        android:textColorHighlight="@android:color/white"
-                        android:textColorHint="@android:color/white"
-                        android:textColorLink="@android:color/white" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:checked="@={viewModel.rememberAccount}"
-                    android:text="@string/title_remember_account"
-                    android:textColor="@android:color/white" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:backgroundTint="@android:color/holo_orange_dark"
-                    android:color="@color/blue_grey_500"
-                    android:onClick="@{() -> viewModel.onLoginClick()}"
-                    android:text="@string/action_login"
-                    android:textColor="@android:color/white" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="@dimen/dp_100"
-                        android:layout_height="@dimen/dp_1"
-                        android:background="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/view_bellow_button_login"
+                        />
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/login_button"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/dp_5"
-                        android:paddingRight="@dimen/dp_5"
-                        android:text="@string/title_or"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/dp_10"
+                        app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
+                        />
 
-                    <View
-                        android:layout_width="@dimen/dp_100"
-                        android:layout_height="@dimen/dp_1"
-                        android:background="@android:color/white" />
-
-                </LinearLayout>
-
-                <com.google.android.gms.common.SignInButton
-                    android:id="@+id/sign_in_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20" />
-
-                <com.facebook.login.widget.LoginButton
-                    android:id="@+id/login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_1"
-                    android:layout_marginRight="@dimen/dp_1"
-                    android:layout_marginTop="@dimen/dp_10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:onClick="@{() -> viewModel.onForgotPasswordClick()}"
-                    android:text="@string/forgot_password"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:onClick="@{()-> viewModel.onRegisterClick()}"
-                    android:text="@string/title_register"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        >
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:onClick="@{() -> viewModel.onForgotPasswordClick()}"
+                            android:text="@string/forgot_password"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/white"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:onClick="@{()-> viewModel.onRegisterClick()}"
+                            android:text="@string/title_register"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/white"
+                            />
+                    </LinearLayout>
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+        </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
-
 </layout>

@@ -1,126 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.register.RegisterViewModel" />
+            type="com.framgia.englishconversation.screen.register.RegisterViewModel"
+            />
 
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_grey_500"
+        android:background="@drawable/border_background"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:padding="@dimen/dp_10"
-        tools:context="com.framgia.englishconversation.screen.login.LoginActivity">
+        tools:context="com.framgia.englishconversation.screen.login.LoginActivity"
+        >
 
         <ImageView
             android:layout_width="@dimen/dp_100"
             android:layout_height="@dimen/dp_100"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher_round" />
+            android:src="@mipmap/ic_launcher_round"
+            tools:ignore="ContentDescription"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/action_register"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/sp_25"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <android.support.design.widget.TextInputLayout
+            android:layout_marginTop="@dimen/dp_10"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dp_15"
+            >
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.AppCompatEditText
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:padding="@dimen/dp_2"
+                app:cardBackgroundColor="@android:color/transparent"
+                >
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:hint="@string/user_name"
-                    android:inputType="textEmailAddress"
-                    android:padding="@dimen/dp_10"
-                    android:shadowColor="@android:color/white"
-                    android:text="@={viewModel.email}"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:textColorLink="@android:color/white" />
+                    android:layout_margin="@dimen/dp_4"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_2"
+                    >
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-            </android.support.design.widget.TextInputLayout>
+                        <android.support.v7.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:hint="@string/user_name"
+                            android:inputType="textEmailAddress"
+                            android:padding="@dimen/dp_10"
+                            android:shadowColor="@android:color/white"
+                            android:text="@={viewModel.email}"
+                            android:textColor="@android:color/white"
+                            android:textColorHighlight="@android:color/white"
+                            android:textColorHint="@android:color/white"
+                            android:textColorLink="@android:color/white"
+                            />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    </android.support.design.widget.TextInputLayout>
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"
-                    android:padding="@dimen/dp_10"
-                    android:shadowColor="@android:color/white"
-                    android:text="@={viewModel.password}"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:textColorLink="@android:color/white" />
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-            </android.support.design.widget.TextInputLayout>
+                        <android.support.v7.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            android:padding="@dimen/dp_10"
+                            android:shadowColor="@android:color/white"
+                            android:text="@={viewModel.password}"
+                            android:textColor="@android:color/white"
+                            android:textColorHighlight="@android:color/white"
+                            android:textColorHint="@android:color/white"
+                            android:textColorLink="@android:color/white"
+                            />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    </android.support.design.widget.TextInputLayout>
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    android:hint="@string/confirrm_password"
-                    android:inputType="textPassword"
-                    android:padding="@dimen/dp_10"
-                    android:shadowColor="@android:color/white"
-                    android:text="@={viewModel.passwordConfirm}"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:textColorLink="@android:color/white" />
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
 
-            </android.support.design.widget.TextInputLayout>
+                        <android.support.v7.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:hint="@string/confirrm_password"
+                            android:inputType="textPassword"
+                            android:padding="@dimen/dp_10"
+                            android:shadowColor="@android:color/white"
+                            android:text="@={viewModel.passwordConfirm}"
+                            android:textColor="@android:color/white"
+                            android:textColorHighlight="@android:color/white"
+                            android:textColorHint="@android:color/white"
+                            android:textColorLink="@android:color/white"
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                android:backgroundTint="@android:color/holo_orange_dark"
-                android:color="@color/blue_grey_500"
+                android:background="@drawable/border_button_white_click"
                 android:onClick="@{() -> viewModel.onRegisterClick()}"
                 android:text="@string/action_register"
-                android:textColor="@android:color/white" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimary"
+                />
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_10"
-                android:background="@null"
-                android:onClick="@{() -> viewModel.onForgotPwClick()}"
-                android:text="@string/forgot_password"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:background="@null"
+                android:gravity="center_horizontal"
                 android:onClick="@{() -> viewModel.onLoginClick()}"
                 android:text="@string/title_login"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@android:color/white"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center_horizontal"
+                android:onClick="@{() -> viewModel.onForgotPwClick()}"
+                android:text="@string/forgot_password"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                />
         </LinearLayout>
 
     </LinearLayout>

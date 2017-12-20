@@ -6,14 +6,13 @@ import android.content.DialogInterface;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.login.LoginActivity;
 import com.framgia.englishconversation.screen.main.MainActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Exposes the data to be used in the Profile screen.
@@ -28,7 +27,7 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     private MainActivity mActivity;
     private Navigator mNavigator;
 
-    public ProfileViewModel(MainActivity mainActivity, Navigator navigator) {
+    ProfileViewModel(MainActivity mainActivity, Navigator navigator) {
         mActivity = mainActivity;
         mNavigator = navigator;
     }
@@ -72,7 +71,8 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     @Override
     public void onSignOutClick() {
         AlertDialog.Builder builder =
-                new AlertDialog.Builder(mActivity).setTitle(R.string.action_logout)
+                new AlertDialog.Builder(mActivity, R.style.AppCompatDialog).setTitle(
+                        R.string.action_logout)
                         .setMessage(R.string.msg_logout)
                         .setNegativeButton(android.R.string.no, null)
                         .setPositiveButton(android.R.string.yes,
@@ -108,7 +108,7 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
 
     @Bindable
     public String getUserUrl() {
-        return mUser.get() != null ? mUser.get().getPhotoUrl().toString() : "";
+        return mUser.get() != null ? mUser.get().getPhotoUrl() : "";
     }
 
     @Bindable
