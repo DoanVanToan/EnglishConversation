@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="com.framgia.englishconversation.data.model.PostType" />
-
         <variable
             name="viewModel"
             type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
@@ -22,7 +20,7 @@
             android:layout_height="@dimen/dp_72"
             android:background="@android:color/white"
             android:gravity="center"
-            android:onClick="@{() ->viewModel.onCreateNewPostClick(PostType.TEXT_CONTENT)}"
+            android:onClick="@{() ->viewModel.onCreateNewPostClick()}"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView

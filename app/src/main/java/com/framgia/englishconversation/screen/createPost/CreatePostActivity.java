@@ -13,7 +13,6 @@ import android.widget.ImageView;
 
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
-import com.framgia.englishconversation.data.model.PostType;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRemoteDataSource;
@@ -31,27 +30,19 @@ public class CreatePostActivity extends BaseActivity {
     public static final int VIDEO_RECORD_POSITION = 2;
     public static final int PHOTO_POSITION = 3;
     public static final int LOCATION_POSITION = 4;
-    private static final String EXTRA_CREATE_TYPE = "EXTRA_CREATE_TYPE";
-
-    @PostType
-    private int mCreateType;
 
     private CreatePostContract.ViewModel mViewModel;
 
     private ImageView[] mImageViews;
 
-    public static Intent getInstance(Context context, @PostType int createType) {
-        Intent intent = new Intent(context, CreatePostActivity.class);
-        intent.putExtra(EXTRA_CREATE_TYPE, createType);
-        return intent;
+    public static Intent getInstance(Context context) {
+        return new Intent(context, CreatePostActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getData();
-
-        mViewModel = new CreatePostViewModel(this, new Navigator(this), mCreateType);
+        mViewModel = new CreatePostViewModel(this, new Navigator(this));
         AuthenicationRepository repository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
         TimelineRepository timelineRepository =
@@ -76,14 +67,6 @@ public class CreatePostActivity extends BaseActivity {
         int selectedColor = ContextCompat.getColor(this, R.color.color_indogo_acceent_700);
         binding.imageConversation.getDrawable()
                 .setColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP);
-    }
-
-    private void getData() {
-        Intent intent = getIntent();
-        if (intent == null) return;
-        if (intent.getExtras() != null) {
-            mCreateType = intent.getExtras().getInt(EXTRA_CREATE_TYPE);
-        }
     }
 
     @Override

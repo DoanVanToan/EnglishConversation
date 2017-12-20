@@ -74,13 +74,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
                                 parent,
                                 false);
                 return new ImageViewHolder(imageBinding);
-            default:
+            case MediaModel.MediaType.CONVERSATION:
                 ItemTimelineConversationBinding conversationBinding =
                         ItemTimelineConversationBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
                                 parent,
                                 false);
                 return new ConversationViewHolder(conversationBinding);
+            default:
+                return null;
         }
     }
 
