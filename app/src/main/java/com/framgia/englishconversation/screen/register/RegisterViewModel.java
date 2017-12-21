@@ -5,14 +5,13 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.text.TextUtils;
-
-import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.screen.editProfile.EditProfileActivity;
 import com.framgia.englishconversation.screen.forgotPassword.ForgotPasswordActivity;
 import com.framgia.englishconversation.screen.main.MainActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Exposes the data to be used in the Register screen.
@@ -30,7 +29,7 @@ public class RegisterViewModel extends BaseObservable implements RegisterContrac
     private String mPassword;
     private String mPasswordConfirm;
 
-    public RegisterViewModel(Context context, Navigator navigator) {
+    RegisterViewModel(Context context, Navigator navigator) {
         mContext = context;
         mActivity = (RegisterActivity) context;
         mNavigator = navigator;

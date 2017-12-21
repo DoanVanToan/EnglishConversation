@@ -3,7 +3,6 @@ package com.framgia.englishconversation.screen.forgotPassword;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.utils.navigator.Navigator;
@@ -15,12 +14,12 @@ import com.framgia.englishconversation.utils.navigator.Navigator;
 public class ForgotPasswordViewModel extends BaseObservable
         implements ForgotPasswordContract.ViewModel {
 
+    private Context mContext;
     private ForgotPasswordContract.Presenter mPresenter;
     private String mEmail;
     private Navigator mNavigator;
-    private Context mContext;
 
-    public ForgotPasswordViewModel(Context context, Navigator navigator) {
+    ForgotPasswordViewModel(Context context, Navigator navigator) {
         mContext = context;
         mNavigator = navigator;
     }
@@ -41,13 +40,8 @@ public class ForgotPasswordViewModel extends BaseObservable
     }
 
     @Override
-    public void onResetPasswodClick() {
+    public void onResetPasswordClick() {
         mPresenter.resetPassword(mEmail);
-    }
-
-    @Override
-    public void onBackClick() {
-        mNavigator.finishActivity();
     }
 
     @Override

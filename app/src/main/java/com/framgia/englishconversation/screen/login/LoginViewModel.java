@@ -7,10 +7,6 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.text.TextUtils;
 import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.screen.editProfile.EditProfileActivity;
@@ -18,6 +14,10 @@ import com.framgia.englishconversation.screen.forgotPassword.ForgotPasswordActiv
 import com.framgia.englishconversation.screen.main.MainActivity;
 import com.framgia.englishconversation.screen.register.RegisterActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Exposes the data to be used in the Login screen.
@@ -33,7 +33,7 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
     private boolean mIsRememberAccount;
     private LoginActivity mActivity;
 
-    public LoginViewModel(Context context, Navigator navigator) {
+    LoginViewModel(Context context, Navigator navigator) {
         mContext = context;
         mActivity = (LoginActivity) context;
         mNavigator = navigator;

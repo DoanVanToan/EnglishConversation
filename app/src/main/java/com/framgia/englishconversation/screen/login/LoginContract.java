@@ -1,12 +1,11 @@
 package com.framgia.englishconversation.screen.login;
 
 import android.content.Intent;
-
 import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * This specifies the contract between the view and the presenter.
