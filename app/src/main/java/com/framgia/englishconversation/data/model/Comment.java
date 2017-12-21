@@ -1,6 +1,5 @@
 package com.framgia.englishconversation.data.model;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -10,14 +9,18 @@ import com.google.gson.annotations.SerializedName;
 public class Comment {
     @SerializedName("id")
     private String mId;
+    @SerializedName("post_id")
+    private String mPostId;
     @SerializedName("content")
     private String mContent;
     @SerializedName("created_at")
-    private String mCreatedAt;
+    private long mCreatedAt;
     @SerializedName("modified_at")
     private String mModifiedAt;
     @SerializedName("created_user")
     private UserModel mCreateUser;
+    @SerializedName("media")
+    private MediaModel mMediaModel;
 
     public String getId() {
         return mId;
@@ -35,12 +38,20 @@ public class Comment {
         mContent = content;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return mCreatedAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         mCreatedAt = createdAt;
+    }
+
+    public String getPostId() {
+        return mPostId;
+    }
+
+    public void setPostId(String postId) {
+        mPostId = postId;
     }
 
     public String getModifiedAt() {
@@ -53,6 +64,14 @@ public class Comment {
 
     public UserModel getCreateUser() {
         return mCreateUser;
+    }
+
+    public MediaModel getMediaModel() {
+        return mMediaModel;
+    }
+
+    public void setMediaModel(MediaModel mediaModel) {
+        mMediaModel = mediaModel;
     }
 
     public void setCreateUser(UserModel createUser) {
