@@ -26,6 +26,7 @@ public class Constant {
     public class DatabaseTree {
         public static final String POST = "post";
         public static final String COMMENT = "comment";
+        public static final String CREATED_AT = "createdAt";
     }
 
     public static final String USER_AGENT = "user-agent";
