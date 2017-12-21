@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
-
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.utils.Blocker;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import java.util.Calendar;
@@ -129,10 +129,22 @@ public final class BindingUtils {
     public static void setOnTouchListener(EditText editText, View.OnTouchListener listener) {
         editText.setOnTouchListener(listener);
     }
-    
+
     @BindingAdapter("videoPlayer")
     public static void setVideoPlayer(SimpleExoPlayerView exoPlayerView,
             SimpleExoPlayer exoPlayer) {
         exoPlayerView.setPlayer(exoPlayer);
+    }
+
+    @BindingAdapter({ "onClickSafely" })
+    public static void setOnClickSafely(View view, final View.OnClickListener listener) {
+        view.setOnClickListener(new View.OnClickListener() {
+            private Blocker mBlocker = new Blocker();
+
+            @Override
+            public void onClick(View v) {
+                if (!mBlocker.block()) listener.onClick(v);
+            }
+        });
     }
 }

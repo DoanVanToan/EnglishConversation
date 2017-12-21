@@ -11,9 +11,7 @@ interface ForgotPasswordContract {
      * View.
      */
     interface ViewModel extends BaseViewModel<Presenter> {
-        void onResetPasswodClick();
-
-        void onBackClick();
+        void onResetPasswordClick();
 
         void onEmailEmpty();
 
