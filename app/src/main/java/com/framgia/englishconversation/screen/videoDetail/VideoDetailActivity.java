@@ -19,7 +19,7 @@ public class VideoDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = new VideoDetailViewModel(this,
-                (TimelineModel) getIntent().getExtras().getParcelable(Constant.ARGUMENT_TIMELINE));
+                (TimelineModel) getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE));
         VideoDetailContract.Presenter presenter = new VideoDetailPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
 

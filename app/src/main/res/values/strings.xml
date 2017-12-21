@@ -61,6 +61,9 @@
     <string name="title_vote">Vote</string>
     <string name="title_comment">Comment</string>
     <string name="title_description">Description:</string>
+    <string name="title_image">Image</string>
+    <string name="title_audio">Audio</string>
+    <string name="title_video">Video</string>
     <string name="hint_description">Put your post here</string>
     <string name="subtitle_create_post">What are you thinking ?</string>
     <string name="title_for_recording_duration">Recording audio</string>
@@ -83,4 +86,6 @@
     <string name="prefix_audio_file_name">RecordingAudio_</string>
     <string name="prefix_uploading">Uploading: </string>
     <string name="msg_get_user_info_failed"> .Please try to login again!</string>
+    <string name="description_back_to_timeline">Press to back to timeline</string>
+    <string name="description_vote_for_post">Vote for this post</string>
 </resources>

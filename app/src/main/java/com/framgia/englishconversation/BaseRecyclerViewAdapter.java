@@ -3,6 +3,7 @@ package com.framgia.englishconversation;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * Base Adapter.
@@ -29,6 +30,6 @@ public abstract class BaseRecyclerViewAdapter<V extends RecyclerView.ViewHolder>
      * @param <T> Data from item click
      */
     public interface OnRecyclerViewItemClickListener<T> {
-        void onItemRecyclerViewClick(T item);
+        void onItemRecyclerViewClick(View view, T item);
     }
 }
