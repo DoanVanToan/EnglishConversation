@@ -1,4 +1,4 @@
-package com.framgia.englishconversation.data.source.remote.timeline;
+package com.framgia.englishconversation.data.source.remote;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

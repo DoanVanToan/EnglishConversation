@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.andoidsrc.popupmenu.MainActivity">
+
+    <item
+        android:id="@+id/type_image"
+        android:title="@string/title_image"
+        android:visible="true"/>
+    <item
+        android:id="@+id/type_audio"
+        android:title="@string/title_audio"
+        android:visible="true"/>
+    <item
+        android:id="@+id/type_video"
+        android:title="@string/title_video"
+        android:visible="true"/>
+</menu>

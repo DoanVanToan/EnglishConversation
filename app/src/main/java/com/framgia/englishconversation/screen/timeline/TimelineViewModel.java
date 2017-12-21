@@ -4,20 +4,22 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
-
-import com.framgia.englishconversation.BR;
+import android.os.Bundle;
+import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
+import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
+import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
-
 import java.util.ArrayList;
 
 /**
  * Exposes the data to be used in the Timeline screen.
  */
 
-public class TimelineViewModel extends BaseObservable implements TimelineContract.ViewModel {
+public class TimelineViewModel extends BaseObservable
+        implements TimelineContract.ViewModel, OnTimelineItemTouchListener<TimelineModel> {
 
     private TimelineContract.Presenter mPresenter;
     private Navigator mNavigator;
@@ -30,6 +32,7 @@ public class TimelineViewModel extends BaseObservable implements TimelineContrac
         mContext = context;
         mNavigator = navigator;
         mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>());
+        mAdapter.setRecyclerViewItemClickListener(this);
     }
 
     @Override
@@ -87,5 +90,12 @@ public class TimelineViewModel extends BaseObservable implements TimelineContrac
 
     public void setAdapter(TimelineAdapter adapter) {
         mAdapter = adapter;
+    }
+
+    @Override
+    public void onHeaderTouchListener(TimelineModel timelineModel) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.EXTRA_TIMELINE, timelineModel);
+        mNavigator.startActivity(VideoDetailActivity.class, bundle);
     }
 }

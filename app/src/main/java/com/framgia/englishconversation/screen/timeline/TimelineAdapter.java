@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
@@ -12,7 +11,6 @@ import com.framgia.englishconversation.databinding.ItemTimelineConversationBindi
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
-
 import java.util.List;
 
 /**
@@ -21,9 +19,15 @@ import java.util.List;
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTimelineViewHolder> {
     private List<TimelineModel> mData;
+    private OnTimelineItemTouchListener mItemTouchListener;
 
     public TimelineAdapter(List<TimelineModel> items) {
         mData = items;
+    }
+
+    public void setRecyclerViewItemClickListener(
+            OnTimelineItemTouchListener itemTouchListener) {
+        mItemTouchListener = itemTouchListener;
     }
 
     public void updateData(List<TimelineModel> timelines) {
@@ -44,42 +48,31 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
     @Override
     public TimelineAdapter.BaseTimelineViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                     int viewType) {
+            int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.ONLY_TEXT:
-                ItemTimelineOnlyTextBinding onlyTextBinding =
-                        ItemTimelineOnlyTextBinding.inflate(
-                                LayoutInflater.from(parent.getContext()),
-                                parent,
-                                false);
+                ItemTimelineOnlyTextBinding onlyTextBinding = ItemTimelineOnlyTextBinding.inflate(
+                        LayoutInflater.from(parent.getContext()), parent, false);
                 return new OnlyTextViewHolder(onlyTextBinding);
             case MediaModel.MediaType.AUDIO:
                 ItemTimelineAudioBinding audioBinding =
-                        ItemTimelineAudioBinding.inflate(
-                                LayoutInflater.from(parent.getContext()),
-                                parent,
-                                false);
+                        ItemTimelineAudioBinding.inflate(LayoutInflater.from(parent.getContext()),
+                                parent, false);
                 return new AudioViewHolder(audioBinding);
             case MediaModel.MediaType.VIDEO:
                 ItemTimelineVideoBinding videoBinding =
-                        ItemTimelineVideoBinding.inflate(
-                                LayoutInflater.from(parent.getContext()),
-                                parent,
-                                false);
-                return new VideoViewHolder(videoBinding);
+                        ItemTimelineVideoBinding.inflate(LayoutInflater.from(parent.getContext()),
+                                parent, false);
+                return new VideoViewHolder(videoBinding, mItemTouchListener);
             case MediaModel.MediaType.IMAGE:
                 ItemTimelineImageBinding imageBinding =
-                        ItemTimelineImageBinding.inflate(
-                                LayoutInflater.from(parent.getContext()),
-                                parent,
-                                false);
+                        ItemTimelineImageBinding.inflate(LayoutInflater.from(parent.getContext()),
+                                parent, false);
                 return new ImageViewHolder(imageBinding);
             case MediaModel.MediaType.CONVERSATION:
                 ItemTimelineConversationBinding conversationBinding =
                         ItemTimelineConversationBinding.inflate(
-                                LayoutInflater.from(parent.getContext()),
-                                parent,
-                                false);
+                                LayoutInflater.from(parent.getContext()), parent, false);
                 return new ConversationViewHolder(conversationBinding);
             default:
                 return null;
@@ -155,15 +148,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
      */
     public class VideoViewHolder extends BaseTimelineViewHolder {
         private ItemTimelineVideoBinding mBinding;
+        private OnTimelineItemTouchListener mOnTouchListener;
 
-        public VideoViewHolder(ItemTimelineVideoBinding itemView) {
+        VideoViewHolder(ItemTimelineVideoBinding itemView,
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mOnTouchListener = onTouchListener;
         }
 
         @Override
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
+            mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
         }
     }
@@ -198,6 +195,4 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
         public abstract void bindData(TimelineModel model);
     }
-
-
 }

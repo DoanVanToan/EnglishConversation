@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "209723759764",
+    "firebase_url": "https://englishconversation-86a8b.firebaseio.com",
+    "project_id": "englishconversation-86a8b",
+    "storage_bucket": "englishconversation-86a8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209723759764:android:d4ae32836280c1ca",
+        "android_client_info": {
+          "package_name": "com.framgia.englishconversation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209723759764-mmejem7eucnjo37ku9lempfbkqtmp5u1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.englishconversation",
+            "certificate_hash": "495c0ac29c23d93428179f54445884b25d0a534d"
+          }
+        },
+        {
+          "client_id": "209723759764-0ljfo0d4qt6r1tqbo6o0v8l9g2bkhes1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA972m3avxayx50a_CpBZHrtB2L9iLg3cs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209723759764-0ljfo0d4qt6r1tqbo6o0v8l9g2bkhes1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

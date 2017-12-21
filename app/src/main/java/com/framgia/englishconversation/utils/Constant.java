@@ -20,11 +20,15 @@ public class Constant {
         public static final int TWO_IMAGE = 2;
         public static final int THREE_IMAGE = 3;
         public static final int FOUR_IMAGE = 4;
-
-        public static final String POST = "post";
     }
-    
+
+    //Constant related to database's field name
+    public class DatabaseTree {
+        public static final String POST = "post";
+        public static final String COMMENT = "comment";
+    }
+
     public static final String USER_AGENT = "user-agent";
-    public static final String ARGUMENT_TIMELINE = "ARGUMENT_TIMELINE";
+    public static final String EXTRA_TIMELINE = "EXTRA_TIMELINE";
     public static final int INDEX_FIRST_ITEM = 0;
 }

@@ -2,13 +2,12 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
-
-import com.google.gson.annotations.SerializedName;
 import com.framgia.englishconversation.BR;
+import com.google.firebase.database.Exclude;
+import com.google.gson.annotations.SerializedName;
 
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.AUDIO;
 import static com.framgia.englishconversation.data.model.MediaModel.MediaType.CONVERSATION;
@@ -31,6 +30,7 @@ public class MediaModel extends BaseObservable implements Parcelable {
     @SerializedName("name")
     private String mName;
     @SerializedName("upload_percent")
+    @Exclude
     private int mUploadPercent;
 
     public MediaModel(@MediaType int mediatype) {

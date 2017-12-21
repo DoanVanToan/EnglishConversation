@@ -3,6 +3,7 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 import android.support.annotation.NonNull;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
+import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +21,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     private static final String TAG = "TimelineRemote";
 
     public TimelineRemoteDataSource() {
-        super(Constant.Timeline.POST);
+        super(Constant.DatabaseTree.POST);
     }
 
     @Override
