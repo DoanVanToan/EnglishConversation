@@ -1,16 +1,18 @@
 package com.framgia.englishconversation.screen.login;
 
 import android.text.TextUtils;
-
 import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.FirebaseUser;
-import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
+import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsApi;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
+import com.framgia.englishconversation.utils.Constant;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsKey.PREF_EMAIL;
-import static com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsKey.PREF_PASSWORD;
+import static com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsKey
+        .PREF_PASSWORD;
 
 /**
  * Listens to user actions from the UI ({@link LoginActivity}), retrieves the data and updates
@@ -23,7 +25,7 @@ final class LoginPresenter implements LoginContract.Presenter {
     private SharedPrefsApi mSharedPrefs;
 
     public LoginPresenter(LoginContract.ViewModel viewModel, AuthenicationRepository repository,
-                          SharedPrefsApi sharedPrefs) {
+            SharedPrefsApi sharedPrefs) {
         mViewModel = viewModel;
         mRepository = repository;
         mSharedPrefs = sharedPrefs;
@@ -69,14 +71,6 @@ final class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void login(final String email, final String password, final boolean isRememberAccount) {
-        if (TextUtils.isEmpty(email)) {
-            mViewModel.onEmailEmpty();
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            mViewModel.onPasswordEmpty();
-            return;
-        }
         mViewModel.showDialog();
         mRepository.signIn(email, password, new DataCallback<FirebaseUser>() {
             @Override
@@ -86,7 +80,7 @@ final class LoginPresenter implements LoginContract.Presenter {
                 if (isRememberAccount) {
                     mSharedPrefs.put(PREF_EMAIL, email);
                     mSharedPrefs.put(PREF_PASSWORD, password);
-                }else {
+                } else {
                     mSharedPrefs.put(PREF_EMAIL, "");
                     mSharedPrefs.put(PREF_PASSWORD, "");
                 }
@@ -110,5 +104,28 @@ final class LoginPresenter implements LoginContract.Presenter {
     public void login(AccessToken accessToken) {
         mViewModel.showDialog();
         mRepository.signIn(accessToken, mSignInCallback);
+    }
+
+    @Override
+    public boolean validateInput(String email, String password) {
+        boolean isValid = true;
+        if (TextUtils.isEmpty(email)) {
+            isValid = false;
+            mViewModel.onInputEmailError(R.string.is_empty);
+        }
+        if (TextUtils.isEmpty(password)) {
+            isValid = false;
+            mViewModel.onInputPasswordError(R.string.is_empty);
+        }
+        if (!TextUtils.isEmpty(email) && !email.matches(Constant.EMAIL_FORMAT)) {
+            isValid = false;
+            mViewModel.onInputEmailError(R.string.invalid_email_format);
+        }
+        if (!TextUtils.isEmpty(password)
+                && password.length() < Constant.MINIMUM_CHARACTERS_PASSWORD) {
+            isValid = false;
+            mViewModel.onInputPasswordError(R.string.least_6_characters);
+        }
+        return isValid;
     }
 }

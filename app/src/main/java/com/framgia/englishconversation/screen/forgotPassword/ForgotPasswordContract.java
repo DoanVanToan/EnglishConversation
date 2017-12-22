@@ -13,7 +13,7 @@ interface ForgotPasswordContract {
     interface ViewModel extends BaseViewModel<Presenter> {
         void onResetPasswordClick();
 
-        void onEmailEmpty();
+        void onInputEmailError(int message);
 
         void onResetPasswordSuccess();
 
@@ -25,5 +25,7 @@ interface ForgotPasswordContract {
      */
     interface Presenter extends BasePresenter {
         void resetPassword(String email);
+
+        boolean validateInput(String email);
     }
 }
