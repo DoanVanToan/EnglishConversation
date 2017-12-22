@@ -64,14 +64,16 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        bind:errorTextInputLayout="@{viewModel.emailError}"
                         >
 
                         <android.support.v7.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:hint="@string/user_name"
+                            android:hint="@string/hint_email"
                             android:inputType="textEmailAddress"
+                            android:maxLength="50"
                             android:maxLines="1"
                             android:padding="@dimen/dp_10"
                             android:shadowColor="@android:color/white"
@@ -87,6 +89,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:errorTextInputLayout="@{viewModel.getPasswordError}"
                         >
 
                         <android.support.v7.widget.AppCompatEditText
@@ -95,6 +98,7 @@
                             android:layout_marginTop="@dimen/dp_20"
                             android:hint="@string/password"
                             android:inputType="textPassword"
+                            android:maxLength="50"
                             android:maxLines="1"
                             android:padding="@dimen/dp_10"
                             android:shadowColor="@android:color/white"
@@ -110,6 +114,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        bind:errorTextInputLayout="@{viewModel.passwordConfirmError}"
                         >
 
                         <android.support.v7.widget.AppCompatEditText
@@ -118,6 +123,7 @@
                             android:layout_marginTop="@dimen/dp_20"
                             android:hint="@string/confirrm_password"
                             android:inputType="textPassword"
+                            android:maxLength="50"
                             android:maxLines="1"
                             android:padding="@dimen/dp_10"
                             android:shadowColor="@android:color/white"

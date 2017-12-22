@@ -28,6 +28,9 @@ public class RegisterViewModel extends BaseObservable implements RegisterContrac
     private String mEmail;
     private String mPassword;
     private String mPasswordConfirm;
+    private String mEmailError;
+    private String mPasswordError;
+    private String mPasswordConfirmError;
 
     RegisterViewModel(Context context, Navigator navigator) {
         mContext = context;
@@ -74,18 +77,18 @@ public class RegisterViewModel extends BaseObservable implements RegisterContrac
     }
 
     @Override
-    public void onEmptyEmail() {
-        mNavigator.showToast(R.string.empty_email);
+    public void onEmailError(int message) {
+        setEmailError(mContext.getString(message));
     }
 
     @Override
-    public void onEmptyPassword() {
-        mNavigator.showToast(R.string.empty_password);
+    public void onPassWordError(int message) {
+        setPasswordError(mContext.getString(message));
     }
 
     @Override
-    public void onEmptyPasswordConfirm() {
-        mNavigator.showToast(R.string.empty_password_confirm);
+    public void onConfirmPasswordError(int message) {
+        setPasswordConfirmError(mContext.getString(message));
     }
 
     @Override
@@ -95,6 +98,9 @@ public class RegisterViewModel extends BaseObservable implements RegisterContrac
 
     @Override
     public void onRegisterClick() {
+        if (!mPresenter.validateInput(mEmail, mPassword, mPasswordConfirm)) {
+            return;
+        }
         mPresenter.registerAccount(mEmail, mPassword, mPasswordConfirm);
     }
 
@@ -144,5 +150,35 @@ public class RegisterViewModel extends BaseObservable implements RegisterContrac
     public void setPasswordConfirm(String passwordConfirm) {
         mPasswordConfirm = passwordConfirm;
         notifyPropertyChanged(BR.passwordConfirm);
+    }
+
+    @Bindable
+    public String getEmailError() {
+        return mEmailError;
+    }
+
+    @Bindable
+    public String getPasswordError() {
+        return mPasswordError;
+    }
+
+    @Bindable
+    public String getPasswordConfirmError() {
+        return mPasswordConfirmError;
+    }
+
+    public void setEmailError(String emailError) {
+        mEmailError = emailError;
+        notifyPropertyChanged(BR.emailError);
+    }
+
+    public void setPasswordError(String passwordError) {
+        mPasswordError = passwordError;
+        notifyPropertyChanged(BR.passwordError);
+    }
+
+    public void setPasswordConfirmError(String passwordConfirmError) {
+        mPasswordConfirmError = passwordConfirmError;
+        notifyPropertyChanged(BR.passwordConfirmError);
     }
 }
