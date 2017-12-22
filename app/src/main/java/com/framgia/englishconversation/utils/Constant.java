@@ -32,7 +32,16 @@ public class Constant {
         public static final String CREATED_AT = "createdAt";
     }
 
+    public class RequestCode {
+        public static final int RECORD_AUDIO = 135;
+        public static final int RECORD_VIDEO = 136;
+        public static final int SELECT_IMAGE = 137;
+        public static final int POST_COMMENT = 138;
+    }
+
     public static final String USER_AGENT = "user-agent";
     public static final String EXTRA_TIMELINE = "EXTRA_TIMELINE";
+    public static final String EXTRA_MEDIA_MODEL = "EXTRA_MEDIA_MODEL";
+    public static final String EXTRA_COMMENT = "EXTRA_COMMENT";
     public static final int INDEX_FIRST_ITEM = 0;
 }

@@ -3,13 +3,15 @@ package com.framgia.englishconversation.data.model;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import com.android.databinding.library.baseAdapters.BR;
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by framgia on 16/05/2017.
  */
 
-public class Comment extends BaseObservable {
+public class Comment extends BaseObservable implements Parcelable {
     @SerializedName("id")
     private String mId;
     @SerializedName("post_id")
@@ -24,6 +26,9 @@ public class Comment extends BaseObservable {
     private UserModel mCreateUser;
     @SerializedName("media")
     private MediaModel mMediaModel;
+
+    public Comment() {
+    }
 
     public String getId() {
         return mId;
@@ -47,9 +52,18 @@ public class Comment extends BaseObservable {
         return mCreatedAt;
     }
 
+    public String getPostId() {
+        return mPostId;
+    }
+
+    public void setPostId(String postId) {
+        mPostId = postId;
+    }
+
     public void setCreatedAt(long createdAt) {
         mCreatedAt = createdAt;
         notifyPropertyChanged(BR.createdAt);
+        
     }
 
     @Bindable
@@ -89,4 +103,43 @@ public class Comment extends BaseObservable {
         }
         return MediaModel.MediaType.ONLY_TEXT;
     }
+
+    protected Comment(Parcel in) {
+        mId = in.readString();
+        mPostId = in.readString();
+        mContent = in.readString();
+        mCreatedAt = in.readLong();
+        mModifiedAt = in.readLong();
+        mCreateUser = (UserModel) in.readValue(UserModel.class.getClassLoader());
+        mMediaModel = (MediaModel) in.readValue(MediaModel.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mPostId);
+        dest.writeString(mContent);
+        dest.writeLong(mCreatedAt);
+        dest.writeLong(mModifiedAt);
+        dest.writeValue(mCreateUser);
+        dest.writeValue(mMediaModel);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+        @Override
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        @Override
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
 }

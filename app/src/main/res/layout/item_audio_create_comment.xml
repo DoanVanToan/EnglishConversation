@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="record"
+            type="com.framgia.englishconversation.data.model.MediaModel"
+            />
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.createcomment.CreateCommentViewModel"
+            />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/image_cancel"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:onClick="@{() -> viewModel.onDeleteItemMediaClicked(record)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/com_facebook_close"
+            />
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_56"
+            app:controller_layout_id="@layout/custom_audio_playback_controller"
+            app:enableAudioPlayerMode="@{true}"
+            app:layout_constraintEnd_toStartOf="@id/image_cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:resize_mode="fixed_width"
+            app:videoPlayer="@{viewModel.simpleExoPlayer}"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

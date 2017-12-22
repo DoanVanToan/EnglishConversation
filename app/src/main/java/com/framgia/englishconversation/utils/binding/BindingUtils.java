@@ -139,6 +139,14 @@ public final class BindingUtils {
         exoPlayerView.setPlayer(exoPlayer);
     }
 
+    @BindingAdapter("enableAudioPlayerMode")
+    public static void setEnableAudioPlayerMode(SimpleExoPlayerView exoPlayerView, boolean enable) {
+        if (enable) {
+            exoPlayerView.setControllerShowTimeoutMs(0);
+            exoPlayerView.setControllerHideOnTouch(false);
+        }
+    }
+
     @BindingAdapter({ "onClickSafely" })
     public static void setOnClickSafely(View view, final View.OnClickListener listener) {
         view.setOnClickListener(new View.OnClickListener() {
@@ -192,5 +200,11 @@ public final class BindingUtils {
             Fragment fragment) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(layout.getId(), fragment).commit();
+    }
+
+    @BindingAdapter({ "scrollListener" })
+    public static void setScrollListener(RecyclerView recyclerView,
+            RecyclerView.OnScrollListener onScrollListener) {
+        recyclerView.addOnScrollListener(onScrollListener);
     }
 }
