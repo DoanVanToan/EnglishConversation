@@ -13,6 +13,9 @@ public class Constant {
     public static final int SECOND_PER_MINUTE = 60;
     public static final String DEFAULT_FORMAT_AUDIO = ".3gp";
     public static final int FLAG_HIDE_KEYBOARD = 0;
+    public static final int MINIMUM_CHARACTERS_PASSWORD = 6;
+    public static final int MIN_CHARACTERS = 1;
+    public static final String EMAIL_FORMAT = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     public class Timeline {
         public static final int NO_IMAGE = 0;

@@ -1,8 +1,8 @@
 package com.framgia.englishconversation.screen.register;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -18,11 +18,11 @@ interface RegisterContract {
 
         void showProgressDialog();
 
-        void onEmptyEmail();
+        void onEmailError(int message);
 
-        void onEmptyPassword();
+        void onPassWordError(int message);
 
-        void onEmptyPasswordConfirm();
+        void onConfirmPasswordError(int message);
 
         void onPasswordConfirmNotCorrect();
 
@@ -40,5 +40,7 @@ interface RegisterContract {
      */
     interface Presenter extends BasePresenter {
         void registerAccount(String email, String password, String passwordConfirm);
+
+        boolean validateInput(String email, String password, String passwordConfirm);
     }
 }

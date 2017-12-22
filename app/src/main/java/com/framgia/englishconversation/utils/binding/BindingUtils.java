@@ -4,10 +4,13 @@ import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,6 +22,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.utils.Blocker;
+import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import java.util.Calendar;
@@ -144,6 +148,37 @@ public final class BindingUtils {
             @Override
             public void onClick(View v) {
                 if (!mBlocker.block()) listener.onClick(v);
+            }
+        });
+    }
+
+    @BindingAdapter({ "errorTextInputLayout" })
+    public static void setErrorTextInputLayout(final TextInputLayout textInputLayout,
+            final String text) {
+        textInputLayout.setError(text);
+        final EditText editText = textInputLayout.getEditText();
+        if (editText == null) {
+            return;
+        }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //No-op
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() < Constant.MIN_CHARACTERS) {
+                    textInputLayout.setError(text);
+                }
+                if (charSequence.length() > Constant.ZERO_PERCENT) {
+                    textInputLayout.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                textInputLayout.setError("");
             }
         });
     }

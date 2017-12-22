@@ -88,4 +88,8 @@
     <string name="msg_get_user_info_failed"> .Please try to login again!</string>
     <string name="description_back_to_timeline">Press to back to timeline</string>
     <string name="description_vote_for_post">Vote for this post</string>
+    <string name="is_empty">Empty, Please enter the data!</string>
+    <string name="invalid_email_format">Invalid email format!</string>
+    <string name="least_6_characters">Please enter at least 6 characters!</string>
+    <string name="confirm_password_does_not_match">Confirm password does not match!</string>
 </resources>
