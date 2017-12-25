@@ -33,9 +33,9 @@ interface LoginContract {
 
         void onForgotPasswordClick();
 
-        void onEmailEmpty();
+        void onInputEmailError(int message);
 
-        void onPasswordEmpty();
+        void onInputPasswordError(int message);
 
         void onActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -55,5 +55,7 @@ interface LoginContract {
         void login(GoogleSignInAccount account);
 
         void login(AccessToken accessToken);
+
+        boolean validateInput(String email, String password);
     }
 }

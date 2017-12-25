@@ -30,6 +30,8 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
     private ProgressDialog mDialog;
     private String mEmail;
     private String mPassword;
+    private String mEmailError;
+    private String mPasswordError;
     private boolean mIsRememberAccount;
     private LoginActivity mActivity;
 
@@ -97,6 +99,9 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
 
     @Override
     public void onLoginClick() {
+        if (!mPresenter.validateInput(mEmail, mPassword)) {
+            return;
+        }
         mPresenter.login(mEmail, mPassword, mIsRememberAccount);
     }
 
@@ -112,13 +117,13 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
     }
 
     @Override
-    public void onEmailEmpty() {
-        mNavigator.showToast(R.string.empty_email);
+    public void onInputEmailError(int message) {
+        setEmailError(mContext.getString(message));
     }
 
     @Override
-    public void onPasswordEmpty() {
-        mNavigator.showToast(R.string.empty_password);
+    public void onInputPasswordError(int message) {
+        setPasswordError(mContext.getString(message));
     }
 
     @Override
@@ -158,19 +163,9 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
         return mEmail;
     }
 
-    public void setEmail(String email) {
-        mEmail = email;
-        notifyPropertyChanged(BR.email);
-    }
-
     @Bindable
     public String getPassword() {
         return mPassword;
-    }
-
-    public void setPassword(String password) {
-        mPassword = password;
-        notifyPropertyChanged(BR.password);
     }
 
     @Bindable
@@ -178,8 +173,38 @@ public class LoginViewModel extends BaseObservable implements LoginContract.View
         return mIsRememberAccount;
     }
 
+    @Bindable
+    public String getEmailError() {
+        return mEmailError;
+    }
+
+    @Bindable
+    public String getPasswordError() {
+        return mPasswordError;
+    }
+
+    public void setEmail(String email) {
+        mEmail = email;
+        notifyPropertyChanged(BR.email);
+    }
+
+    public void setPassword(String password) {
+        mPassword = password;
+        notifyPropertyChanged(BR.password);
+    }
+
     public void setRememberAccount(boolean rememberAccount) {
         mIsRememberAccount = rememberAccount;
         notifyPropertyChanged(BR.rememberAccount);
+    }
+
+    public void setEmailError(String emailError) {
+        mEmailError = emailError;
+        notifyPropertyChanged(BR.emailError);
+    }
+
+    public void setPasswordError(String passwordError) {
+        mPasswordError = passwordError;
+        notifyPropertyChanged(BR.passwordError);
     }
 }

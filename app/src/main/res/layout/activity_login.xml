@@ -76,6 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_15"
                         app:layout_constraintTop_toTopOf="parent"
+                        bind:errorTextInputLayout="@{viewModel.emailError}"
                         >
                         <android.support.v7.widget.AppCompatEditText
                             android:layout_width="match_parent"
@@ -83,6 +84,7 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:hint="@string/hint_email"
                             android:inputType="textEmailAddress"
+                            android:maxLength="50"
                             android:maxLines="1"
                             android:padding="@dimen/dp_10"
                             android:shadowColor="@android:color/white"
@@ -101,7 +103,10 @@
                         android:layout_height="wrap_content"
                         android:shadowColor="@color/blue_grey_500"
                         android:textColorHint="@color/color_grey_300"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="50"
                         app:layout_constraintTop_toBottomOf="@+id/text_email"
+                        bind:errorTextInputLayout="@{viewModel.passwordError}"
                         >
                         <android.support.v7.widget.AppCompatEditText
                             android:layout_width="match_parent"
@@ -109,6 +114,7 @@
                             android:layout_marginTop="@dimen/dp_20"
                             android:hint="@string/password"
                             android:inputType="textPassword"
+                            android:maxLength="50"
                             android:maxLines="1"
                             android:padding="@dimen/dp_10"
                             android:shadowColor="@android:color/white"
