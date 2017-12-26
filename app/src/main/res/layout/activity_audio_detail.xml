@@ -27,130 +27,25 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingEnd="@dimen/dp_8"
-                android:paddingStart="@dimen/dp_8">
+                android:padding="@dimen/dp_8">
 
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraint_header"
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_height="@dimen/dp_48"
-                    android:onClick="@{() -> viewModel.onFinishClick()}"
-                    android:paddingEnd="@dimen/dp_8"
-                    android:paddingStart="@dimen/dp_8"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/image_back"
-                        android:layout_width="@dimen/dp_16"
-                        android:layout_height="@dimen/dp_16"
-                        android:contentDescription="@string/description_back_to_timeline"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_backspace" />
-
-                    <ImageView
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="@dimen/dp_24"
-                        android:contentDescription="@string/description_vote_for_post"
-                        android:padding="@dimen/dp_2"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_vote" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <View
-                    android:id="@+id/view_header"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_2"
-                    android:background="@color/color_grey_200"
-                    app:layout_constraintTop_toBottomOf="@id/constraint_header" />
-
-                <TextView
-                    android:id="@+id/text_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="@drawable/bg_timeline_conversation"
-                    android:gravity="center"
-                    android:maxLines="3"
-                    android:padding="@dimen/dp_4"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_header" />
-
-                <View
-                    android:id="@+id/view_audio"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_2"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="@color/color_grey_200"
-                    app:layout_constraintTop_toBottomOf="@id/text_content" />
+                <include
+                    android:id="@+id/layout_header"
+                    layout="@layout/item_header_timeline"
+                    bind:timelineModel="@{viewModel.timelineModel}" />
 
                 <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                    android:id="@+id/exo_audio"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_200"
+                    android:layout_height="@dimen/dp_72"
                     android:layout_marginTop="@dimen/dp_8"
                     android:transitionName="@string/transition_audio"
+                    app:controller_layout_id="@layout/custom_audio_playback_controller"
                     app:hide_on_touch="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_audio"
+                    app:layout_constraintTop_toBottomOf="@id/layout_header"
                     app:show_timeout="0"
-                    app:videoPlayer="@{viewModel.exoPlayer}" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/image_avatar"
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_40"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:contentDescription="@string/description_avatar"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exo_audio"
-                    bind:imageUrl="@{viewModel.timelineModel.createdUser.photoUrl}" />
-
-                <TextView
-                    android:id="@+id/text_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:text="@{viewModel.timelineModel.createdUser.userName}"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@id/image_avatar"
-                    app:layout_constraintTop_toTopOf="@id/image_avatar" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:color="@android:color/black"
-                    android:text="@{viewModel.timelineModel.createdUser.email}"
-                    android:textSize="@dimen/sp_12"
-                    app:layout_constraintStart_toEndOf="@id/image_avatar"
-                    app:layout_constraintTop_toBottomOf="@id/text_name" />
-
-                <View
-                    android:id="@+id/view_info_user"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_2"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:background="@color/color_grey_200"
-                    app:layout_constraintTop_toBottomOf="@id/image_avatar" />
+                    bind:player="@{viewModel.exoPlayer}" />
 
             </android.support.constraint.ConstraintLayout>
 

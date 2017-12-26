@@ -97,4 +97,6 @@
     <string name="description_play_audio">Play the detail audio</string>
     <string name="description_avatar">Image post user</string>
     <string name="transition_audio">Transition audio</string>
+    <string name="description_pause_audio">Pause audio</string>
+    <string name="title_audio_separator_time">/</string>
 </resources>

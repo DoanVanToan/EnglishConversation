@@ -23,6 +23,8 @@ public interface AudioDetailContract {
      */
     interface View extends BaseViewModel<Presenter> {
 
+        void onFinishActivity();
+
         void onResume();
 
         void onPause();

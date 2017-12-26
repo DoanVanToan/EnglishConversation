@@ -18,7 +18,8 @@ import java.util.List;
 public class TimelineModel extends BaseObservable implements Parcelable {
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<TimelineModel> CREATOR = new Parcelable.Creator<TimelineModel>() {
+    public static final Parcelable.Creator<TimelineModel> CREATOR
+            = new Parcelable.Creator<TimelineModel>() {
         @Override
         public TimelineModel createFromParcel(Parcel in) {
             return new TimelineModel(in);
@@ -29,6 +30,7 @@ public class TimelineModel extends BaseObservable implements Parcelable {
             return new TimelineModel[size];
         }
     };
+
     @SerializedName("id")
     private String mId;
     @SerializedName("content")
@@ -65,37 +67,37 @@ public class TimelineModel extends BaseObservable implements Parcelable {
         mModifiedAt = in.readLong();
         mLocation = (LocationModel) in.readValue(LocationModel.class.getClassLoader());
         if (in.readByte() == 0x01) {
-            mMedias = new ArrayList<MediaModel>();
+            mMedias = new ArrayList<>();
             in.readList(mMedias, MediaModel.class.getClassLoader());
         } else {
             mMedias = null;
         }
         if (in.readByte() == 0x01) {
-            mComments = new ArrayList<Comment>();
+            mComments = new ArrayList<>();
             in.readList(mComments, Comment.class.getClassLoader());
         } else {
             mComments = null;
         }
         if (in.readByte() == 0x01) {
-            mLikeUser = new ArrayList<UserModel>();
+            mLikeUser = new ArrayList<>();
             in.readList(mLikeUser, UserModel.class.getClassLoader());
         } else {
             mLikeUser = null;
         }
         if (in.readByte() == 0x01) {
-            mDishLikeUser = new ArrayList<UserModel>();
+            mDishLikeUser = new ArrayList<>();
             in.readList(mDishLikeUser, UserModel.class.getClassLoader());
         } else {
             mDishLikeUser = null;
         }
         if (in.readByte() == 0x01) {
-            mReportUser = new ArrayList<UserModel>();
+            mReportUser = new ArrayList<>();
             in.readList(mReportUser, UserModel.class.getClassLoader());
         } else {
             mReportUser = null;
         }
         if (in.readByte() == 0x01) {
-            mConversations = new ArrayList<ConversationModel>();
+            mConversations = new ArrayList<>();
             in.readList(mConversations, ConversationModel.class.getClassLoader());
         } else {
             mConversations = null;
