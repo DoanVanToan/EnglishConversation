@@ -1,17 +1,23 @@
 package com.framgia.englishconversation.screen.timeline;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
+import android.view.View;
+
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 
 /**
@@ -31,7 +37,7 @@ public class TimelineViewModel extends BaseObservable
     public TimelineViewModel(Context context, Navigator navigator) {
         mContext = context;
         mNavigator = navigator;
-        mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>());
+        mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>(), this);
         mAdapter.setRecyclerViewItemClickListener(this);
     }
 
@@ -92,10 +98,16 @@ public class TimelineViewModel extends BaseObservable
         mAdapter = adapter;
     }
 
+    public void onAudioTimeLineClick(TimelineModel timelineModel, View view) {
+        Intent intent = AudioDetailActivity.getInstance(mContext, timelineModel);
+        mNavigator.startActivityBySharedElement(intent, view, ViewCompat.getTransitionName(view));
+    }
+
     @Override
     public void onHeaderTouchListener(TimelineModel timelineModel) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constant.EXTRA_TIMELINE, timelineModel);
         mNavigator.startActivity(VideoDetailActivity.class, bundle);
     }
+
 }

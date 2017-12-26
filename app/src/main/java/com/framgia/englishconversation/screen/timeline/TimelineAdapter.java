@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
@@ -11,6 +12,7 @@ import com.framgia.englishconversation.databinding.ItemTimelineConversationBindi
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
+
 import java.util.List;
 
 /**
@@ -18,11 +20,14 @@ import java.util.List;
  */
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTimelineViewHolder> {
+
     private List<TimelineModel> mData;
     private OnTimelineItemTouchListener mItemTouchListener;
+    private TimelineViewModel mViewModel;
 
-    public TimelineAdapter(List<TimelineModel> items) {
+    public TimelineAdapter(List<TimelineModel> items, TimelineViewModel viewModel) {
         mData = items;
+        mViewModel = viewModel;
     }
 
     public void setRecyclerViewItemClickListener(
@@ -48,7 +53,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
     @Override
     public TimelineAdapter.BaseTimelineViewHolder onCreateViewHolder(ViewGroup parent,
-            int viewType) {
+                                                                     int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.ONLY_TEXT:
                 ItemTimelineOnlyTextBinding onlyTextBinding = ItemTimelineOnlyTextBinding.inflate(
@@ -121,6 +126,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         @Override
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
+            mBinding.setViewModel(mViewModel);
             mBinding.executePendingBindings();
         }
     }
@@ -151,7 +157,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mOnTouchListener;
 
         VideoViewHolder(ItemTimelineVideoBinding itemView,
-                OnTimelineItemTouchListener onTouchListener) {
+                        OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;

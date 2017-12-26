@@ -92,4 +92,9 @@
     <string name="invalid_email_format">Invalid email format!</string>
     <string name="least_6_characters">Please enter at least 6 characters!</string>
     <string name="confirm_password_does_not_match">Confirm password does not match!</string>
+    <string name="msg_error_init">Sorry, you can not init this audio. Please try again later!</string>
+    <string name="msg_error_start">Sorry, an error has occurred. Please try again later!</string>
+    <string name="description_play_audio">Play the detail audio</string>
+    <string name="description_avatar">Image post user</string>
+    <string name="transition_audio">Transition audio</string>
 </resources>

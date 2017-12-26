@@ -95,7 +95,7 @@
                     <TextView
                         android:id="@+id/text_second_content"
                         android:layout_width="@dimen/dp_0"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/dp_32"
                         android:layout_marginEnd="@dimen/dp_4"
                         android:background="@drawable/bg_recording_audio_layout"
                         android:gravity="end"
@@ -129,32 +129,10 @@
                 android:layout_marginTop="@dimen/dp_8"
                 android:background="@color/color_brown_50" />
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_marginStart="@dimen/dp_8"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_0"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:background="@drawable/bg_recording_audio_layout"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_4"
-                    android:text="@string/action_view_all"
-                    android:textColor="@android:color/holo_green_dark"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    bind:ignore="HardcodedText" />
-
-                <include
-                    layout="@layout/item_footer_timeline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    bind:timelineModel="@{timelineModel}" />
-
-            </android.support.constraint.ConstraintLayout>
+            <include
+                layout="@layout/item_footer_timeline"
+                app:layout_constraintEnd_toEndOf="parent"
+                bind:timelineModel="@{timelineModel}" />
 
         </LinearLayout>
 
