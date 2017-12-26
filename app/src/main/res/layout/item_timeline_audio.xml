@@ -6,12 +6,19 @@
     <data>
 
         <import type="android.view.View" />
-        <import type="com.framgia.englishconversation.utils.Utils"/>
+
+        <import type="com.framgia.englishconversation.utils.Utils" />
+
         <import type="com.framgia.englishconversation.utils.Constant.Timeline" />
 
         <variable
             name="timelineModel"
             type="com.framgia.englishconversation.data.model.TimelineModel" />
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
+
     </data>
 
     <android.support.v7.widget.CardView
@@ -31,26 +38,30 @@
                 bind:timelineModel="@{timelineModel}" />
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraint_audio"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_56"
                 android:layout_margin="@dimen/dp_8"
-                android:background="@drawable/bg_record_item">
+                android:background="@drawable/bg_record_item"
+                android:transitionName="@string/transition_audio">
 
                 <ImageView
                     android:id="@+id/image_playing_audio"
                     android:layout_width="@dimen/dp_24"
                     android:layout_height="@dimen/dp_24"
+                    android:layout_marginLeft="@dimen/dp_8"
                     android:layout_marginStart="@dimen/dp_8"
-                    app:srcCompat="@drawable/ic_pause_circle_outline_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_pause_circle_outline_black" />
 
                 <TextView
                     android:id="@+id/text_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginRight="@dimen/dp_8"
                     android:text="@{Utils.getFormatTimeFile(timelineModel.medias[0].url)}"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
@@ -82,6 +93,7 @@
 
             <include
                 layout="@layout/item_footer_timeline"
+                bind:onClick="@{() -> viewModel.onAudioTimeLineClick(timelineModel, constraintAudio)}"
                 bind:timelineModel="@{timelineModel}" />
         </LinearLayout>
 

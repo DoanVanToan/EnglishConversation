@@ -12,9 +12,10 @@
         <variable
             name="timelineModel"
             type="com.framgia.englishconversation.data.model.TimelineModel" />
+
         <variable
             name="touchListener"
-            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"/>
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -32,16 +33,15 @@
             <include
                 layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}"
-                bind:touchListener="@{touchListener}"/>
+                bind:touchListener="@{touchListener}" />
 
             <VideoView
-                android:layout_gravity="center"
                 android:id="@+id/video_view"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_200"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/dp_8"
-                bind:videoPath="@{timelineModel.medias[0].url}"
-                />
+                bind:videoPath="@{timelineModel.medias[0].url}" />
 
             <View
                 android:layout_width="match_parent"
