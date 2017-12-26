@@ -76,7 +76,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int PERIOD_TIME = 1;
     private final static String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private static final int SIZE_CONVERSATION_DEFAULT = 0;
 
     @AdapterType
     private int mAdapterType;
@@ -103,9 +102,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator) {
         mActivity = activity;
         mNavigator = navigator;
-        mAdapterType = AdapterType.CONVERSATION;
         mTimelineModel = new TimelineModel();
         mProgressDialog = new ProgressDialog(mActivity);
+        mAdapterType = AdapterType.MEDIA;
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         mCompositeDisposable = new CompositeDisposable();
         mMediaAdapter = new MediaAdapter(this);
@@ -528,15 +527,14 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     public void onRecordAudioClick() {
         if (Utils.isAllowPermision(mActivity, PERMISSION)) {
+            Utils.hideKeyBoard(mActivity);
             setAdapterType(AdapterType.MEDIA);
-            mActivity.fillColorSelectedButton(CreatePostActivity.AUDIO_RECORD_POSITION);
             onAudioRecordingClick();
         }
     }
 
     public void onVideoPickerClick() {
         setAdapterType(AdapterType.MEDIA);
-        mActivity.fillColorSelectedButton(CreatePostActivity.VIDEO_RECORD_POSITION);
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
             mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
@@ -544,20 +542,17 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onCreateConventionClick() {
-        mActivity.fillColorSelectedButton(CreatePostActivity.CONVERSATION_POSITION);
         setAdapterType(AdapterType.CONVERSATION);
     }
 
     @Override
     public void onImagePickerClick() {
-        mActivity.fillColorSelectedButton(CreatePostActivity.PHOTO_POSITION);
         setAdapterType(AdapterType.MEDIA);
         selectImage();
     }
 
     @Override
     public void onPlacePickerClick() {
-        mActivity.fillColorSelectedButton(CreatePostActivity.LOCATION_POSITION);
         setAdapterType(AdapterType.MEDIA);
         openPlacePicker();
     }

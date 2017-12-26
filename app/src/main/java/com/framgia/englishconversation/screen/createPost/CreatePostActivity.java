@@ -3,13 +3,10 @@ package com.framgia.englishconversation.screen.createPost;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
@@ -32,8 +29,6 @@ public class CreatePostActivity extends BaseActivity {
     public static final int LOCATION_POSITION = 4;
 
     private CreatePostContract.ViewModel mViewModel;
-
-    private ImageView[] mImageViews;
 
     public static Intent getInstance(Context context) {
         return new Intent(context, CreatePostActivity.class);
@@ -60,13 +55,6 @@ public class CreatePostActivity extends BaseActivity {
             getSupportActionBar().setSubtitle(R.string.subtitle_create_post);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mImageViews = new ImageView[]{
-                binding.imageConversation, binding.imageRecordAudio, binding.imageVideo,
-                binding.imagePhoto, binding.imageLocation
-        };
-        int selectedColor = ContextCompat.getColor(this, R.color.color_indogo_acceent_700);
-        binding.imageConversation.getDrawable()
-                .setColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -111,17 +99,5 @@ public class CreatePostActivity extends BaseActivity {
                                            @NonNull int[] grantResults) {
         mViewModel.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public void fillColorSelectedButton(int position) {
-        int selectedColor = ContextCompat.getColor(this, R.color.color_indogo_acceent_700);
-        int unSelectedColor = ContextCompat.getColor(this, android.R.color.black);
-        for (int i = 0; i < mImageViews.length; i++) {
-            if (i == position) {
-                mImageViews[i].setColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                mImageViews[i].setColorFilter(unSelectedColor, PorterDuff.Mode.SRC_ATOP);
-            }
-        }
     }
 }

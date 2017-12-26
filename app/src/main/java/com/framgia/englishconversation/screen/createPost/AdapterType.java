@@ -11,8 +11,8 @@ import static com.framgia.englishconversation.screen.createPost.AdapterType.MEDI
  * Description:
  */
 
-@IntDef({CONVERSATION, MEDIA})
+@IntDef({MEDIA, CONVERSATION})
 public @interface AdapterType {
-    int CONVERSATION = 0;
-    int MEDIA = 1;
+    int MEDIA = 0;
+    int CONVERSATION = 1;
 }
