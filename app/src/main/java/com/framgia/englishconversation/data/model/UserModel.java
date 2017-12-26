@@ -2,7 +2,6 @@ package com.framgia.englishconversation.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -47,7 +46,7 @@ public class UserModel implements Parcelable {
 
     public UserModel(FirebaseUser user) {
         mUserName = user.getDisplayName();
-        mPhotoUrl = user.getPhotoUrl().toString();
+        mPhotoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
         mEmail = user.getEmail();
         mId = user.getUid();
     }

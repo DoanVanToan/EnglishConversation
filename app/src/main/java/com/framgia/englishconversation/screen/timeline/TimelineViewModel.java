@@ -10,10 +10,12 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import com.android.databinding.library.baseAdapters.BR;
+import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
+import com.framgia.englishconversation.screen.imageDetail.ImageDetailActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
@@ -59,7 +61,7 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void onGetUserSuccess(UserModel data) {
         mUser.set(data);
-        setUserUrl(data.getPhotoUrl().toString());
+        setUserUrl(data.getPhotoUrl() != null ? data.getPhotoUrl().toString() : null);
     }
 
     @Override
@@ -105,9 +107,22 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onHeaderTouchListener(TimelineModel timelineModel) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.EXTRA_TIMELINE, timelineModel);
-        mNavigator.startActivity(VideoDetailActivity.class, bundle);
+        switch (timelineModel.getPostType()) {
+            case MediaModel.MediaType.VIDEO:
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(Constant.EXTRA_TIMELINE, timelineModel);
+                mNavigator.startActivity(VideoDetailActivity.class, bundle);
+                break;
+            case MediaModel.MediaType.IMAGE:
+                mContext.startActivity(ImageDetailActivity.getInstance(mContext, timelineModel));
+                break;
+            case MediaModel.MediaType.AUDIO:
+                break;
+            case MediaModel.MediaType.ONLY_TEXT:
+                break;
+            default:
+                break;
+        }
     }
 
 }
