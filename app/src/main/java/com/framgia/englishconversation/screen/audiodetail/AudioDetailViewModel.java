@@ -11,12 +11,18 @@ import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -33,6 +39,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     private int mCurrentWindow;
     private long mPlaybackPosition;
     private String mPathAudio;
+    private ComponentListener mComponentListener;
     private SimpleExoPlayer mExoPlayer;
     private AudioDetailActivity mActivity;
     private TimelineModel mTimelineModel;
@@ -78,6 +85,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
     private void initComponents() {
         mPathAudio = mTimelineModel.getMedias().get(INDEX_AUDIO).getUrl();
+        mComponentListener = new ComponentListener();
     }
 
     private void setUpExoPlayer() {
@@ -91,12 +99,12 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         Uri uriAudio = Uri.parse(mPathAudio);
         mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
         mExoPlayer.prepare(getMediaSource(uriAudio), true, false);
+        mExoPlayer.addListener(mComponentListener);
         setExoPlayer(mExoPlayer);
     }
 
     private MediaSource getMediaSource(Uri uri) {
-        return new ExtractorMediaSource(
-                uri,
+        return new ExtractorMediaSource(uri,
                 new DefaultHttpDataSourceFactory(Constant.USER_AGENT),
                 new DefaultExtractorsFactory(), null, null);
     }
@@ -107,12 +115,14 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         }
         mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
         mPlaybackPosition = mExoPlayer.getCurrentPosition();
+        mExoPlayer.removeListener(mComponentListener);
         mExoPlayer.release();
         mExoPlayer = null;
     }
 
-    public void onFinishClick() {
-        mNavigator.finishBySharedElementIfAvailable();
+    @Override
+    public void onFinishActivity() {
+        mNavigator.finishActivity();
     }
 
     @Bindable
@@ -132,5 +142,62 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
     public TimelineModel getTimelineModel() {
         return mTimelineModel;
+    }
+
+    private class ComponentListener implements Player.EventListener {
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object manifest) {
+            // no ops
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroupArray,
+                                    TrackSelectionArray trackSelectionArray) {
+            // no ops
+        }
+
+        @Override
+        public void onLoadingChanged(boolean isLoading) {
+            // no ops
+        }
+
+        @Override
+        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if (playbackState == Player.STATE_ENDED) {
+                mExoPlayer.seekToDefaultPosition();
+                mExoPlayer.setPlayWhenReady(false);
+            }
+        }
+
+        @Override
+        public void onRepeatModeChanged(int repeatMode) {
+            // no ops
+        }
+
+        @Override
+        public void onShuffleModeEnabledChanged(boolean b) {
+            // no ops
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+            // no ops
+        }
+
+        @Override
+        public void onPositionDiscontinuity(int reason) {
+            // no ops
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+            // no ops
+        }
+
+        @Override
+        public void onSeekProcessed() {
+            // no ops
+        }
     }
 }
