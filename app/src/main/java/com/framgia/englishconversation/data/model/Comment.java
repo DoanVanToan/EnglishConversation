@@ -1,12 +1,15 @@
 package com.framgia.englishconversation.data.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import com.android.databinding.library.baseAdapters.BR;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by framgia on 16/05/2017.
  */
 
-public class Comment {
+public class Comment extends BaseObservable {
     @SerializedName("id")
     private String mId;
     @SerializedName("post_id")
@@ -16,7 +19,7 @@ public class Comment {
     @SerializedName("created_at")
     private long mCreatedAt;
     @SerializedName("modified_at")
-    private String mModifiedAt;
+    private long mModifiedAt;
     @SerializedName("created_user")
     private UserModel mCreateUser;
     @SerializedName("media")
@@ -30,6 +33,7 @@ public class Comment {
         mId = id;
     }
 
+    @Bindable
     public String getContent() {
         return mContent;
     }
@@ -38,43 +42,51 @@ public class Comment {
         mContent = content;
     }
 
+    @Bindable
     public long getCreatedAt() {
         return mCreatedAt;
     }
 
     public void setCreatedAt(long createdAt) {
         mCreatedAt = createdAt;
+        notifyPropertyChanged(BR.createdAt);
     }
 
-    public String getPostId() {
-        return mPostId;
-    }
-
-    public void setPostId(String postId) {
-        mPostId = postId;
-    }
-
-    public String getModifiedAt() {
+    @Bindable
+    public long getModifiedAt() {
         return mModifiedAt;
     }
 
-    public void setModifiedAt(String modifiedAt) {
+    public void setModifiedAt(long modifiedAt) {
         mModifiedAt = modifiedAt;
+        notifyPropertyChanged(BR.modifiedAt);
     }
 
+    @Bindable
     public UserModel getCreateUser() {
         return mCreateUser;
     }
 
+    public void setCreateUser(UserModel createUser) {
+        mCreateUser = createUser;
+        notifyPropertyChanged(BR.createUser);
+    }
+
+    @Bindable
     public MediaModel getMediaModel() {
         return mMediaModel;
     }
 
     public void setMediaModel(MediaModel mediaModel) {
         mMediaModel = mediaModel;
+        notifyPropertyChanged(BR.mediaModel);
     }
 
-    public void setCreateUser(UserModel createUser) {
-        mCreateUser = createUser;
+    @Bindable
+    public int getCommentType() {
+        if (mMediaModel != null) {
+            return mMediaModel.getType();
+        }
+        return MediaModel.MediaType.ONLY_TEXT;
     }
 }
