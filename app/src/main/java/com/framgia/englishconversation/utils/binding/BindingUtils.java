@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatSpinner;
@@ -15,17 +18,16 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
-
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.utils.Blocker;
 import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-
 import java.util.Calendar;
 
 /**
@@ -41,32 +43,32 @@ public final class BindingUtils {
     /**
      * setMediaAdapter For RecyclerView
      */
-    @BindingAdapter({"recyclerAdapter"})
+    @BindingAdapter({ "recyclerAdapter" })
     public static void setAdapterForRecyclerView(RecyclerView recyclerView,
-                                                 RecyclerView.Adapter adapter) {
+            RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
     }
 
     /**
      * setNested scrollenable For RecyclerView
      */
-    @BindingAdapter({"scrollEnabled"})
+    @BindingAdapter({ "scrollEnabled" })
     public static void setRecyclerViewSrollEnable(RecyclerView recyclerView, boolean isEnabled) {
         recyclerView.setNestedScrollingEnabled(isEnabled);
     }
 
-    @BindingAdapter({"bind:adapter"})
+    @BindingAdapter({ "bind:adapter" })
     public static void setViewPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
         viewPager.setAdapter(adapter);
     }
 
-    @BindingAdapter({"bind:onTabSelected"})
+    @BindingAdapter({ "bind:onTabSelected" })
     public static void setOnTabSelectedListener(TabLayout tabLayout,
-                                                TabLayout.OnTabSelectedListener listener) {
+            TabLayout.OnTabSelectedListener listener) {
         tabLayout.addOnTabSelectedListener(listener);
     }
 
-    @BindingAdapter({"bind:imageUrl", "bind:imageError"})
+    @BindingAdapter({ "bind:imageUrl", "bind:imageError" })
     public static void loadImage(ImageView imageView, String url, Drawable error) {
         Glide.with(imageView.getContext())
                 .load(url)
@@ -97,20 +99,20 @@ public final class BindingUtils {
                 .into(imageView);
     }
 
-    @BindingAdapter({"bind:videoPath"})
+    @BindingAdapter({ "bind:videoPath" })
     public static void loadVideoUri(VideoView videoView, String path) {
         videoView.setVideoPath(path);
     }
 
-    @BindingAdapter({"spinnerAdapter"})
+    @BindingAdapter({ "spinnerAdapter" })
     public static void setAdapterForSpinner(AppCompatSpinner spinner,
-                                            ArrayAdapter<String> adapter) {
+            ArrayAdapter<String> adapter) {
         spinner.setAdapter(adapter);
     }
 
     @BindingAdapter("layoutManager")
     public static void setLayoutManager(RecyclerView recyclerView,
-                                        LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
+            LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
     }
 
@@ -133,11 +135,11 @@ public final class BindingUtils {
 
     @BindingAdapter("videoPlayer")
     public static void setVideoPlayer(SimpleExoPlayerView exoPlayerView,
-                                      SimpleExoPlayer exoPlayer) {
+            SimpleExoPlayer exoPlayer) {
         exoPlayerView.setPlayer(exoPlayer);
     }
 
-    @BindingAdapter({"onClickSafely"})
+    @BindingAdapter({ "onClickSafely" })
     public static void setOnClickSafely(View view, final View.OnClickListener listener) {
         view.setOnClickListener(new View.OnClickListener() {
             private Blocker mBlocker = new Blocker();
@@ -149,9 +151,9 @@ public final class BindingUtils {
         });
     }
 
-    @BindingAdapter({"errorTextInputLayout"})
+    @BindingAdapter({ "errorTextInputLayout" })
     public static void setErrorTextInputLayout(final TextInputLayout textInputLayout,
-                                               final String text) {
+            final String text) {
         textInputLayout.setError(text);
         final EditText editText = textInputLayout.getEditText();
         if (editText == null) {
@@ -180,8 +182,15 @@ public final class BindingUtils {
         });
     }
 
-    @BindingAdapter({"bind:player"})
+    @BindingAdapter({ "bind:player" })
     public static void setUpPlayer(SimpleExoPlayerView playerView, SimpleExoPlayer player) {
         playerView.setPlayer(player);
+    }
+
+    @BindingAdapter({ "bind:manager", "bind:fragment" })
+    public static void setFragmentManager(FrameLayout layout, FragmentManager manager,
+            Fragment fragment) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(layout.getId(), fragment).commit();
     }
 }
