@@ -14,10 +14,9 @@
 
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context="com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity"
         >
 
@@ -25,10 +24,40 @@
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_200"
-            app:resize_mode="fixed_width"
             app:controller_layout_id="@layout/custom_video_playback_controller"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:resize_mode="fit"
             app:videoPlayer="@{viewModel.simpleExoPlayer}"
             />
-        
-    </LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
+            app:imageError="@{@drawable/ic_person_black_24dp}"
+            app:imageUrl="@{viewModel.timelineModel.createdUser.photoUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            />
+        <EditText
+            android:id="@+id/et_input_comment"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_30"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
+            android:inputType="text"
+            android:maxLines="1"
+            android:onClick="@{() -> viewModel.onCreateCommentTouched()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_user_avatar"
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            />
+    </android.support.constraint.ConstraintLayout>
 </layout>

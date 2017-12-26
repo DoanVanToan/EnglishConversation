@@ -1,13 +1,17 @@
 package com.framgia.englishconversation.screen.videoDetail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.utils.Constant;
+import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -27,10 +31,16 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
     private long mCurrentPlaybackPosition = 0;
     private TimelineModel mTimelineModel;
     private Context mContext;
+    private Navigator mNavigator;
 
     VideoDetailViewModel(Context context, TimelineModel timelineModel) {
         mContext = context;
         mTimelineModel = timelineModel;
+        mNavigator = new Navigator((Activity) context);
+    }
+
+    public TimelineModel getTimelineModel() {
+        return mTimelineModel;
     }
 
     @Override
@@ -81,6 +91,7 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
     }
 
     private void initializePlayer() {
+
         SimpleExoPlayer player =
                 ExoPlayerFactory.newSimpleInstance(mContext, new DefaultTrackSelector());
         setSimpleExoPlayer(player);
@@ -102,5 +113,13 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
             mSimpleExoPlayer.release();
             mSimpleExoPlayer = null;
         }
+    }
+
+    public void onCreateCommentTouched() {
+        releasePlayer();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
+        mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
+                Constant.RequestCode.POST_COMMENT);
     }
 }
