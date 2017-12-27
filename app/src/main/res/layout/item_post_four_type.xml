@@ -4,15 +4,19 @@
 
     <data>
 
-        <import type="java.util.List" />
+        <import type="java.util.List"/>
 
-        <import type="com.framgia.englishconversation.data.model.MediaModel" />
+        <import type="com.framgia.englishconversation.data.model.MediaModel"/>
 
-        <import type="android.view.View" />
-
+        <import type="android.view.View"/>
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.imagedetail.OnMediaModelItemTouchListener"
+            />
         <variable
             name="listData"
-            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;" />
+            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;"
+            />
     </data>
 
     <LinearLayout
@@ -20,43 +24,54 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:padding="@dimen/dp_5">
+        android:padding="@dimen/dp_5"
+        >
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            bind:imageUrl="@{listData[0].url}" />
+            android:onClick="@{()->listener.onTouchListener(listData,0)}"
+            bind:imageUrl="@{listData[0].url}"
+            />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_120"
-                bind:imageUrl="@{listData[1].url}" />
+                android:onClick="@{()->listener.onTouchListener(listData,1)}"
+                bind:imageUrl="@{listData[1].url}"
+                />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_120"
                 android:layout_marginTop="@dimen/dp_5"
-                bind:imageUrl="@{listData[2].url}" />
+                android:onClick="@{()->listener.onTouchListener(listData,2)}"
+                bind:imageUrl="@{listData[2].url}"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_120"
-                android:layout_marginTop="@dimen/dp_5">
+                android:layout_marginTop="@dimen/dp_5"
+                >
 
                 <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    bind:imageUrl="@{listData[3].url}" />
+                    android:onClick="@{()->listener.onTouchListener(listData,3)}"
+                    bind:imageUrl="@{listData[3].url}"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -64,11 +79,13 @@
                     android:alpha="0.7"
                     android:background="@android:color/black"
                     android:gravity="center"
+                    android:onClick="@{()->listener.onTouchListener(listData,4)}"
                     android:text="@{@string/item_format(String.valueOf(listData.size-4))}"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/sp_40"
                     android:textStyle="bold"
-                    android:visibility="@{listData.size > 4? View.VISIBLE: View.GONE}" />
+                    android:visibility="@{listData.size > 4? View.VISIBLE: View.GONE}"
+                    />
 
             </RelativeLayout>
 

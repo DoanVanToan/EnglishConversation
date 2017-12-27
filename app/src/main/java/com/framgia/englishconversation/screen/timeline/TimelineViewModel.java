@@ -15,7 +15,7 @@ import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
-import com.framgia.englishconversation.screen.imageDetail.ImageDetailActivity;
+import com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;

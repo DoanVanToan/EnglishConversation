@@ -99,6 +99,15 @@ public final class BindingUtils {
                 .into(imageView);
     }
 
+    @BindingAdapter("bind:imageUrlFullSize")
+    public static void loadImageFullSize(final ImageView imageView, String url) {
+        Glide.with(imageView.getContext())
+                .load(url)
+                .asBitmap()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(imageView);
+    }
+
     @BindingAdapter({ "bind:videoPath" })
     public static void loadVideoUri(VideoView videoView, String path) {
         videoView.setVideoPath(path);

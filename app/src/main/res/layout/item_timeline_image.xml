@@ -29,7 +29,9 @@
 
             <include
                 layout="@layout/item_header_timeline"
-                bind:timelineModel="@{timelineModel}" />
+                bind:timelineModel="@{timelineModel}"
+                bind:touchListener="@{touchListener}"
+                />
 
             <include
                 layout="@layout/item_list_image"

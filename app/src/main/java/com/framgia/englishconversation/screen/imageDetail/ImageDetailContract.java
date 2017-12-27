@@ -1,4 +1,4 @@
-package com.framgia.englishconversation.screen.imageDetail;
+package com.framgia.englishconversation.screen.imagedetail;
 
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
