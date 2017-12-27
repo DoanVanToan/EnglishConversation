@@ -20,7 +20,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="com.framgia.englishconversation.screen.imageDetail.ImageDetailActivity"
+            tools:context="com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity"
             >
             <include
                 layout="@layout/item_header_timeline"
@@ -42,6 +42,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_item_header"
                 app:timelineModel="@{viewModel.timelineModel}"
+                app:listener="@{viewModel.listener}"
                 />
 
             <View

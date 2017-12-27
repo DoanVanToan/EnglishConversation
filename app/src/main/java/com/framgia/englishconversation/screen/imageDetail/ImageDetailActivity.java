@@ -29,7 +29,7 @@ public class ImageDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         TimelineModel timelineModel =
                 getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
-        mViewModel = new ImageDetailViewModel(timelineModel, getSupportFragmentManager());
+        mViewModel = new ImageDetailViewModel(this, timelineModel, getSupportFragmentManager());
 
         ImageDetailContract.Presenter presenter = new ImageDetailPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
