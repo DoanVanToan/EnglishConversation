@@ -43,5 +43,6 @@ public class Constant {
     public static final String EXTRA_TIMELINE = "EXTRA_TIMELINE";
     public static final String EXTRA_MEDIA_MODEL = "EXTRA_MEDIA_MODEL";
     public static final String EXTRA_COMMENT = "EXTRA_COMMENT";
+    public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final int INDEX_FIRST_ITEM = 0;
 }

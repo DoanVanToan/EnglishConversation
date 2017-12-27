@@ -12,6 +12,10 @@
             name="timelineModel"
             type="com.framgia.englishconversation.data.model.TimelineModel"
             />
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.imagedetail.OnMediaModelItemTouchListener"
+            />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,24 +26,28 @@
             layout="@layout/item_post_first_type"
             android:visibility="@{timelineModel.viewType == Timeline.ONE_IMAGE? View.VISIBLE: View.GONE}"
             bind:listData="@{timelineModel.medias}"
+            bind:listener="@{listener}"
             />
 
         <include
             layout="@layout/item_post_second_type"
             android:visibility="@{timelineModel.viewType == Timeline.TWO_IMAGE? View.VISIBLE: View.GONE}"
             bind:listData="@{timelineModel.medias}"
+            bind:listener="@{listener}"
             />
 
         <include
             layout="@layout/item_post_thrid_type"
             android:visibility="@{timelineModel.viewType == Timeline.THREE_IMAGE? View.VISIBLE: View.GONE}"
             bind:listData="@{timelineModel.medias}"
+            bind:listener="@{listener}"
             />
 
         <include
             layout="@layout/item_post_four_type"
             android:visibility="@{timelineModel.viewType >= Timeline.FOUR_IMAGE? View.VISIBLE: View.GONE}"
             bind:listData="@{timelineModel.medias}"
+            bind:listener="@{listener}"
             />
     </LinearLayout>
 </layout>

@@ -22,7 +22,7 @@
         <activity
             android:name=".screen.main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".screen.login.LoginActivity"
             android:screenOrientation="portrait">
@@ -72,23 +72,29 @@
 
         <activity
             android:name=".screen.videoDetail.VideoDetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".screen.audiodetail.AudioDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        
+
         <activity
-            android:name=".screen.imageDetail.ImageDetailActivity"
+            android:name=".screen.imagedetail.ImageDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".screen.createcomment.CreateCommentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        
+            android:theme="@style/Theme.AppCompat.Translucent" />
+
+        <activity
+            android:name=".screen.selectedimagedetail.SelectedImageDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>
