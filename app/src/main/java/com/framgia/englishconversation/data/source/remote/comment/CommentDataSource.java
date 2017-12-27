@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.source.remote.comment;
 
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
+import java.util.List;
 
 /**
  * Created by VinhTL on 20/12/2017.
@@ -14,7 +15,7 @@ public interface CommentDataSource {
 
     interface CommentCallback {
 
-        void onChildAdded(Comment comment);
+        void onChildAdded(List<Comment> comments, boolean isLoadingMore);
 
         void onChildChanged(Comment comment);
 

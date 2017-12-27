@@ -3,8 +3,6 @@ package com.framgia.englishconversation.screen.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
-
 import com.framgia.englishconversation.screen.profile.ProfileFragment;
 import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 
@@ -26,14 +24,13 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.d("MainPagerAdapter", "create Main pager adapter");
         switch (position) {
             case NEW:
                 return TimelineFragment.newInstance();
             case TOP_VOTE:
-                return TimelineFragment.newInstance();
+
             case YOUR_POST:
-                return TimelineFragment.newInstance();
+
             case SETTING:
                 return ProfileFragment.newInstance();
             default:

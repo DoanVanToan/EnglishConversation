@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
+import java.util.List;
 
 /**
  * Created by toand on 5/13/2017.
@@ -13,9 +14,9 @@ public interface TimelineDataSource {
 
     void getTimeline(TimelineRemoteDataSource.TimelineCallback callback);
 
-    interface TimelineCallback{
+    interface TimelineCallback {
 
-        void onChildAdded(TimelineModel timeline);
+        void onChildAdded(List<TimelineModel> timelines);
 
         void onChildChanged(TimelineModel timeline, String commentKey);
 

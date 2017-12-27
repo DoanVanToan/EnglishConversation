@@ -18,16 +18,19 @@ import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
 import com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
+import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Exposes the data to be used in the Timeline screen.
  */
 
 public class TimelineViewModel extends BaseObservable
-        implements TimelineContract.ViewModel, OnTimelineItemTouchListener<TimelineModel> {
+        implements TimelineContract.ViewModel, OnTimelineItemTouchListener<TimelineModel>,
+        OnEndScrollListener.OnEndScroll {
 
     private TimelineContract.Presenter mPresenter;
     private Navigator mNavigator;
@@ -35,12 +38,14 @@ public class TimelineViewModel extends BaseObservable
     private ObservableField<UserModel> mUser = new ObservableField<>();
     private String mUserUrl;
     private TimelineAdapter mAdapter;
+    private OnEndScrollListener mOnEndScrollListener;
 
     public TimelineViewModel(Context context, Navigator navigator) {
         mContext = context;
         mNavigator = navigator;
         mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>(), this);
         mAdapter.setRecyclerViewItemClickListener(this);
+        mOnEndScrollListener = new OnEndScrollListener(this);
     }
 
     @Override
@@ -70,8 +75,8 @@ public class TimelineViewModel extends BaseObservable
     }
 
     @Override
-    public void onChildAdded(TimelineModel timeline) {
-        mAdapter.updateData(timeline);
+    public void onChildAdded(List<TimelineModel> timelines) {
+        mAdapter.updateData(timelines);
     }
 
     public ObservableField<UserModel> getUser() {
@@ -90,6 +95,15 @@ public class TimelineViewModel extends BaseObservable
     public void setUserUrl(String userUrl) {
         mUserUrl = userUrl;
         notifyPropertyChanged(BR.userUrl);
+    }
+
+    @Override
+    public OnEndScrollListener getOnEndScrollListener() {
+        return mOnEndScrollListener;
+    }
+
+    public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {
+        mOnEndScrollListener = onEndScrollListener;
     }
 
     public TimelineAdapter getAdapter() {
@@ -125,4 +139,8 @@ public class TimelineViewModel extends BaseObservable
         }
     }
 
+    @Override
+    public void onEndScrolled() {
+        mPresenter.fetchTimelineData();
+    }
 }
