@@ -30,7 +30,6 @@ public class MediaModel extends BaseObservable implements Parcelable {
     @SerializedName("name")
     private String mName;
     @SerializedName("upload_percent")
-    @Exclude
     private int mUploadPercent;
 
     public MediaModel(@MediaType int mediatype) {
@@ -72,7 +71,7 @@ public class MediaModel extends BaseObservable implements Parcelable {
         parcel.writeString(mName);
     }
 
-    @IntDef({IMAGE, VIDEO, AUDIO, CONVERSATION, ONLY_TEXT})
+    @IntDef({ IMAGE, VIDEO, AUDIO, CONVERSATION, ONLY_TEXT })
     public @interface MediaType {
         int IMAGE = 0;
         int VIDEO = 1;
@@ -122,6 +121,7 @@ public class MediaModel extends BaseObservable implements Parcelable {
     }
 
     @Bindable
+    @Exclude
     public int getUploadPercent() {
         return mUploadPercent;
     }

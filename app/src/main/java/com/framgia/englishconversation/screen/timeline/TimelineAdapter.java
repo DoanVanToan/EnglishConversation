@@ -41,8 +41,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     }
 
     public void updateData(TimelineModel timeline) {
-        mData.add(0, timeline);
-        notifyItemInserted(0);
+        mData.add(timeline);
+        notifyItemInserted(mData.size() - 1);
     }
 
     @Override

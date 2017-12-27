@@ -127,7 +127,7 @@ final class CreateCommentPresenter
         mComment.setMediaModel(null);
     }
 
-    //TODO: Consult with Boruto about the correct name for this method
+    //TODO: Consult with Boruto about this method name, this is an after recording event
     @Override
     public void onRecordingAudioClick(String filePath, String fileName) {
         mMediaModel.setUrl(filePath);

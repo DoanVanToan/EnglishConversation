@@ -2,7 +2,6 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -13,31 +12,23 @@
             />
 
     </data>
-
-    <android.support.v4.widget.NestedScrollView
+    
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:context="com.framgia.englishconversation.screen.timeline.TimelineActivity"
+        android:orientation="vertical"
         >
-        <LinearLayout
+        <include
+            layout="@layout/timeline_header"
+            bind:viewModel="@{viewModel}"
+            />
+
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-            <include
-                layout="@layout/timeline_header"
-                bind:viewModel="@{viewModel}"
-                />
-
-            <android.support.v7.widget.RecyclerView
-                bind:scrollEnabled="@{false}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                bind:adapter="@{viewModel.adapter}"
-                bind:layoutManager="LinearLayoutManager"
-                />
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            bind:adapter="@{viewModel.adapter}"
+            bind:layoutManager="LinearLayoutManager"
+            bind:scrollListener="@{viewModel.onEndScrollListener}"
+            />
+    </LinearLayout>
 </layout>
