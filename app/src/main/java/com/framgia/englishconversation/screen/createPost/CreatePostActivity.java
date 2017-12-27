@@ -22,12 +22,6 @@ import com.framgia.englishconversation.utils.navigator.Navigator;
  */
 public class CreatePostActivity extends BaseActivity {
 
-    public static final int CONVERSATION_POSITION = 0;
-    public static final int AUDIO_RECORD_POSITION = 1;
-    public static final int VIDEO_RECORD_POSITION = 2;
-    public static final int PHOTO_POSITION = 3;
-    public static final int LOCATION_POSITION = 4;
-
     private CreatePostContract.ViewModel mViewModel;
 
     public static Intent getInstance(Context context) {

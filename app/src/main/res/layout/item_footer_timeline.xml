@@ -14,29 +14,34 @@
 
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:onClick="@{onClick}"
-        android:orientation="horizontal"
-        android:padding="@dimen/dp_8">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:contentDescription="@string/description_voted"
-            app:srcCompat="@drawable/ic_comment" />
+        android:paddingBottom="@dimen/dp_4"
+        android:paddingEnd="@dimen/dp_8"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_4">
 
         <TextView
             android:id="@+id/text_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
             android:text="@string/title_comment"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_12" />
-    </LinearLayout>
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:contentDescription="@string/description_voted"
+            app:layout_constraintEnd_toStartOf="@id/text_comment"
+            app:srcCompat="@drawable/ic_comment" />
+
+    </android.support.constraint.ConstraintLayout>
+
 </layout>
