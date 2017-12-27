@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
@@ -20,7 +21,7 @@
 
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_linear_timeline_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,64 +30,53 @@
         android:orientation="vertical"
         android:padding="@dimen/dp_8">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            bind:imageError="@{@drawable/ic_person_black_24dp}"
+            bind:imageUrl="@{timelineModel.createdUser.photoUrl}" />
+
+        <TextView
+            android:id="@+id/text_username"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:layout_marginEnd="@dimen/dp_8"
-                android:layout_marginRight="@dimen/dp_8"
-                bind:imageError="@{@drawable/ic_person_black_24dp}"
-                bind:imageUrl="@{timelineModel.createdUser.photoUrl}" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:text="@{timelineModel.createdUser.userName}"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:textColor="@color/color_grey_700"
-                    android:textSize="@dimen/sp_12"
-                    bind:milisecond="@{timelineModel.createdAt}" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:lines="1"
+            android:text="@{timelineModel.createdUser.userName}"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/image_avatar"
+            app:layout_constraintTop_toTopOf="@id/image_avatar" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_8"
-            android:background="@color/color_brown_50"
-            android:visibility="@{timelineModel.viewType == Timeline.NO_IMAGE? View.VISIBLE: View.GONE}" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:textColor="@color/color_grey_700"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/image_avatar"
+            app:layout_constraintStart_toStartOf="@id/text_username"
+            app:layout_constraintTop_toBottomOf="@id/text_username"
+            bind:milisecond="@{timelineModel.createdAt}" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="5"
-            android:paddingBottom="@dimen/dp_8"
             android:paddingTop="@dimen/dp_8"
             android:text="@{timelineModel.content}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_14"
-            android:visibility="@{TextUtils.isEmpty(timelineModel.content)? View.GONE: View.VISIBLE}" />
+            android:visibility="@{TextUtils.isEmpty(timelineModel.content)? View.GONE: View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_avatar" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </layout>
