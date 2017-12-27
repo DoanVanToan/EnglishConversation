@@ -1,4 +1,4 @@
-package com.framgia.englishconversation.screen.imageDetail;
+package com.framgia.englishconversation.screen.imagedetail;
 
 /**
  * Listens to user actions from the UI ({@link ImageDetailActivity}), retrieves the data and updates

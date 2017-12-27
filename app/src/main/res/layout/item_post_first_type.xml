@@ -4,13 +4,19 @@
 
     <data>
 
-        <import type="java.util.List" />
+        <import type="java.util.List"/>
 
-        <import type="com.framgia.englishconversation.data.model.MediaModel" />
+        <import type="com.framgia.englishconversation.data.model.MediaModel"/>
 
         <variable
             name="listData"
-            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;" />
+            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;"
+            />
+
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.imagedetail.OnMediaModelItemTouchListener"
+            />
     </data>
 
     <ImageView
@@ -19,7 +25,9 @@
         android:layout_marginLeft="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
         android:contentDescription="@string/description_image_posted"
+        android:onClick="@{()->listener.onTouchListener(listData,0)}"
         android:orientation="horizontal"
-        bind:imageUrl="@{listData[0].url}" />
+        bind:imageUrl="@{listData[0].url}"
+        />
 
 </layout>
