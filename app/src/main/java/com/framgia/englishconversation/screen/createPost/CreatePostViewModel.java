@@ -10,9 +10,11 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -23,11 +25,9 @@ import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.GravityType;
-import com.framgia.englishconversation.data.model.LocationModel;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.record.Util;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Constant;
@@ -36,23 +36,23 @@ import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
@@ -73,19 +73,15 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int REQUEST_RECORD_AUDIO = 3;
     private static final int REQUEST_RECORD_VIDEO = 4;
     private static final int LIMIT_IMAGES = 10;
-    private static final int PERIOD_TIME = 1;
     private final static String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @AdapterType
     private int mAdapterType;
-    private String mAddress;
+    private long mPlaybackPosition;
+    private int mCurrentWindow;
+    private String mAudioFilePath;
     private boolean mIsUploading;
-    private boolean mIsPlaying;
-    private int mProgressAudio;
-    private String mTimeInProgressAudio;
-    private long mDurationMedia;
-    private long mCurrentDuration;
     private UserModel mUser;
     private TimelineModel mTimelineModel;
     private MediaPlayer mMediaPlayer;
@@ -95,9 +91,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private Navigator mNavigator;
     private ProgressDialog mProgressDialog;
     private BroadcastReceiver mReceiver;
-    private CompositeDisposable mCompositeDisposable;
     private MediaAdapter mMediaAdapter;
     private ConversationAdapter mConversationAdapter;
+    private SimpleExoPlayer mExoPlayer;
 
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator) {
         mActivity = activity;
@@ -106,7 +102,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mProgressDialog = new ProgressDialog(mActivity);
         mAdapterType = AdapterType.MEDIA;
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
-        mCompositeDisposable = new CompositeDisposable();
         mMediaAdapter = new MediaAdapter(this);
         mConversationAdapter = new ConversationAdapter(mActivity, this);
     }
@@ -174,8 +169,21 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         };
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(mActivity);
         manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
-        if (mMediaPlayer != null) {
-            onPlayAudioClick();
+    }
+
+    @Override
+    public void onPause() {
+        if (com.google.android.exoplayer2.util.Util.SDK_INT <= Build.VERSION_CODES.M) {
+            releaseExoAudioPlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        mPresenter.onStop();
+        LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
+        if (com.google.android.exoplayer2.util.Util.SDK_INT > Build.VERSION_CODES.M) {
+            releaseMedia();
         }
     }
 
@@ -185,7 +193,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             return;
         }
         switch (requestCode) {
-            case PLACE_PICKER_REQUEST:
+            // TODO: handle when user pick location. For now we don't focus into it
+            /*case PLACE_PICKER_REQUEST:
                 Place place = PlacePicker.getPlace(data, mActivity);
                 LocationModel locationModel = new LocationModel();
                 locationModel.setAddress(place.getAddress().toString());
@@ -193,21 +202,12 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 locationModel.setLng(place.getLatLng().longitude);
                 setAddress(place.getAddress().toString());
                 mTimelineModel.setLocation(locationModel);
-                break;
+                break;*/
             case SELECT_IMAGE_REQUEST:
                 List<Image> images =
                         data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
                 if (images == null || images.size() == 0) break;
                 addPostImage(images);
-                break;
-            case REQUEST_RECORD_AUDIO:
-                String filePath = Util.getResultFilePath(data);
-                String fileName = Util.getResultFileName(data);
-                MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
-                record.setId(UUID.randomUUID().toString());
-                record.setUrl(filePath);
-                record.setName(fileName);
-                addPostAudioRecord(record);
                 break;
             case REQUEST_RECORD_VIDEO:
                 updateVideoMedia(data.getData());
@@ -215,11 +215,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             default:
                 break;
         }
-    }
-
-    private void setAddress(String address) {
-        mAddress = address;
-        notifyPropertyChanged(BR.address);
     }
 
     @Override
@@ -301,15 +296,38 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     @Override
-    public void onStop() {
-        mPresenter.onStop();
-        LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
-        onPlayAudioClick();
-    }
-
-    @Override
     public void setPresenter(CreatePostContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    private void initializeAudioPlayer() {
+        if (mExoPlayer != null) {
+            return;
+        }
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
+        mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
+        Uri uri = Uri.parse(mAudioFilePath);
+        mExoPlayer.prepare(getMediaSource(uri), true, false);
+        setExoPlayer(mExoPlayer);
+    }
+
+    private MediaSource getMediaSource(Uri uri) {
+        return new ExtractorMediaSource(uri,
+                new DefaultDataSourceFactory(mActivity, Constant.USER_AGENT),
+                new DefaultExtractorsFactory(), null, null);
+    }
+
+    private void releaseExoAudioPlayer() {
+        if (mExoPlayer == null) {
+            return;
+        }
+        mPlaybackPosition = mExoPlayer.getCurrentPosition();
+        mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
+        mExoPlayer.release();
+        mExoPlayer = null;
     }
 
     private boolean isEnablePermission(String[] permissions, int[] grantResults) {
@@ -445,19 +463,10 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     private void initMedia(String filePath) {
-        setPlaying(false);
         mMediaPlayer = new MediaPlayer();
         try {
             mMediaPlayer.setDataSource(filePath);
             mMediaPlayer.prepare();
-            mDurationMedia = mMediaPlayer.getDuration() / Constant.MILLISECONDS_PER_MINUTE;
-            setTimeInProgressAudio(Utils.updateDuration(mDurationMedia));
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    setPlaying(false);
-                }
-            });
         } catch (IOException e) {
             mNavigator.showToast(mActivity.getString(R.string.error_init_media));
         }
@@ -469,10 +478,10 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
         String fileName = mActivity.getString(R.string.prefix_audio_file_name)
                 + System.currentTimeMillis() + Constant.DEFAULT_FORMAT_AUDIO;
-        String filePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
+        mAudioFilePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
         RecordingAudioBuilder.with(mActivity, mRecordingAudioDialog)
                 .setFileName(fileName)
-                .setFilePath(filePath)
+                .setFilePath(mAudioFilePath)
                 .setAudioSource(AudioSource.MIC)
                 .showRecordingAudioFromActivity();
     }
@@ -509,12 +518,15 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 new RecordingAudioDialog.OnRecordingAudioListener() {
                     @Override
                     public void onRecordingAudioClick(String filePath, String fileName) {
+                        releaseExoAudioPlayer();
+                        Log.d("CratePostViewModel", filePath);
                         MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
                         record.setId(UUID.randomUUID().toString());
                         record.setUrl(filePath);
                         record.setName(fileName);
                         initMedia(filePath);
                         addPostAudioRecord(record);
+                        initializeAudioPlayer();
                     }
 
                     @Override
@@ -557,64 +569,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         openPlacePicker();
     }
 
-    public void onPlayAudioClick() {
-        if (mMediaPlayer == null) {
-            return;
-        }
-        if (!mIsPlaying) {
-            mMediaPlayer.start();
-            updateAudioUi();
-        } else {
-            mMediaPlayer.pause();
-        }
-        setPlaying(!mIsPlaying);
-    }
-
-    private void updateAudioUi() {
-        Disposable disposable = Observable.interval(PERIOD_TIME, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<Long>() {
-                    @Override
-                    public void onNext(Long time) {
-                        if ((mCurrentDuration + time) >= mDurationMedia) {
-                            setProgressAudio(Constant.ZERO_PERCENT);
-                            setTimeInProgressAudio(Utils.updateDuration(mDurationMedia));
-                            mCurrentDuration = Constant.ZERO_PERCENT;
-                            mCompositeDisposable.clear();
-                        } else {
-                            if (!mIsPlaying) {
-                                mCurrentDuration += time + 1;
-                                long timeInProgress = mDurationMedia - mCurrentDuration;
-                                int progress = (int) (mCurrentDuration
-                                        * Constant.ONE_HUNDRED_PERCENT / mDurationMedia);
-                                setTimeInProgressAudio(Utils.updateDuration(timeInProgress));
-                                setProgressAudio(progress);
-                                mCompositeDisposable.clear();
-                            } else {
-                                long timeInProgress = mDurationMedia - mCurrentDuration - (time - 1);
-                                int progress =
-                                        (int) ((mDurationMedia - timeInProgress)
-                                                * Constant.ONE_HUNDRED_PERCENT / mDurationMedia);
-                                setTimeInProgressAudio(Utils.updateDuration(timeInProgress));
-                                setProgressAudio(progress);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mNavigator.showToast(
-                                mActivity.getString(R.string.message_error_audio_update));
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-        mCompositeDisposable.add(disposable);
-    }
-
     private void releaseMedia() {
         if (mMediaPlayer == null) {
             return;
@@ -624,33 +578,13 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     @Bindable
-    public boolean isPlaying() {
-        return mIsPlaying;
+    public SimpleExoPlayer getExoPlayer() {
+        return mExoPlayer;
     }
 
-    public void setPlaying(boolean playing) {
-        mIsPlaying = playing;
-        notifyPropertyChanged(BR.playing);
-    }
-
-    @Bindable
-    public int getProgressAudio() {
-        return mProgressAudio;
-    }
-
-    public void setProgressAudio(int progressAudio) {
-        mProgressAudio = progressAudio;
-        notifyPropertyChanged(BR.progressAudio);
-    }
-
-    @Bindable
-    public String getTimeInProgressAudio() {
-        return mTimeInProgressAudio;
-    }
-
-    public void setTimeInProgressAudio(String timeInProgressAudio) {
-        mTimeInProgressAudio = timeInProgressAudio;
-        notifyPropertyChanged(BR.timeInProgressAudio);
+    public void setExoPlayer(SimpleExoPlayer exoPlayer) {
+        mExoPlayer = exoPlayer;
+        notifyPropertyChanged(BR.exoPlayer);
     }
 
     public UserModel getUser() {

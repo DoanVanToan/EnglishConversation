@@ -100,4 +100,5 @@
     <string name="description_pause_audio">Pause audio</string>
     <string name="title_audio_separator_time">/</string>
     <string name="title_see_more">See more &#8230;</string>
+    <string name="description_dimiss_audio">Dimiss audio</string>
 </resources>
