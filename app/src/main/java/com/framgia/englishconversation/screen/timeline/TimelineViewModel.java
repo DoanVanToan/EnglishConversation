@@ -14,6 +14,7 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
+import com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
 import com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
@@ -66,7 +67,11 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void onGetUserSuccess(UserModel data) {
         mUser.set(data);
-        setUserUrl(data.getPhotoUrl() != null ? data.getPhotoUrl().toString() : null);
+        if (data.getPhotoUrl() == null) {
+            return;
+        }
+        String photoUrl = data.getPhotoUrl();
+        setUserUrl(data.getPhotoUrl() != null ? photoUrl : null);
     }
 
     @Override
@@ -128,7 +133,11 @@ public class TimelineViewModel extends BaseObservable
                 mNavigator.startActivity(VideoDetailActivity.class, bundle);
                 break;
             case MediaModel.MediaType.IMAGE:
-                mContext.startActivity(ImageDetailActivity.getInstance(mContext, timelineModel));
+                mNavigator.startActivity(ImageDetailActivity.getInstance(mContext, timelineModel));
+                break;
+            case MediaModel.MediaType.CONVERSATION:
+                mNavigator.startActivity(
+                        ConversationDetailActivity.getInstance(mContext, timelineModel));
                 break;
             case MediaModel.MediaType.AUDIO:
                 break;

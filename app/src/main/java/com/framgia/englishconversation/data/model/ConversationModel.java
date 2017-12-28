@@ -2,6 +2,8 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.framgia.englishconversation.BR;
 import com.google.gson.annotations.SerializedName;
@@ -12,8 +14,19 @@ import com.google.gson.annotations.SerializedName;
  * Description:
  */
 
-public class ConversationModel extends BaseObservable {
+public class ConversationModel extends BaseObservable implements Parcelable {
 
+    public static final Creator<ConversationModel> CREATOR = new Creator<ConversationModel>() {
+        @Override
+        public ConversationModel createFromParcel(Parcel in) {
+            return new ConversationModel(in);
+        }
+
+        @Override
+        public ConversationModel[] newArray(int size) {
+            return new ConversationModel[size];
+        }
+    };
     @SerializedName("content")
     private String mContent;
     @SerializedName("media")
@@ -27,6 +40,12 @@ public class ConversationModel extends BaseObservable {
 
     public ConversationModel(@GravityType int gravity) {
         mGravity = gravity;
+    }
+
+    protected ConversationModel(Parcel in) {
+        mContent = in.readString();
+        mMediaModel = in.readParcelable(MediaModel.class.getClassLoader());
+        mGravity = in.readInt();
     }
 
     @Bindable
@@ -59,4 +78,15 @@ public class ConversationModel extends BaseObservable {
         notifyPropertyChanged(BR.gravity);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mContent);
+        parcel.writeParcelable(mMediaModel, i);
+        parcel.writeInt(mGravity);
+    }
 }

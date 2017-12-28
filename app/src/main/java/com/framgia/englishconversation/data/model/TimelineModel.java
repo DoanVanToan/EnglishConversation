@@ -17,9 +17,7 @@ import java.util.List;
 
 public class TimelineModel extends BaseObservable implements Parcelable {
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<TimelineModel> CREATOR
-            = new Parcelable.Creator<TimelineModel>() {
+    public static final Creator<TimelineModel> CREATOR = new Creator<TimelineModel>() {
         @Override
         public TimelineModel createFromParcel(Parcel in) {
             return new TimelineModel(in);
@@ -30,7 +28,6 @@ public class TimelineModel extends BaseObservable implements Parcelable {
             return new TimelineModel[size];
         }
     };
-
     @SerializedName("id")
     private String mId;
     @SerializedName("content")
@@ -56,52 +53,42 @@ public class TimelineModel extends BaseObservable implements Parcelable {
     @SerializedName("conversations")
     private List<ConversationModel> mConversations;
 
+
     public TimelineModel() {
     }
 
     protected TimelineModel(Parcel in) {
         mId = in.readString();
         mContent = in.readString();
-        mCreatedUser = (UserModel) in.readValue(UserModel.class.getClassLoader());
+        mCreatedUser = in.readParcelable(UserModel.class.getClassLoader());
         mCreatedAt = in.readLong();
         mModifiedAt = in.readLong();
-        mLocation = (LocationModel) in.readValue(LocationModel.class.getClassLoader());
-        if (in.readByte() == 0x01) {
-            mMedias = new ArrayList<>();
-            in.readList(mMedias, MediaModel.class.getClassLoader());
-        } else {
-            mMedias = null;
-        }
-        if (in.readByte() == 0x01) {
-            mComments = new ArrayList<>();
-            in.readList(mComments, Comment.class.getClassLoader());
-        } else {
-            mComments = null;
-        }
-        if (in.readByte() == 0x01) {
-            mLikeUser = new ArrayList<>();
-            in.readList(mLikeUser, UserModel.class.getClassLoader());
-        } else {
-            mLikeUser = null;
-        }
-        if (in.readByte() == 0x01) {
-            mDishLikeUser = new ArrayList<>();
-            in.readList(mDishLikeUser, UserModel.class.getClassLoader());
-        } else {
-            mDishLikeUser = null;
-        }
-        if (in.readByte() == 0x01) {
-            mReportUser = new ArrayList<>();
-            in.readList(mReportUser, UserModel.class.getClassLoader());
-        } else {
-            mReportUser = null;
-        }
-        if (in.readByte() == 0x01) {
-            mConversations = new ArrayList<>();
-            in.readList(mConversations, ConversationModel.class.getClassLoader());
-        } else {
-            mConversations = null;
-        }
+        mMedias = in.createTypedArrayList(MediaModel.CREATOR);
+        mComments = in.createTypedArrayList(Comment.CREATOR);
+        mLikeUser = in.createTypedArrayList(UserModel.CREATOR);
+        mDishLikeUser = in.createTypedArrayList(UserModel.CREATOR);
+        mReportUser = in.createTypedArrayList(UserModel.CREATOR);
+        mConversations = in.createTypedArrayList(ConversationModel.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mContent);
+        dest.writeParcelable(mCreatedUser, flags);
+        dest.writeLong(mCreatedAt);
+        dest.writeLong(mModifiedAt);
+        dest.writeTypedList(mMedias);
+        dest.writeTypedList(mComments);
+        dest.writeTypedList(mLikeUser);
+        dest.writeTypedList(mDishLikeUser);
+        dest.writeTypedList(mReportUser);
+        dest.writeTypedList(mConversations);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Bindable
@@ -252,56 +239,5 @@ public class TimelineModel extends BaseObservable implements Parcelable {
                 + ", mCreatedUser="
                 + mCreatedUser
                 + '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
-        dest.writeString(mContent);
-        dest.writeValue(mCreatedUser);
-        dest.writeLong(mCreatedAt);
-        dest.writeLong(mModifiedAt);
-        dest.writeValue(mLocation);
-        if (mMedias == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mMedias);
-        }
-        if (mComments == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mComments);
-        }
-        if (mLikeUser == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mLikeUser);
-        }
-        if (mDishLikeUser == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mDishLikeUser);
-        }
-        if (mReportUser == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mReportUser);
-        }
-        if (mConversations == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(mConversations);
-        }
     }
 }
