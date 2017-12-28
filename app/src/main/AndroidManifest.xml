@@ -19,10 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".screen.main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".screen.login.LoginActivity"
             android:screenOrientation="portrait">
@@ -87,11 +88,16 @@
         <activity
             android:name=".screen.createcomment.CreateCommentActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"
-            android:theme="@style/Theme.AppCompat.Translucent" />
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:windowSoftInputMode="stateVisible" />
 
         <activity
             android:name=".screen.selectedimagedetail.SelectedImageDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".screen.conversationdetail.ConversationDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 

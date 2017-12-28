@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -519,7 +518,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                     @Override
                     public void onRecordingAudioClick(String filePath, String fileName) {
                         releaseExoAudioPlayer();
-                        Log.d("CratePostViewModel", filePath);
                         MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
                         record.setId(UUID.randomUUID().toString());
                         record.setUrl(filePath);

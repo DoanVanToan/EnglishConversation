@@ -12,6 +12,10 @@
         <variable
             name="timelineModel"
             type="com.framgia.englishconversation.data.model.TimelineModel" />
+
+        <variable
+            name="touchListener"
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -28,7 +32,8 @@
             <include
                 android:id="@+id/layout_header"
                 layout="@layout/item_header_timeline"
-                bind:timelineModel="@{timelineModel}" />
+                bind:timelineModel="@{timelineModel}"
+                bind:touchListener="@{touchListener}" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraint_conversation"

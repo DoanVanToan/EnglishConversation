@@ -1,11 +1,11 @@
 buildscript {
-  repositories {
-    maven { url 'https://maven.fabric.io/public' }
-  }
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
 
-  dependencies {
-    classpath 'io.fabric.tools:gradle:1.+'
-  }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -15,92 +15,93 @@ apply from: '../checkci.gradle'
 def APP_ID = "com.framgia.englishconversation";
 
 android {
-  compileSdkVersion 26
-  buildToolsVersion "26.0.2"
-  defaultConfig {
-    applicationId "${APP_ID}"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode rootProject.ext.versionCode
-    versionName rootProject.ext.versionName
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "${APP_ID}"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
-    vectorDrawables.useSupportLibrary = true
-    multiDexEnabled true
-  }
-
-  dataBinding {
-    enabled = true
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
-  }
-  dexOptions {
-    jumboMode = true
-  }
-  lintOptions {
-    abortOnError false
-  }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dexOptions {
+        jumboMode = true
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
-  maven {
-    url "https://jitpack.io"
-  }
-  maven {
-    url 'https://maven.google.com/'
-    name 'Google'
-  }
-  maven {
-    url 'https://maven.fabric.io/public'
-  }
+    maven {
+        url "https://jitpack.io"
+    }
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
 }
 
 dependencies {
-  compile fileTree(include: ['*.jar'], dir: 'libs')
-  Map<String, String> dependencies = rootProject.ext.dependencies
-  compile dependencies.supportDesign
-  compile dependencies.constraintLayout
-  compile dependencies.cardView
-  compile dependencies.vector
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    Map<String, String> dependencies = rootProject.ext.dependencies
+    compile dependencies.supportDesign
+    compile dependencies.constraintLayout
+    compile dependencies.cardView
+    compile dependencies.vector
 
-  compile dependencies.rxJava
-  compile dependencies.rxAndroid
-  compile dependencies.retrofit2
-  compile dependencies.retrofit2Adapter
-  compile dependencies.retrofitGson
-  compile dependencies.loggingInterceptor
+    compile dependencies.rxJava
+    compile dependencies.rxAndroid
+    compile dependencies.retrofit2
+    compile dependencies.retrofit2Adapter
+    compile dependencies.retrofitGson
+    compile dependencies.loggingInterceptor
 
-  compile dependencies.circleImage
+    compile dependencies.circleImage
 
-  compile dependencies.omRecorder
-  compile dependencies.audiovisualization
+    compile dependencies.omRecorder
+    compile dependencies.audiovisualization
 
-  compile dependencies.googleAuth
-  compile dependencies.googlePlace
+    compile dependencies.googleAuth
+    compile dependencies.googlePlace
 
-  compile dependencies.facebookAuth
+    compile dependencies.facebookAuth
 
-  compile dependencies.firebaseAuth
-  compile dependencies.firebaseStorage
-  compile dependencies.firebaseDataBase
+    compile dependencies.firebaseAuth
+    compile dependencies.firebaseStorage
+    compile dependencies.firebaseDataBase
 
-  compile dependencies.exoPlayerCore
-  compile dependencies.exoPlayerUi
+    compile dependencies.exoPlayerCore
+    compile dependencies.exoPlayerUi
 
-  compile project(':multipleimageselect')
-  testCompile dependencies.junit
-  testCompile dependencies.mockito
+    compile project(':multipleimageselect')
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile dependencies.junit
+    testCompile dependencies.mockito
 
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-    transitive = true;
-  }
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
 }
 apply plugin: 'com.google.gms.google-services'
 

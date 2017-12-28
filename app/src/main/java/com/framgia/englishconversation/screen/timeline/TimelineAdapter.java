@@ -77,7 +77,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
                 ItemTimelineConversationBinding conversationBinding =
                         ItemTimelineConversationBinding.inflate(
                                 LayoutInflater.from(parent.getContext()), parent, false);
-                return new ConversationViewHolder(conversationBinding);
+                return new ConversationViewHolder(conversationBinding, mItemTouchListener);
             default:
                 return null;
         }
@@ -138,7 +138,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mOnTouchListener;
 
         public ImageViewHolder(ItemTimelineImageBinding itemView,
-                OnTimelineItemTouchListener onTouchListener) {
+                               OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -180,15 +180,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
     public class ConversationViewHolder extends BaseTimelineViewHolder {
         private ItemTimelineConversationBinding mBinding;
+        private OnTimelineItemTouchListener mTouchListener;
 
-        public ConversationViewHolder(ItemTimelineConversationBinding itemView) {
+        ConversationViewHolder(ItemTimelineConversationBinding itemView,
+                               OnTimelineItemTouchListener touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mTouchListener = touchListener;
         }
 
         @Override
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
+            mBinding.setTouchListener(mTouchListener);
             mBinding.executePendingBindings();
         }
     }
