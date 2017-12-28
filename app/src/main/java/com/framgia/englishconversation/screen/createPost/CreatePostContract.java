@@ -1,12 +1,13 @@
 package com.framgia.englishconversation.screen.createPost;
 
 import android.content.Intent;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ interface CreatePostContract {
      * View.
      */
     interface ViewModel extends BaseViewModel<Presenter> {
+
+        void onPause();
 
         void onActivityResult(int requestCode, int resultCode, Intent data);
 

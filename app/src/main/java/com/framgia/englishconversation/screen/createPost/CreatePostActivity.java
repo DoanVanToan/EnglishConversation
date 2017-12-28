@@ -58,6 +58,12 @@ public class CreatePostActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        mViewModel.onPause();
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         mViewModel.onStop();
         super.onStop();

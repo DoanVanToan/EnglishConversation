@@ -9,22 +9,24 @@
         android:id="@+id/frame_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@id/exo_play"
-            style="@style/ExoMediaButton.Play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/ic_play"
             android:contentDescription="@string/description_play_audio" />
 
         <ImageButton
             android:id="@id/exo_pause"
-            style="@style/ExoMediaButton.Pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/ic_pause"
             android:contentDescription="@string/description_pause_audio" />
 
     </FrameLayout>
@@ -35,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginRight="@dimen/dp_8"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/holo_blue_bright"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +51,7 @@
         android:text="@string/title_audio_separator_time"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/exo_duration"
         app:layout_constraintTop_toTopOf="parent" />
