@@ -78,7 +78,9 @@ public class Utils {
     public static int getFileDuration(String filePath) {
         try {
             MediaPlayer mp = MediaPlayer.create(AppApplication.getInstance(), Uri.parse(filePath));
-            return mp.getDuration();
+            int duration = mp.getDuration();
+            mp.release();
+            return duration;
         } catch (Exception e) {
             return -1;
         }
@@ -103,8 +105,8 @@ public class Utils {
         long m = (duration / Constant.SECOND_PER_MINUTE) % Constant.SECOND_PER_MINUTE;
         return String.format(Locale.getDefault(), "%02d:%02d", m, s);
     }
-    
-    public static long generateOppositeNumber(long number){
+
+    public static long generateOppositeNumber(long number) {
         return -number;
     }
 

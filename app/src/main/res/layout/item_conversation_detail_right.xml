@@ -4,9 +4,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="conversation"
             type="com.framgia.englishconversation.data.model.ConversationModel" />
+
+        <variable
+            name="position"
+            type="int" />
 
         <variable
             name="viewModel"
@@ -20,7 +26,8 @@
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginLeft="@dimen/dp_56"
         android:layout_marginRight="@dimen/dp_8"
-        android:layout_marginStart="@dimen/dp_56">
+        android:layout_marginStart="@dimen/dp_56"
+        android:layout_marginTop="@dimen/dp_16">
 
         <ImageView
             android:id="@+id/image_recording_audio"
@@ -28,7 +35,8 @@
             android:layout_height="@dimen/dp_24"
             android:background="@drawable/ic_audio_conversation"
             android:contentDescription="@string/description_recording_audio_convention"
-            android:onClick="@{() -> viewModel.onAudioConversationClick(conversation)}"
+            android:onClick="@{() -> viewModel.onAudioConversationClick(position)}"
+            android:visibility="@{conversation.mediaModel == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +49,7 @@
             android:layout_marginStart="@dimen/dp_8"
             android:background="@drawable/bg_recording_audio_layout"
             android:gravity="center_vertical|end"
-            android:minHeight="@dimen/dp_32"
+            android:minHeight="@dimen/dp_56"
             android:padding="@dimen/dp_4"
             android:text="@={conversation.content}"
             android:textColor="@android:color/black"
