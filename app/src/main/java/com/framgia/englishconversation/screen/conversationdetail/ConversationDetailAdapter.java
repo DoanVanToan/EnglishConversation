@@ -92,6 +92,7 @@ public class ConversationDetailAdapter extends
         void bindView(ConversationModel conversationModel) {
             mBinding.setConversation(conversationModel);
             mBinding.setViewModel(mViewModel);
+            mBinding.setPosition(getAdapterPosition());
             mBinding.executePendingBindings();
         }
     }
@@ -112,6 +113,7 @@ public class ConversationDetailAdapter extends
         void bindView(ConversationModel conversationModel) {
             mBinding.setConversation(conversationModel);
             mBinding.setViewModel(mViewModel);
+            mBinding.setPosition(getAdapterPosition());
             mBinding.executePendingBindings();
         }
     }

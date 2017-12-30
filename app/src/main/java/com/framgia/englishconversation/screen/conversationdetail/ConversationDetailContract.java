@@ -23,5 +23,8 @@ public interface ConversationDetailContract {
      */
     interface ViewModel extends BaseViewModel<Presenter> {
 
+        void onResume();
+
+        void onPause();
     }
 }

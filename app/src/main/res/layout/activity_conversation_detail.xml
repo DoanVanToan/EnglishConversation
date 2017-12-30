@@ -36,26 +36,25 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_conversation"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp_300"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:background="@drawable/bg_timeline_conversation"
-                    android:maxHeight="@dimen/dp_240"
+                    android:background="@color/color_grey_200"
                     android:padding="@dimen/dp_4"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_header"
-                    bind:adapter="@{viewModel.adapter}" />
+                    bind:adapter="@{viewModel.adapter}"
+                    bind:scrollPosition="@{viewModel.updatePositionUi}" />
 
-                <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                <ImageView
                     android:id="@+id/player"
                     android:layout_width="@dimen/dp_32"
                     android:layout_height="@dimen/dp_32"
                     android:layout_marginTop="@dimen/dp_16"
-                    app:controller_layout_id="@layout/custom_audio_conversation_playback_controller"
-                    app:hide_on_touch="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:show_timeout="0" />
+                    android:background="@{viewModel.playing == true ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
+                    android:onClick="@{() -> viewModel.onControllerConversationClick()}"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 

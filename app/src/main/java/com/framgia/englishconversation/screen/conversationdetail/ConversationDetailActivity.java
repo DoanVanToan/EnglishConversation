@@ -38,4 +38,28 @@ public class ConversationDetailActivity extends AppCompatActivity {
         mViewModel.setPresenter(presenter);
         binding.setViewModel((ConversationDetailViewModel) mViewModel);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mViewModel.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewModel.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mViewModel.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        mViewModel.onStop();
+        super.onStop();
+    }
 }
