@@ -11,7 +11,7 @@ import java.util.List;
 public interface CommentDataSource {
     void createNewComment(Comment comment, DataCallback callback);
 
-    void getComment(CommentCallback callback);
+    void getComment(CommentCallback callback, Comment lastComment);
 
     interface CommentCallback {
 

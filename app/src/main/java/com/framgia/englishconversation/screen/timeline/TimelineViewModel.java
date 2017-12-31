@@ -8,7 +8,6 @@ import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
-
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -20,7 +19,6 @@ import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +74,7 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onChildAdded(List<TimelineModel> timelines) {
+        mOnEndScrollListener.setIsFetchingData(false);
         mAdapter.updateData(timelines);
     }
 
@@ -97,13 +96,19 @@ public class TimelineViewModel extends BaseObservable
         notifyPropertyChanged(BR.userUrl);
     }
 
-    @Override
+    @Bindable
     public OnEndScrollListener getOnEndScrollListener() {
         return mOnEndScrollListener;
     }
 
     public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {
         mOnEndScrollListener = onEndScrollListener;
+        notifyPropertyChanged(BR.onEndScrollListener);
+    }
+
+    @Override
+    public void onCancelled(String message) {
+        mOnEndScrollListener.setIsFetchingData(false);
     }
 
     public TimelineAdapter getAdapter() {
@@ -141,6 +146,6 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onEndScrolled() {
-        mPresenter.fetchTimelineData();
+        mPresenter.fetchTimelineData(mAdapter.getLastItem());
     }
 }

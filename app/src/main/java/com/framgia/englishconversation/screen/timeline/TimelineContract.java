@@ -4,7 +4,6 @@ import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.utils.OnEndScrollListener;
 import java.util.List;
 
 /**
@@ -21,13 +20,13 @@ interface TimelineContract {
 
         void onChildAdded(List<TimelineModel> timelines);
 
-        OnEndScrollListener getOnEndScrollListener();
+        void onCancelled(String message);
     }
 
     /**
      * Presenter.
      */
     interface Presenter extends BasePresenter {
-        void fetchTimelineData();
+        void fetchTimelineData(TimelineModel timelineModel);
     }
 }
