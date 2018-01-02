@@ -12,7 +12,8 @@ public interface TimelineDataSource {
 
     void createNewPost(TimelineModel timelineModel, DataCallback callback);
 
-    void getTimeline(TimelineRemoteDataSource.TimelineCallback callback);
+    void getTimeline(TimelineRemoteDataSource.TimelineCallback callback,
+            TimelineModel lastTimeline);
 
     interface TimelineCallback {
 

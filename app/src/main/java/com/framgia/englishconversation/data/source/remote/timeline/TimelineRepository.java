@@ -2,7 +2,6 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
-import com.framgia.englishconversation.utils.OnEndScrollListener;
 
 /**
  * Created by toand on 5/13/2017.
@@ -19,11 +18,8 @@ public class TimelineRepository {
         mDataSource.createNewPost(timelineModel, callback);
     }
 
-    public void getTimeline(TimelineRemoteDataSource.TimelineCallback callback){
-        mDataSource.getTimeline(callback);
-    }
-
-    public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {
-        mDataSource.setOnEndScrollListener(onEndScrollListener);
+    public void getTimeline(TimelineRemoteDataSource.TimelineCallback callback,
+            TimelineModel timelineModel) {
+        mDataSource.getTimeline(callback, timelineModel);
     }
 }

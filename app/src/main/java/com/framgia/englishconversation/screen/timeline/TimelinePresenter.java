@@ -26,8 +26,7 @@ final class TimelinePresenter
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
-        mTimelineRepository.setOnEndScrollListener(mViewModel.getOnEndScrollListener());
-        mTimelineRepository.getTimeline(this);
+        mTimelineRepository.getTimeline(this, null);
     }
 
     @Override
@@ -71,11 +70,11 @@ final class TimelinePresenter
 
     @Override
     public void onCancelled(String message) {
-
+        mViewModel.onCancelled(message);
     }
 
     @Override
-    public void fetchTimelineData() {
-        mTimelineRepository.getTimeline(this);
+    public void fetchTimelineData(TimelineModel timelineModel) {
+        mTimelineRepository.getTimeline(this, timelineModel);
     }
 }
