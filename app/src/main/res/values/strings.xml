@@ -101,4 +101,8 @@
     <string name="title_audio_separator_time">/</string>
     <string name="title_see_more">See more &#8230;</string>
     <string name="description_dimiss_audio">Dimiss audio</string>
+    <string name="description_second_image">Second image</string>
+    <string name="description_third_image">Third image</string>
+    <string name="description_fourth_image">Fourth image</string>
+    <string name="description_first_image">First image</string>
 </resources>
