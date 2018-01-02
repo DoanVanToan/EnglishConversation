@@ -63,6 +63,12 @@ public class CreateCommentActivity extends BaseActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        mViewModel.onDestroy();
+        super.onDestroy();
+    }
+
     public void onMultimediaIconTouch() {
         mPopupMenu.show();
     }

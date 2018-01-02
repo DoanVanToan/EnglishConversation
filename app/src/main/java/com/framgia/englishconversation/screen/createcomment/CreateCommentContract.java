@@ -28,8 +28,10 @@ interface CreateCommentContract {
         void onGetMultimediaDataDone(Intent intent, @MediaModel.MediaType int type);
 
         void onMultimediaFileAttached(MediaModel mediaModel);
-        
+
         void onPostLiteralCommentResult(boolean isSuccess, Intent intent);
+
+        void onDestroy();
     }
 
     /**
@@ -51,5 +53,7 @@ interface CreateCommentContract {
         void onDeleteItemMediaClicked();
 
         void postLiteralComment();
+
+        void onDestroy();
     }
 }

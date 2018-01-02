@@ -149,6 +149,9 @@ public class CreateCommentViewModel extends BaseObservable
     public void onSubmitComment() {
         if (mPresenter.getComment().getMediaModel() != null) {
             uploadFiles(mPresenter.getComment().getMediaModel());
+        } else {
+            mPresenter.getComment().setContent(mInputtedComment);
+            mPresenter.postLiteralComment();
         }
     }
 
@@ -242,6 +245,11 @@ public class CreateCommentViewModel extends BaseObservable
             ((AppCompatActivity) mContext).setResult(Activity.RESULT_CANCELED, resultData);
         }
         ((AppCompatActivity) mContext).finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.onDestroy();
     }
 
     @Bindable

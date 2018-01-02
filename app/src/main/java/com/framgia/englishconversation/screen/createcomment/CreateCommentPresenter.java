@@ -7,12 +7,15 @@ import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsApi;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsKey.PREF_EMAIL;
 
@@ -30,6 +33,7 @@ final class CreateCommentPresenter
     private TimelineModel mTimelineModel;
     private SharedPrefsApi mSharedPrefsApi;
     private CommentRepository mCommentRepository;
+    private CompositeDisposable mDisposable;
 
     CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, TimelineModel timelineModel,
             SharedPrefsApi sharedPrefsApi) {
@@ -41,8 +45,10 @@ final class CreateCommentPresenter
         commentCreatedUser.setEmail(sharedPrefsApi.get(PREF_EMAIL, String.class));
         mComment.setCreateUser(commentCreatedUser);
         mComment.setCreatedAt(System.currentTimeMillis());
-        mCommentRepository = new CommentRepository(new CommentRemoteDataSource());
+        mCommentRepository =
+                new CommentRepository(new CommentRemoteDataSource(mTimelineModel.getId()));
         mComment.setPostId(mTimelineModel.getId());
+        mDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -101,20 +107,33 @@ final class CreateCommentPresenter
 
     @Override
     public void postLiteralComment() {
-        mCommentRepository.createNewComment(mComment, new DataCallback() {
-            @Override
-            public void onGetDataSuccess(Object data) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra(Constant.EXTRA_COMMENT, mComment);
-                mViewModel.onPostLiteralCommentResult(true, returnIntent);
-            }
+        mDisposable.add(mCommentRepository.createNewComment(mComment)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<Comment>() {
+                    @Override
+                    public void onNext(Comment comment) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra(Constant.EXTRA_COMMENT, mComment);
+                        mViewModel.onPostLiteralCommentResult(true, returnIntent);
+                    }
 
-            @Override
-            public void onGetDataFailed(String msg) {
-                Intent returnIntent = new Intent();
-                mViewModel.onPostLiteralCommentResult(false, returnIntent);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        Intent returnIntent = new Intent();
+                        mViewModel.onPostLiteralCommentResult(false, returnIntent);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void onDestroy() {
+        mDisposable.dispose();
     }
 
     @Override
