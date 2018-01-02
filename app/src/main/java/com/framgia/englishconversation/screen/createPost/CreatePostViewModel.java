@@ -16,7 +16,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
@@ -47,7 +46,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +53,8 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
+import static com.framgia.englishconversation.service.FirebaseUploadService
+        .ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_MEDIA_MODEL;
@@ -72,8 +71,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int REQUEST_RECORD_AUDIO = 3;
     private static final int REQUEST_RECORD_VIDEO = 4;
     private static final int LIMIT_IMAGES = 10;
-    private final static String[] PERMISSION = new String[]{
-            Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final String[] PERMISSION = new String[] {
+            Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @AdapterType
     private int mAdapterType;
@@ -119,8 +119,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                         if (intent.getExtras() == null) {
                             return;
                         }
-                        int percent = intent.getExtras().getInt(
-                                FirebaseUploadService.EXTRA_UPLOADED_PERCENT);
+                        int percent = intent.getExtras()
+                                .getInt(FirebaseUploadService.EXTRA_UPLOADED_PERCENT);
                         MediaModel mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
                         if (mediaModel == null) {
                             return;
@@ -288,10 +288,15 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+            int[] grantResults) {
         if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermission(permissions, grantResults)) {
             onAudioRecordingClick();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -303,10 +308,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         if (mExoPlayer != null) {
             return;
         }
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(),
-                new DefaultLoadControl());
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(), new DefaultLoadControl());
         mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
         Uri uri = Uri.parse(mAudioFilePath);
         mExoPlayer.prepare(getMediaSource(uri), true, false);
@@ -476,7 +479,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             return;
         }
         String fileName = mActivity.getString(R.string.prefix_audio_file_name)
-                + System.currentTimeMillis() + Constant.DEFAULT_FORMAT_AUDIO;
+                + System.currentTimeMillis()
+                + Constant.DEFAULT_FORMAT_AUDIO;
         mAudioFilePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
         RecordingAudioBuilder.with(mActivity, mRecordingAudioDialog)
                 .setFileName(fileName)
@@ -626,10 +630,10 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 if (!view.performClick() && motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     int itemCount = mConversationAdapter.getItemCount();
                     if (position == (itemCount - 1)) {
-                        int currentGravity = mConversationAdapter.getData()
-                                .get(position).getGravity();
-                        int newGravity = (currentGravity == GravityType.LEFT)
-                                ? GravityType.RIGHT : GravityType.LEFT;
+                        int currentGravity =
+                                mConversationAdapter.getData().get(position).getGravity();
+                        int newGravity = (currentGravity == GravityType.LEFT) ? GravityType.RIGHT
+                                : GravityType.LEFT;
                         ConversationModel conversation = new ConversationModel(newGravity);
                         mConversationAdapter.addData(conversation);
                     }
@@ -638,5 +642,4 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             }
         };
     }
-
 }

@@ -32,6 +32,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         mItemTouchListener = itemTouchListener;
     }
 
+    public void updateDataForward(TimelineModel timelineModel) {
+        if (timelineModel == null) {
+            return;
+        }
+        mData.add(0, timelineModel);
+        notifyDataSetChanged();
+    }
+
     public void updateData(List<TimelineModel> timelines) {
         if (timelines == null) return;
         mData.addAll(timelines);
@@ -95,6 +103,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         return mData != null && !mData.isEmpty() ? mData.get(mData.size() - 1) : null;
     }
 
+    public TimelineModel getFirstItem() {
+        return mData != null && !mData.isEmpty() ? mData.get(0) : null;
+    }
+
     /**
      * Display timeline model with only text (without media)
      */
@@ -140,7 +152,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mOnTouchListener;
 
         public ImageViewHolder(ItemTimelineImageBinding itemView,
-                               OnTimelineItemTouchListener onTouchListener) {
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -185,7 +197,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mTouchListener;
 
         ConversationViewHolder(ItemTimelineConversationBinding itemView,
-                               OnTimelineItemTouchListener touchListener) {
+                OnTimelineItemTouchListener touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;

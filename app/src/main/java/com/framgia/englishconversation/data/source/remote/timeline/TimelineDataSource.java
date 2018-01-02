@@ -1,7 +1,7 @@
 package com.framgia.englishconversation.data.source.remote.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
-import com.framgia.englishconversation.data.source.callback.DataCallback;
+import io.reactivex.Observable;
 import java.util.List;
 
 /**
@@ -10,21 +10,9 @@ import java.util.List;
 
 public interface TimelineDataSource {
 
-    void createNewPost(TimelineModel timelineModel, DataCallback callback);
+    Observable<TimelineModel> createNewPost(TimelineModel timelineModel);
 
-    void getTimeline(TimelineRemoteDataSource.TimelineCallback callback,
-            TimelineModel lastTimeline);
+    Observable<List<TimelineModel>> getTimeline(TimelineModel lastTimeline);
 
-    interface TimelineCallback {
-
-        void onChildAdded(List<TimelineModel> timelines);
-
-        void onChildChanged(TimelineModel timeline, String commentKey);
-
-        void onChildRemoved(TimelineModel timeline, String commentKey);
-
-        void onChildMoved(TimelineModel timeline, String commentKey);
-
-        void onCancelled(String message);
-    }
+    Observable<TimelineModel> updateTimeline(TimelineModel lastTimeline);
 }

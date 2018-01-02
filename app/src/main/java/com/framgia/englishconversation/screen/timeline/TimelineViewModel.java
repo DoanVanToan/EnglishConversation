@@ -60,6 +60,7 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void setPresenter(TimelineContract.Presenter presenter) {
         mPresenter = presenter;
+        mPresenter.fetchTimelineData(null);
     }
 
     @Override
@@ -75,12 +76,6 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void onCreateNewPostClick() {
         mNavigator.startActivity(CreatePostActivity.getInstance(mContext));
-    }
-
-    @Override
-    public void onChildAdded(List<TimelineModel> timelines) {
-        mOnEndScrollListener.setIsFetchingData(false);
-        mAdapter.updateData(timelines);
     }
 
     public ObservableField<UserModel> getUser() {
@@ -112,8 +107,24 @@ public class TimelineViewModel extends BaseObservable
     }
 
     @Override
-    public void onCancelled(String message) {
+    public void onGetTimelinesSuccess(List<TimelineModel> timelines) {
         mOnEndScrollListener.setIsFetchingData(false);
+        mAdapter.updateData(timelines);
+    }
+
+    @Override
+    public void onGetTimelinesFailure(String message) {
+        mOnEndScrollListener.setIsFetchingData(false);
+    }
+
+    @Override
+    public void onGetTimelineSuccess(TimelineModel timelineModel) {
+        mAdapter.updateDataForward(timelineModel);
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.onDestroy();
     }
 
     public TimelineAdapter getAdapter() {
