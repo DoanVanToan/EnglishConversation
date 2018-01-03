@@ -1,7 +1,7 @@
 package com.framgia.englishconversation.data.source.remote.comment;
 
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.source.callback.DataCallback;
+import io.reactivex.Observable;
 import java.util.List;
 
 /**
@@ -9,20 +9,9 @@ import java.util.List;
  */
 
 public interface CommentDataSource {
-    void createNewComment(Comment comment, DataCallback callback);
+    Observable<Comment> createNewComment(Comment comment);
 
-    void getComment(CommentCallback callback, Comment lastComment);
+    Observable<List<Comment>> getComment(Comment lastComment);
 
-    interface CommentCallback {
-
-        void onChildAdded(List<Comment> comments, boolean isLoadingMore);
-
-        void onChildChanged(Comment comment);
-
-        void onChildRemoved(Comment comment);
-
-        void onChildMoved(Comment comment);
-
-        void onCancelled(String message);
-    }
+    Observable<Comment> registerModifyTimelines(Comment lastComment);
 }
