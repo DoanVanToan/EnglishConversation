@@ -4,21 +4,25 @@ import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
-import com.framgia.englishconversation.data.source.remote.timeline.TimelineDataSource;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.google.firebase.auth.FirebaseUser;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 
 /**
  * Listens to user actions from the UI ({@link TimelineFragment}), retrieves the data and updates
  * the UI as required.
  */
-final class TimelinePresenter
-        implements TimelineContract.Presenter, TimelineDataSource.TimelineCallback {
+final class TimelinePresenter implements TimelineContract.Presenter {
 
     private final TimelineContract.ViewModel mViewModel;
     private AuthenicationRepository mAuthenicationRepository;
     private TimelineRepository mTimelineRepository;
+    private TimelineModel mLastTimelineModel;
+    private CompositeDisposable mDisposable;
 
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
             AuthenicationRepository authenicationRepository,
@@ -26,7 +30,7 @@ final class TimelinePresenter
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
-        mTimelineRepository.getTimeline(this, null);
+        mDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -49,32 +53,58 @@ final class TimelinePresenter
     }
 
     @Override
-    public void onChildAdded(List<TimelineModel> timelines) {
-        mViewModel.onChildAdded(timelines);
+    public void fetchTimelineData(final TimelineModel timelineModel) {
+        mDisposable.add(mTimelineRepository.getTimeline(timelineModel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<List<TimelineModel>>() {
+                    @Override
+                    public void onNext(List<TimelineModel> timelineModels) {
+                        if (timelineModels == null || timelineModels.isEmpty()) {
+                            return;
+                        }
+                        mViewModel.onGetTimelinesSuccess(timelineModels);
+                        if (mLastTimelineModel == null) {
+                            mLastTimelineModel = timelineModels.get(0);
+                            registerModifyTimelines(mLastTimelineModel);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mViewModel.onGetTimelinesFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                }));
     }
 
     @Override
-    public void onChildChanged(TimelineModel timeline, String commentKey) {
-
+    public void onDestroy() {
+        mDisposable.dispose();
     }
 
-    @Override
-    public void onChildRemoved(TimelineModel timeline, String commentKey) {
+    public void registerModifyTimelines(TimelineModel timelineModel) {
+        mDisposable.add(mTimelineRepository.registerModifyTimelines(timelineModel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<TimelineModel>() {
+                    @Override
+                    public void onNext(TimelineModel timelineModel) {
+                        mViewModel.onGetTimelineSuccess(timelineModel);
+                    }
 
-    }
+                    @Override
+                    public void onError(Throwable e) {
+                        mViewModel.onGetTimelinesFailure(e.getMessage());
+                    }
 
-    @Override
-    public void onChildMoved(TimelineModel timeline, String commentKey) {
+                    @Override
+                    public void onComplete() {
 
-    }
-
-    @Override
-    public void onCancelled(String message) {
-        mViewModel.onCancelled(message);
-    }
-
-    @Override
-    public void fetchTimelineData(TimelineModel timelineModel) {
-        mTimelineRepository.getTimeline(this, timelineModel);
+                    }
+                }));
     }
 }

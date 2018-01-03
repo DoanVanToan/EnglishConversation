@@ -63,4 +63,10 @@ public class TimelineFragment extends BaseFragment {
         mViewModel.onStop();
         super.onStop();
     }
+
+    @Override
+    public void onDestroy() {
+        mViewModel.onDestroy();
+        super.onDestroy();
+    }
 }

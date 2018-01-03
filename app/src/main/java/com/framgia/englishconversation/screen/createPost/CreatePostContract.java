@@ -1,13 +1,11 @@
 package com.framgia.englishconversation.screen.createPost;
 
 import android.content.Intent;
-
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
-
 import java.util.List;
 
 /**
@@ -40,6 +38,8 @@ interface CreatePostContract {
         void onCreatePostFailed(String msg);
 
         void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
+
+        void onDestroy();
     }
 
     /**
@@ -49,5 +49,7 @@ interface CreatePostContract {
         void getUser();
 
         void createPost(TimelineModel timelineModel);
+
+        void onDestroy();
     }
 }

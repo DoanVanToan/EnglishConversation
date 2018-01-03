@@ -18,9 +18,13 @@ interface TimelineContract {
 
         void onCreateNewPostClick();
 
-        void onChildAdded(List<TimelineModel> timelines);
+        void onGetTimelinesSuccess(List<TimelineModel> timelines);
 
-        void onCancelled(String message);
+        void onGetTimelinesFailure(String message);
+
+        void onGetTimelineSuccess(TimelineModel timelineModel);
+
+        void onDestroy();
     }
 
     /**
@@ -28,5 +32,7 @@ interface TimelineContract {
      */
     interface Presenter extends BasePresenter {
         void fetchTimelineData(TimelineModel timelineModel);
+
+        void onDestroy();
     }
 }
