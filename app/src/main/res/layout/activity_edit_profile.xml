@@ -30,7 +30,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/ic_launcher_round"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="@dimen/dp_2"
                 bind:imageUri="@{viewModel.photoUri}" />

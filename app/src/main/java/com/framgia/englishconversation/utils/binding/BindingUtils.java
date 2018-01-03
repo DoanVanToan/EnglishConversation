@@ -86,7 +86,7 @@ public final class BindingUtils {
         Glide.with(imageView.getContext())
                 .load(url)
                 .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.ic_launcher_round)
                 .centerCrop()
                 .into(imageView);
     }
@@ -97,7 +97,7 @@ public final class BindingUtils {
         Glide.with(imageView.getContext())
                 .load(uri.toString())
                 .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageView);
     }
 
@@ -106,7 +106,7 @@ public final class BindingUtils {
         Glide.with(imageView.getContext())
                 .load(url)
                 .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageView);
     }
 
