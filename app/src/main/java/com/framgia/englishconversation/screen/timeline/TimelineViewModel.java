@@ -6,8 +6,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
-import android.view.View;
+
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -20,6 +19,7 @@ import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,9 +135,9 @@ public class TimelineViewModel extends BaseObservable
         mAdapter = adapter;
     }
 
-    public void onAudioTimeLineClick(TimelineModel timelineModel, View view) {
+    public void onAudioTimeLineClick(TimelineModel timelineModel) {
         Intent intent = AudioDetailActivity.getInstance(mContext, timelineModel);
-        mNavigator.startActivityBySharedElement(intent, view, ViewCompat.getTransitionName(view));
+        mNavigator.startActivity(intent);
     }
 
     @Override

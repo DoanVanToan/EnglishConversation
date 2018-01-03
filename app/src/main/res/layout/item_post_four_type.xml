@@ -1,96 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="java.util.List"/>
+        <import type="java.util.List" />
 
-        <import type="com.framgia.englishconversation.data.model.MediaModel"/>
+        <import type="com.framgia.englishconversation.data.model.MediaModel" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
         <variable
             name="listener"
-            type="com.framgia.englishconversation.screen.imagedetail.OnMediaModelItemTouchListener"
-            />
+            type="com.framgia.englishconversation.screen.imagedetail.OnMediaModelItemTouchListener" />
+
         <variable
             name="listData"
-            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;"
-            />
+            type="java.util.List&lt;com.framgia.englishconversation.data.model.MediaModel&gt;" />
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:padding="@dimen/dp_5"
-        >
+        android:padding="@dimen/dp_5">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/image_second_item"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:contentDescription="@string/description_second_image"
+            android:onClick="@{()->listener.onTouchListener(listData,1)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:imageUrl="@{listData[1].url}" />
+
+        <ImageView
+            android:id="@+id/image_third_image"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_8"
+            android:contentDescription="@string/description_third_image"
+            android:onClick="@{()->listener.onTouchListener(listData,2)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/image_second_item"
+            app:layout_constraintTop_toBottomOf="@id/image_second_item"
+            bind:imageUrl="@{listData[2].url}" />
+
+        <ImageView
+            android:id="@+id/imageView_fourth_image"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_8"
+            android:contentDescription="@string/description_fourth_image"
+            android:onClick="@{()->listener.onTouchListener(listData,3)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/image_third_image"
+            app:layout_constraintTop_toBottomOf="@id/image_third_image"
+            bind:imageUrl="@{listData[3].url}" />
+
+        <TextView
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_8"
+            android:alpha="0.7"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:onClick="@{()->listener.onTouchListener(listData,4)}"
+            android:text="@{@string/item_format(String.valueOf(listData.size-4))}"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_40"
+            android:textStyle="bold"
+            android:visibility="@{listData.size > 4? View.VISIBLE: View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/image_third_image"
+            app:layout_constraintTop_toBottomOf="@id/image_third_image" />
+
+        <ImageView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:contentDescription="@string/description_first_image"
             android:onClick="@{()->listener.onTouchListener(listData,0)}"
-            bind:imageUrl="@{listData[0].url}"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/image_second_item"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:imageUrl="@{listData[0].url}" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_120"
-                android:onClick="@{()->listener.onTouchListener(listData,1)}"
-                bind:imageUrl="@{listData[1].url}"
-                />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_120"
-                android:layout_marginTop="@dimen/dp_5"
-                android:onClick="@{()->listener.onTouchListener(listData,2)}"
-                bind:imageUrl="@{listData[2].url}"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_120"
-                android:layout_marginTop="@dimen/dp_5"
-                >
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:onClick="@{()->listener.onTouchListener(listData,3)}"
-                    bind:imageUrl="@{listData[3].url}"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.7"
-                    android:background="@android:color/black"
-                    android:gravity="center"
-                    android:onClick="@{()->listener.onTouchListener(listData,4)}"
-                    android:text="@{@string/item_format(String.valueOf(listData.size-4))}"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/sp_40"
-                    android:textStyle="bold"
-                    android:visibility="@{listData.size > 4? View.VISIBLE: View.GONE}"
-                    />
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </layout>

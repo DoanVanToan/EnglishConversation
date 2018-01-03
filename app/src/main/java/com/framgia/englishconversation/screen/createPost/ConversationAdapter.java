@@ -122,9 +122,10 @@ public class ConversationAdapter extends
         notifyItemChanged(position);
     }
 
-    void deleteConversation(int position) {
+    public void deleteConversation(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount() - position);
     }
 
     /**

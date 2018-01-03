@@ -3,18 +3,15 @@ package com.framgia.englishconversation.utils.navigator;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Toast;
 
 import com.framgia.englishconversation.R;
@@ -75,25 +72,6 @@ public class Navigator {
 
     public void startActivityForResult(@NonNull Intent intent, int requestCode) {
         mActivity.startActivityForResult(intent, requestCode);
-    }
-
-    public void startActivityBySharedElement(Intent intent, View view, String translationName) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ActivityOptionsCompat optionsCompat =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            mActivity, view, translationName);
-            mActivity.startActivity(intent, optionsCompat.toBundle());
-        } else {
-            mActivity.startActivity(intent);
-        }
-    }
-
-    public void finishBySharedElementIfAvailable() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mActivity.finishAfterTransition();
-        } else {
-            mActivity.finish();
-        }
     }
 
     public void startActivityForResult(@NonNull Class<? extends Activity> clazz, Bundle args,
