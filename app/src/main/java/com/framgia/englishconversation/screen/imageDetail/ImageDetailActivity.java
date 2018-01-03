@@ -37,6 +37,8 @@ public class ImageDetailActivity extends BaseActivity {
         ActivityImageDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_image_detail);
         binding.setViewModel((ImageDetailViewModel) mViewModel);
+        getSupportActionBar(getString(R.string.title_post_detail,
+                timelineModel.getCreatedUser().getUserName()));
     }
 
     @Override
@@ -49,5 +51,11 @@ public class ImageDetailActivity extends BaseActivity {
     protected void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

@@ -109,4 +109,6 @@
     <string name="description_pause_video">Pause video</string>
     <string name="description_next_audio">Next audio</string>
     <string name="symbol_percent"> %</string>
+    <string name="title_post_detail">%1$s Post</string>
+    <string name="title_selected_image_deital">Image detail</string>
 </resources>
