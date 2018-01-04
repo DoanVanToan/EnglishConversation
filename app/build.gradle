@@ -88,8 +88,8 @@ dependencies {
     compile dependencies.firebaseStorage
     compile dependencies.firebaseDataBase
 
-    compile dependencies.exoPlayerCore
-    compile dependencies.exoPlayerUi
+    compile dependencies.exoPlayer
+    compile dependencies.toroExo
 
     compile project(':multipleimageselect')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -1,9 +1,10 @@
 package com.framgia.englishconversation.screen.timeline;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
@@ -11,13 +12,15 @@ import com.framgia.englishconversation.databinding.ItemTimelineConversationBindi
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+
 import java.util.List;
 
 /**
  * Created by toand on 5/17/2017.
  */
 
-public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTimelineViewHolder> {
+public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder> {
 
     private List<TimelineModel> mData;
     private OnTimelineItemTouchListener mItemTouchListener;
@@ -57,8 +60,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     }
 
     @Override
-    public TimelineAdapter.BaseTimelineViewHolder onCreateViewHolder(ViewGroup parent,
-            int viewType) {
+    public BaseTimelineViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                     int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.ONLY_TEXT:
                 ItemTimelineOnlyTextBinding onlyTextBinding = ItemTimelineOnlyTextBinding.inflate(
@@ -128,7 +131,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     /**
      * Display timeline model with audio media
      */
-    public class AudioViewHolder extends BaseTimelineViewHolder {
+    public class AudioViewHolder extends BaseMediaTimelineViewHolder {
         private ItemTimelineAudioBinding mBinding;
 
         public AudioViewHolder(ItemTimelineAudioBinding itemView) {
@@ -138,9 +141,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
         @Override
         public void bindData(TimelineModel model) {
+            if (model == null || model.getMedias() == null || model.getMedias().isEmpty()) {
+                return;
+            }
+            mUri = Uri.parse(model.getMedias().get(0).getUrl());
             mBinding.setTimelineModel(model);
             mBinding.setViewModel(mViewModel);
             mBinding.executePendingBindings();
+        }
+
+        @Override
+        SimpleExoPlayerView getMediaPlayerView() {
+            return mBinding.player;
         }
     }
 
@@ -152,7 +164,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mOnTouchListener;
 
         public ImageViewHolder(ItemTimelineImageBinding itemView,
-                OnTimelineItemTouchListener onTouchListener) {
+                               OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -169,12 +181,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
     /**
      * Display timeline model with video media
      */
-    public class VideoViewHolder extends BaseTimelineViewHolder {
+    public class VideoViewHolder extends BaseMediaTimelineViewHolder {
         private ItemTimelineVideoBinding mBinding;
         private OnTimelineItemTouchListener mOnTouchListener;
 
         VideoViewHolder(ItemTimelineVideoBinding itemView,
-                OnTimelineItemTouchListener onTouchListener) {
+                        OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -182,9 +194,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
 
         @Override
         public void bindData(TimelineModel model) {
+            if (model == null || model.getMedias() == null || model.getMedias().isEmpty()) {
+                return;
+            }
+            mUri = Uri.parse(model.getMedias().get(0).getUrl());
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
+        }
+
+
+        @Override
+        SimpleExoPlayerView getMediaPlayerView() {
+            return mBinding.videoView;
         }
     }
 
@@ -197,7 +219,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         private OnTimelineItemTouchListener mTouchListener;
 
         ConversationViewHolder(ItemTimelineConversationBinding itemView,
-                OnTimelineItemTouchListener touchListener) {
+                               OnTimelineItemTouchListener touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;
@@ -211,15 +233,4 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseTi
         }
     }
 
-    /**
-     * Base timeline model
-     */
-    public abstract class BaseTimelineViewHolder extends RecyclerView.ViewHolder {
-
-        public BaseTimelineViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        public abstract void bindData(TimelineModel model);
-    }
 }

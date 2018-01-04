@@ -19,6 +19,7 @@
         tools:context="com.framgia.englishconversation.screen.main.MainActivity">
 
         <include
+            android:visibility="gone"
             layout="@layout/toolbar"
             bind:email="@{viewModel.userEmail}"
             bind:uri="@{viewModel.userPhotoUrl}"

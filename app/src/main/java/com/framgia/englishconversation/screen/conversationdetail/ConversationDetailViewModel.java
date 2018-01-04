@@ -12,9 +12,9 @@ import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -29,6 +29,8 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 
 /**
  * Created by fs-sournary.
@@ -241,7 +243,7 @@ public class ConversationDetailViewModel extends BaseObservable
     /**
      * Event for ExoPlayer variable
      */
-    private class ComponentListener implements Player.EventListener {
+    private class ComponentListener implements ExoPlayer.EventListener {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -287,7 +289,7 @@ public class ConversationDetailViewModel extends BaseObservable
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState == Player.STATE_ENDED) {
+            if (playbackState == STATE_ENDED) {
                 mExoPlayer.seekTo(DEFAULT_PLAYBACK_POSITION);
                 mExoPlayer.setPlayWhenReady(false);
                 releaseExoPlayer();
@@ -296,32 +298,17 @@ public class ConversationDetailViewModel extends BaseObservable
         }
 
         @Override
-        public void onRepeatModeChanged(int repeatMode) {
-            // no ops
-        }
-
-        @Override
-        public void onShuffleModeEnabledChanged(boolean b) {
-            // no ops
-        }
-
-        @Override
         public void onPlayerError(ExoPlaybackException error) {
             // no ops
         }
 
         @Override
-        public void onPositionDiscontinuity(int reason) {
-            // no ops
+        public void onPositionDiscontinuity() {
+
         }
 
         @Override
         public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-            // no ops
-        }
-
-        @Override
-        public void onSeekProcessed() {
             // no ops
         }
     }
