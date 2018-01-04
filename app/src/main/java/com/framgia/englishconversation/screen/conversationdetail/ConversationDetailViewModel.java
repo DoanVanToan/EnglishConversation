@@ -45,7 +45,7 @@ public class ConversationDetailViewModel extends BaseObservable
     private static final int NUMBER_DECREASE_SCROLL_POSITION = 1;
     private static final long DEFAULT_PLAYBACK_POSITION = 0;
 
-    private int mUpdatePositionUi;
+    private int mCurrentPosition;
     private int mScrollPosition;
     private boolean mIsPlaying;
     private int mSelectedIndex;
@@ -103,6 +103,15 @@ public class ConversationDetailViewModel extends BaseObservable
     @Override
     public void setPresenter(ConversationDetailContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    public boolean isExitMedia() {
+        for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+            if (conversationModel.getMediaModel() != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initializeExoPlayer(int index) {
@@ -212,13 +221,13 @@ public class ConversationDetailViewModel extends BaseObservable
     }
 
     @Bindable
-    public int getUpdatePositionUi() {
-        return mUpdatePositionUi;
+    public int getCurrentPosition() {
+        return mCurrentPosition;
     }
 
-    public void setUpdatePositionUi(int updatePositionUi) {
-        mUpdatePositionUi = updatePositionUi;
-        notifyPropertyChanged(BR.updatePositionUi);
+    public void setCurrentPosition(int currentPosition) {
+        mCurrentPosition = currentPosition;
+        notifyPropertyChanged(BR.currentPosition);
     }
 
     public ConversationDetailAdapter getAdapter() {
@@ -265,7 +274,7 @@ public class ConversationDetailViewModel extends BaseObservable
                     mScrollPosition += NUMBER_INCREASE_SCROLL_POSITION;
                 }
             }
-            setUpdatePositionUi(mScrollPosition);
+            setCurrentPosition(mScrollPosition);
             if (mScrollPosition == numberConversation - 1) {
                 mScrollPosition = DEFAULT_SCROLL_POSITION;
             }

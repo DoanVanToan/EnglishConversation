@@ -7,6 +7,7 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
@@ -80,6 +81,11 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
         mPresenter = presenter;
     }
 
+    @Override
+    public void finishActivity() {
+        mNavigator.finishActivity();
+    }
+
     @Bindable
     public SimpleExoPlayer getSimpleExoPlayer() {
         return mSimpleExoPlayer;
@@ -91,7 +97,6 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
     }
 
     private void initializePlayer() {
-
         SimpleExoPlayer player =
                 ExoPlayerFactory.newSimpleInstance(mContext, new DefaultTrackSelector());
         setSimpleExoPlayer(player);
