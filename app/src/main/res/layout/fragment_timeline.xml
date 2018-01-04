@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
-            />
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
 
     </data>
-    
-    <LinearLayout
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent">
+
         <include
+            android:id="@+id/layout_header"
             layout="@layout/timeline_header"
-            bind:viewModel="@{viewModel}"
-            />
+            bind:viewModel="@{viewModel}" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_header"
             bind:adapter="@{viewModel.adapter}"
             bind:layoutManager="LinearLayoutManager"
-            bind:scrollListener="@{viewModel.onEndScrollListener}"
-            />
-    </LinearLayout>
+            bind:scrollListener="@{viewModel.onEndScrollListener}" />
+
+    </android.support.constraint.ConstraintLayout>
 </layout>

@@ -37,7 +37,7 @@
     <string name="facebook_app_id">294623550995501</string>
     <string name="login_facebook_cancel">Login cancel!</string>
     <string name="title_remember_account">Remember me.</string>
-    <string name="title_timeline_header">Bạn có video muốn chia sẻ?</string>
+    <string name="title_timeline_header">Bạn muốn chia sẻ điều gì ?</string>
     <string name="timeline_hearder_video">Videos</string>
     <string name="timeline_hearder_photo">Photos</string>
     <string name="timeline_hearder_location">Location</string>
@@ -105,4 +105,8 @@
     <string name="description_third_image">Third image</string>
     <string name="description_fourth_image">Fourth image</string>
     <string name="description_first_image">First image</string>
+    <string name="description_play_video">Play video</string>
+    <string name="description_pause_video">Pause video</string>
+    <string name="description_next_audio">Next audio</string>
+    <string name="symbol_percent"> %</string>
 </resources>

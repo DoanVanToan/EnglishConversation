@@ -14,6 +14,8 @@ interface VideoDetailContract {
         void onPause();
 
         void onResume();
+
+        void finishActivity();
     }
 
     /**

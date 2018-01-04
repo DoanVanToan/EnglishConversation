@@ -3,6 +3,8 @@ package com.framgia.englishconversation.screen.videoDetail;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.MenuItem;
+
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -27,6 +29,22 @@ public class VideoDetailActivity extends BaseActivity {
         ActivityVideoDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_video_detail);
         binding.setViewModel((VideoDetailViewModel) mViewModel);
+        if (getSupportActionBar() == null) {
+            return;
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mViewModel.finishActivity();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

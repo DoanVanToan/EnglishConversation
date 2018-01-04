@@ -1,86 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_relative_controller"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="ltr"
-    >
+    android:padding="@dimen/dp_8">
 
-    <LinearLayout
-        android:id="@+id/layout_linear_basic_control"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/frame_play"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="horizontal"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@id/exo_prev"
-            style="@style/ExoMediaButton.Previous"
-            />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-
-            <ImageButton
-                android:id="@id/exo_play"
-                style="@style/ExoMediaButton.Play"
-                />
-
-            <ImageButton
-                android:id="@id/exo_pause"
-                style="@style/ExoMediaButton.Pause"
-                />
-        </FrameLayout>
+            android:id="@id/exo_play"
+            style="@style/ExoMediaButton.Play"
+            android:contentDescription="@string/description_play_video" />
 
         <ImageButton
-            android:id="@id/exo_next"
-            style="@style/ExoMediaButton.Next"
-            />
+            android:id="@id/exo_pause"
+            style="@style/ExoMediaButton.Pause"
+            android:contentDescription="@string/description_pause_video" />
+    </FrameLayout>
 
-    </LinearLayout>
+    <ImageButton
+        android:id="@id/exo_next"
+        style="@style/ExoMediaButton.Next"
+        android:contentDescription="@string/description_next_audio"
+        app:layout_constraintBottom_toBottomOf="@id/frame_play"
+        app:layout_constraintStart_toEndOf="@id/frame_play"
+        app:layout_constraintTop_toTopOf="@id/frame_play" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@id/exo_prev"
+        style="@style/ExoMediaButton.Previous"
+        android:contentDescription="@string/description_next_audio"
+        app:layout_constraintBottom_toBottomOf="@id/frame_play"
+        app:layout_constraintEnd_toStartOf="@id/frame_play"
+        app:layout_constraintTop_toTopOf="@id/frame_play" />
+
+    <TextView
+        android:id="@id/exo_position"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
+        android:includeFontPadding="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@id/exo_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:paddingLeft="@dimen/dp_4"
-            android:paddingRight="@dimen/dp_4"
-            android:textColor="@color/color_grey"
-            android:textSize="@dimen/sp_14"
-            android:textStyle="bold"
-            />
+    <TextView
+        android:id="@id/exo_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@id/exo_progress"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/dp_26"
-            android:layout_weight="1"
-            />
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_progress"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_26"
+        app:layout_constraintBottom_toBottomOf="@id/exo_duration"
+        app:layout_constraintEnd_toStartOf="@id/exo_duration"
+        app:layout_constraintStart_toEndOf="@id/exo_position"
+        app:layout_constraintTop_toTopOf="@id/exo_duration" />
 
-        <TextView
-            android:id="@id/exo_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:paddingLeft="@dimen/dp_4"
-            android:paddingRight="@dimen/dp_4"
-            android:textColor="@color/color_grey"
-            android:textSize="@dimen/sp_14"
-            android:textStyle="bold"
-            />
-
-    </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

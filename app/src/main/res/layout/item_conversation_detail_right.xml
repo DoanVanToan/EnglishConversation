@@ -52,7 +52,7 @@
             android:minHeight="@dimen/dp_56"
             android:padding="@dimen/dp_4"
             android:text="@={conversation.content}"
-            android:textColor="@android:color/black"
+            android:textColor="@{viewModel.currentPosition == position ? @android:color/holo_red_light : @android:color/black}"
             android:textSize="@dimen/sp_14"
             app:layout_constraintEnd_toStartOf="@id/image_recording_audio"
             app:layout_constraintStart_toStartOf="parent" />
