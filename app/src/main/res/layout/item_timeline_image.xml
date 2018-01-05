@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
-        android:onClick="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"
         app:cardCornerRadius="@dimen/dp_4">
 
         <LinearLayout
@@ -35,7 +34,8 @@
 
             <include
                 layout="@layout/item_list_image"
-                bind:timelineModel="@{timelineModel}" />
+                bind:timelineModel="@{timelineModel}"
+                bind:listener="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"/>
 
             <View
                 android:layout_width="match_parent"
@@ -46,7 +46,8 @@
 
             <include
                 layout="@layout/item_footer_timeline"
-                bind:timelineModel="@{timelineModel}" />
+                bind:timelineModel="@{timelineModel}"
+                bind:onClick="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"/>
 
         </LinearLayout>
 

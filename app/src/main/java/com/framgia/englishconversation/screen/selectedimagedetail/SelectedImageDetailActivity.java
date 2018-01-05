@@ -43,6 +43,7 @@ public class SelectedImageDetailActivity extends BaseActivity {
         ActivitySelectedImageDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_selected_image_detail);
         binding.setViewModel((SelectedImageDetailViewModel) mViewModel);
+        getSupportActionBar(R.string.title_selected_image_deital);
     }
 
     @Override
@@ -55,5 +56,11 @@ public class SelectedImageDetailActivity extends BaseActivity {
     protected void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

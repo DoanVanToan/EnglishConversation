@@ -17,13 +17,13 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/color_black"
         tools:context="com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity"
         >
         <com.framgia.englishconversation.widget.ZoomableImageView
             android:id="@+id/image_photo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/dp_8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             app:imageUrlFullSize="@{viewModel.mediaModels.get(viewModel.position).url}"
@@ -43,11 +43,11 @@
             android:layout_marginTop="8dp"
             android:background="@null"
             android:onClick="@{()->viewModel.nextImage()}"
-            app:srcCompat="@drawable/ic_right_arrow"
             android:visibility="@{viewModel.position &lt; viewModel.mediaModels.size() -1 ? View.VISIBLE: View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/image_photo"
             app:layout_constraintRight_toRightOf="@+id/image_photo"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_arrow"
             tools:ignore="ContentDescription"
             />
         <ImageButton
@@ -60,11 +60,11 @@
             android:layout_marginTop="8dp"
             android:background="@null"
             android:onClick="@{()->viewModel.prevImage()}"
-            app:srcCompat="@drawable/ic_left_arrow"
             android:visibility="@{viewModel.position &gt; 0 ? View.VISIBLE: View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/image_photo"
             app:layout_constraintLeft_toLeftOf="@+id/image_photo"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_left_arrow"
             tools:ignore="ContentDescription"
             />
     </android.support.constraint.ConstraintLayout>

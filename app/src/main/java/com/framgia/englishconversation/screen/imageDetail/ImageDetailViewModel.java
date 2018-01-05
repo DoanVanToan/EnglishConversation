@@ -1,15 +1,20 @@
 package com.framgia.englishconversation.screen.imagedetail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
+import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
+import com.framgia.englishconversation.utils.Constant;
+import com.framgia.englishconversation.utils.navigator.Navigator;
 import java.util.List;
 
 /**
@@ -23,14 +28,15 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     private FragmentManager mManager;
     private Fragment mFragment;
     private Context mContext;
+    private Navigator mNavigator;
     private OnMediaModelItemTouchListener<List<MediaModel>> mListener =
             new OnMediaModelItemTouchListener<List<MediaModel>>() {
-            @Override
-            public void onTouchListener(List<MediaModel> items, int postion) {
-                mContext.startActivity(
-                    SelectedImageDetailActivity.getIntent(mContext, items, postion));
-            }
-        };
+                @Override
+                public void onTouchListener(List<MediaModel> items, int postion) {
+                    mContext.startActivity(
+                            SelectedImageDetailActivity.getIntent(mContext, items, postion));
+                }
+            };
 
     public ImageDetailViewModel(Context context, TimelineModel timelineModel,
             FragmentManager manager) {
@@ -38,6 +44,7 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
         mTimelineModel = timelineModel;
         mManager = manager;
         mFragment = CommentFragment.newInstance();
+        mNavigator = new Navigator((Activity) context);
     }
 
     @Override
@@ -93,5 +100,12 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     public void setListener(OnMediaModelItemTouchListener<List<MediaModel>> listener) {
         mListener = listener;
         notifyPropertyChanged(BR.listener);
+    }
+
+    public void onCreateCommentTouched() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
+        mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
+                Constant.RequestCode.POST_COMMENT);
     }
 }
