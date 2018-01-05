@@ -11,13 +11,12 @@ import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsAp
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.utils.Constant;
+import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsKey.PREF_EMAIL;
 
 /**
  * Listens to user actions from the UI ({@link CreateCommentActivity}), retrieves the data and
@@ -35,19 +34,17 @@ final class CreateCommentPresenter
     private CommentRepository mCommentRepository;
     private CompositeDisposable mDisposable;
 
-    CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, TimelineModel timelineModel,
-            SharedPrefsApi sharedPrefsApi) {
+    CreateCommentPresenter(UserModel userModel, CreateCommentContract.ViewModel viewModel,
+            TimelineModel timelineModel, SharedPrefsApi sharedPrefsApi) {
         mViewModel = viewModel;
         mSharedPrefsApi = sharedPrefsApi;
         mComment = new Comment();
+        mComment.setCreateUser(userModel);
         mTimelineModel = timelineModel;
-        UserModel commentCreatedUser = new UserModel();
-        commentCreatedUser.setEmail(sharedPrefsApi.get(PREF_EMAIL, String.class));
-        mComment.setCreateUser(commentCreatedUser);
-        mComment.setCreatedAt(System.currentTimeMillis());
         mCommentRepository =
                 new CommentRepository(new CommentRemoteDataSource(mTimelineModel.getId()));
         mComment.setPostId(mTimelineModel.getId());
+        mComment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
         mDisposable = new CompositeDisposable();
     }
 

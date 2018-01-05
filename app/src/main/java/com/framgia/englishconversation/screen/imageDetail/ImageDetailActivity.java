@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.ActivityImageDetailBinding;
 import com.framgia.englishconversation.utils.Constant;
 
@@ -27,11 +29,13 @@ public class ImageDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AuthenicationRepository repository =
+                new AuthenicationRepository(new AuthenicationRemoteDataSource());
         TimelineModel timelineModel =
                 getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
         mViewModel = new ImageDetailViewModel(this, timelineModel, getSupportFragmentManager());
 
-        ImageDetailContract.Presenter presenter = new ImageDetailPresenter(mViewModel);
+        ImageDetailContract.Presenter presenter = new ImageDetailPresenter(repository, mViewModel);
         mViewModel.setPresenter(presenter);
 
         ActivityImageDetailBinding binding =

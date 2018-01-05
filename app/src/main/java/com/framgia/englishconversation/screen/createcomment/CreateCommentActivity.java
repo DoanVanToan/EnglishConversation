@@ -8,6 +8,7 @@ import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsImpl;
 import com.framgia.englishconversation.databinding.ActivityCreateCommentBinding;
 import com.framgia.englishconversation.utils.Constant;
@@ -26,9 +27,10 @@ public class CreateCommentActivity extends BaseActivity {
         TimelineModel timelineModel =
                 getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
         mViewModel = new CreateCommentViewModel(this, timelineModel);
-
+        UserModel userModel = getIntent().getExtras().getParcelable(Constant.EXTRA_USER);
         CreateCommentContract.Presenter presenter =
-                new CreateCommentPresenter(mViewModel, timelineModel, new SharedPrefsImpl(this));
+                new CreateCommentPresenter(userModel, mViewModel, timelineModel,
+                        new SharedPrefsImpl(this));
         mViewModel.setPresenter(presenter);
 
         ActivityCreateCommentBinding binding =

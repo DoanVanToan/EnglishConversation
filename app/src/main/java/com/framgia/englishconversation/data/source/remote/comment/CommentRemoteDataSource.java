@@ -103,7 +103,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
             public void subscribe(final ObservableEmitter<Comment> e) throws Exception {
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                         .endAt(lastComment != null ? -lastComment.getCreatedAt()
-                                : Calendar.getInstance().getTimeInMillis());
+                                : -Calendar.getInstance().getTimeInMillis());
 
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
