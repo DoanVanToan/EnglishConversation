@@ -17,6 +17,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -101,11 +102,16 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
             @Override
             public void subscribe(final ObservableEmitter<Comment> e) throws Exception {
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
-                        .endAt(-lastComment.getCreatedAt());
+                        .endAt(lastComment != null ? -lastComment.getCreatedAt()
+                                : Calendar.getInstance().getTimeInMillis());
 
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        if (lastComment != null && lastComment.getId()
+                                .equals(dataSnapshot.getKey())) {
+                            return;
+                        }
                         Comment comment = dataSnapshot.getValue(Comment.class);
                         comment.setCreatedAt(Utils.generateOppositeNumber(comment.getCreatedAt()));
                         comment.setId(dataSnapshot.getKey());

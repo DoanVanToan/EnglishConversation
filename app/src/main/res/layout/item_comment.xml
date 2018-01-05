@@ -18,8 +18,8 @@
         >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_avatar"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
@@ -39,7 +39,7 @@
             android:lines="1"
             android:text="@{commentViewModel.createUser.userName}"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_15"
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintTop_toTopOf="parent"
@@ -58,15 +58,16 @@
             bind:milisecond="@{commentViewModel.createdAt}"
             />
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_8"
             android:text="@{commentViewModel.content}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_14"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_avatar"
+            app:layout_constraintLeft_toRightOf="@+id/image_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/text_time"
             />
     </android.support.constraint.ConstraintLayout>
 </layout>

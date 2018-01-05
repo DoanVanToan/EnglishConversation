@@ -60,12 +60,10 @@ final class TimelinePresenter implements TimelineContract.Presenter {
                 .subscribeWith(new DisposableObserver<List<TimelineModel>>() {
                     @Override
                     public void onNext(List<TimelineModel> timelineModels) {
-                        if (timelineModels == null || timelineModels.isEmpty()) {
-                            return;
-                        }
                         mViewModel.onGetTimelinesSuccess(timelineModels);
                         if (mLastTimelineModel == null) {
-                            mLastTimelineModel = timelineModels.get(0);
+                            mLastTimelineModel =
+                                    timelineModels.isEmpty() ? null : timelineModels.get(0);
                             registerModifyTimelines(mLastTimelineModel);
                         }
                     }
@@ -94,6 +92,9 @@ final class TimelinePresenter implements TimelineContract.Presenter {
                     @Override
                     public void onNext(TimelineModel timelineModel) {
                         mViewModel.onGetTimelineSuccess(timelineModel);
+                        if (mLastTimelineModel == null) {
+                            mLastTimelineModel = timelineModel;
+                        }
                     }
 
                     @Override
