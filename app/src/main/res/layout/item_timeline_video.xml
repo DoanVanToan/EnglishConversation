@@ -41,10 +41,12 @@
                 android:layout_height="@dimen/dp_240"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/dp_8"
+                app:use_controller="false"
+                app:resize_mode="fixed_height"
+                app:surface_type="texture_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_header"
-                app:resize_mode="fill" />
+                app:layout_constraintTop_toBottomOf="@id/layout_header" />
 
             <View
                 android:id="@+id/view_separator_video_comment"

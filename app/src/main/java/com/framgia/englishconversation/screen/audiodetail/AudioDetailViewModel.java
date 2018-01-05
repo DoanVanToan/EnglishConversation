@@ -12,9 +12,9 @@ import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
+import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 
 /**
  * Created by fs-sournary.
@@ -144,7 +146,10 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         return mTimelineModel;
     }
 
-    private class ComponentListener implements Player.EventListener {
+    /**
+     * Listen ExoPlayer
+     */
+    private class ComponentListener implements ExoPlayer.EventListener {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -154,7 +159,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
                                     TrackSelectionArray trackSelectionArray) {
-            // no ops
+            // no opsListener
         }
 
         @Override
@@ -164,29 +169,19 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState == Player.STATE_ENDED) {
+            if (playbackState == STATE_ENDED) {
                 mExoPlayer.seekToDefaultPosition();
                 mExoPlayer.setPlayWhenReady(false);
             }
         }
 
         @Override
-        public void onRepeatModeChanged(int repeatMode) {
+        public void onPlayerError(ExoPlaybackException e) {
             // no ops
         }
 
         @Override
-        public void onShuffleModeEnabledChanged(boolean b) {
-            // no ops
-        }
-
-        @Override
-        public void onPlayerError(ExoPlaybackException error) {
-            // no ops
-        }
-
-        @Override
-        public void onPositionDiscontinuity(int reason) {
+        public void onPositionDiscontinuity() {
             // no ops
         }
 
@@ -195,9 +190,5 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
             // no ops
         }
 
-        @Override
-        public void onSeekProcessed() {
-            // no ops
-        }
     }
 }
