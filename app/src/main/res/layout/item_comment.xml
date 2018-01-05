@@ -18,11 +18,10 @@
         >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:imageError="@{@drawable/ic_person_black_24dp}"
@@ -35,11 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
             android:lines="1"
             android:text="@{commentViewModel.createUser.userName}"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_16"
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintTop_toTopOf="parent"
@@ -60,14 +58,16 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_8"
             android:text="@{commentViewModel.content}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintTop_toBottomOf="@+id/text_time"
+            app:layout_constraintRight_toRightOf="parent"
             />
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -105,7 +105,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                         .endAt(lastTimeline != null ? -lastTimeline.getCreatedAt()
-                                : Calendar.getInstance().getTimeInMillis());
+                                : -Calendar.getInstance().getTimeInMillis());
 
                 query.addChildEventListener(new ChildEventListener() {
                     @Override

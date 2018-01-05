@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
@@ -28,6 +29,7 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     private FragmentManager mManager;
     private Fragment mFragment;
     private Context mContext;
+    private UserModel mUserModel;
     private Navigator mNavigator;
     private OnMediaModelItemTouchListener<List<MediaModel>> mListener =
             new OnMediaModelItemTouchListener<List<MediaModel>>() {
@@ -43,7 +45,7 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
         mContext = context;
         mTimelineModel = timelineModel;
         mManager = manager;
-        mFragment = CommentFragment.newInstance();
+        mFragment = CommentFragment.newInstance(timelineModel);
         mNavigator = new Navigator((Activity) context);
     }
 
@@ -105,7 +107,29 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     public void onCreateCommentTouched() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
+        bundle.putParcelable(Constant.EXTRA_USER, mUserModel);
         mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
                 Constant.RequestCode.POST_COMMENT);
     }
+
+    @Override
+    public void onGetCurrentUserSuccess(UserModel data) {
+        setUserModel(data);
+    }
+
+    @Override
+    public void onGetCurrentUserFailed(String msg) {
+
+    }
+
+    @Bindable
+    public UserModel getUserModel() {
+        return mUserModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        mUserModel = userModel;
+        notifyPropertyChanged(BR.userModel);
+    }
 }
+

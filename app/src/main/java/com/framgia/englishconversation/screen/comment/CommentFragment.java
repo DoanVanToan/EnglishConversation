@@ -6,10 +6,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.BaseFragment;
+import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
+import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.databinding.FragmentCommentBinding;
+
+import static com.framgia.englishconversation.utils.Constant.EXTRA_TIMELINE;
 
 /**
  * Comment Screen.
@@ -18,16 +22,22 @@ public class CommentFragment extends BaseFragment {
 
     private CommentContract.ViewModel mViewModel;
 
-    public static CommentFragment newInstance() {
-        return new CommentFragment();
+    public static CommentFragment newInstance(TimelineModel timelineModel) {
+        CommentFragment commentFragment = new CommentFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(EXTRA_TIMELINE, timelineModel);
+        commentFragment.setArguments(args);
+        return commentFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new CommentViewModel();
-
-        CommentContract.Presenter presenter = new CommentPresenter(mViewModel);
+        TimelineModel timelineModel = getArguments().getParcelable(EXTRA_TIMELINE);
+        mViewModel = new CommentViewModel(getActivity());
+        CommentRepository repository =
+                new CommentRepository(new CommentRemoteDataSource(timelineModel.getId()));
+        CommentContract.Presenter presenter = new CommentPresenter(mViewModel, repository);
         mViewModel.setPresenter(presenter);
     }
 
@@ -35,7 +45,6 @@ public class CommentFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-
         FragmentCommentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_comment, container, false);
         binding.setViewModel((CommentViewModel) mViewModel);
@@ -52,5 +61,11 @@ public class CommentFragment extends BaseFragment {
     public void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        mViewModel.onDestroy();
+        super.onDestroy();
     }
 }
