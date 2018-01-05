@@ -17,6 +17,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -103,12 +104,14 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
             @Override
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
-                        .endAt(-lastTimeline.getCreatedAt());
+                        .endAt(lastTimeline != null ? -lastTimeline.getCreatedAt()
+                                : Calendar.getInstance().getTimeInMillis());
 
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (lastTimeline.getId().equals(dataSnapshot.getKey())) {
+                        if (lastTimeline != null && lastTimeline.getId()
+                                .equals(dataSnapshot.getKey())) {
                             return;
                         }
                         TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);

@@ -12,6 +12,8 @@ import com.framgia.englishconversation.databinding.ItemTimelineConversationBindi
 import com.framgia.englishconversation.databinding.ItemTimelineImageBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
+import com.framgia.englishconversation.screen.BaseMediaViewHolder;
+import com.framgia.englishconversation.screen.BaseViewHolder;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by toand on 5/17/2017.
  */
 
-public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder> {
+public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<TimelineModel> mData;
     private OnTimelineItemTouchListener mItemTouchListener;
@@ -60,7 +62,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     }
 
     @Override
-    public BaseTimelineViewHolder onCreateViewHolder(ViewGroup parent,
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent,
                                                                      int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.ONLY_TEXT:
@@ -93,7 +95,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     }
 
     @Override
-    public void onBindViewHolder(BaseTimelineViewHolder holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.bindData(mData.get(position));
     }
 
@@ -113,7 +115,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     /**
      * Display timeline model with only text (without media)
      */
-    public class OnlyTextViewHolder extends BaseTimelineViewHolder {
+    public class OnlyTextViewHolder extends BaseViewHolder<TimelineModel> {
         private ItemTimelineOnlyTextBinding mBinding;
 
         public OnlyTextViewHolder(ItemTimelineOnlyTextBinding itemView) {
@@ -131,7 +133,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     /**
      * Display timeline model with audio media
      */
-    public class AudioViewHolder extends BaseMediaTimelineViewHolder {
+    public class AudioViewHolder extends BaseMediaViewHolder<TimelineModel> {
         private ItemTimelineAudioBinding mBinding;
 
         public AudioViewHolder(ItemTimelineAudioBinding itemView) {
@@ -151,7 +153,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
         }
 
         @Override
-        SimpleExoPlayerView getMediaPlayerView() {
+        protected SimpleExoPlayerView getMediaPlayerView() {
             return mBinding.player;
         }
     }
@@ -159,7 +161,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     /**
      * Display timneline model with image media
      */
-    public class ImageViewHolder extends BaseTimelineViewHolder {
+    public class ImageViewHolder extends BaseViewHolder<TimelineModel> {
         private ItemTimelineImageBinding mBinding;
         private OnTimelineItemTouchListener mOnTouchListener;
 
@@ -181,7 +183,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
     /**
      * Display timeline model with video media
      */
-    public class VideoViewHolder extends BaseMediaTimelineViewHolder {
+    public class VideoViewHolder extends BaseMediaViewHolder<TimelineModel> {
         private ItemTimelineVideoBinding mBinding;
         private OnTimelineItemTouchListener mOnTouchListener;
 
@@ -205,7 +207,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
 
 
         @Override
-        SimpleExoPlayerView getMediaPlayerView() {
+        protected SimpleExoPlayerView getMediaPlayerView() {
             return mBinding.videoView;
         }
     }
@@ -214,7 +216,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseTimelineViewHolder
      * display timeline model with conversation
      */
 
-    public class ConversationViewHolder extends BaseTimelineViewHolder {
+    public class ConversationViewHolder extends BaseViewHolder<TimelineModel> {
         private ItemTimelineConversationBinding mBinding;
         private OnTimelineItemTouchListener mTouchListener;
 
