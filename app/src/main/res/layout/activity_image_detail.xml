@@ -16,6 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
+        <include
+            layout="@layout/item_header_timeline"
+            android:id="@+id/layout_header"
+            app:timelineModel="@{viewModel.timelineModel}"
+            />
+
         <android.support.v4.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -24,7 +31,7 @@
             app:layout_constraintBottom_toTopOf="@+id/iv_user_avatar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_header"
             >
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

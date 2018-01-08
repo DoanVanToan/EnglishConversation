@@ -4,8 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
+import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ActivityConversationDetailBinding;
@@ -16,7 +15,7 @@ import com.framgia.englishconversation.utils.Constant;
  * Date on 12/27/17.
  * Description: audio detail screen
  */
-public class ConversationDetailActivity extends AppCompatActivity {
+public class ConversationDetailActivity extends BaseActivity {
 
     private ConversationDetailContract.ViewModel mViewModel;
 
@@ -29,14 +28,21 @@ public class ConversationDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityConversationDetailBinding binding = DataBindingUtil
-                .setContentView(this, R.layout.activity_conversation_detail);
+        ActivityConversationDetailBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_conversation_detail);
         TimelineModel timelineModel = getIntent().getParcelableExtra(Constant.EXTRA_TIMELINE);
         mViewModel = new ConversationDetailViewModel(this, timelineModel);
-        ConversationDetailContract.Presenter presenter =
-                new ConversationDetailPresenter();
+        ConversationDetailContract.Presenter presenter = new ConversationDetailPresenter();
         mViewModel.setPresenter(presenter);
         binding.setViewModel((ConversationDetailViewModel) mViewModel);
+        getSupportActionBar(getString(R.string.title_post_detail,
+                timelineModel.getCreatedUser().getUserName()));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override

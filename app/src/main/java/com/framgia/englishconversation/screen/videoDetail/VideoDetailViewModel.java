@@ -7,7 +7,6 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
@@ -40,8 +39,14 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
         mNavigator = new Navigator((Activity) context);
     }
 
+    @Bindable
     public TimelineModel getTimelineModel() {
         return mTimelineModel;
+    }
+
+    public void setTimelineModel(TimelineModel timelineModel) {
+        mTimelineModel = timelineModel;
+        notifyPropertyChanged(BR.timelineModel);
     }
 
     @Override

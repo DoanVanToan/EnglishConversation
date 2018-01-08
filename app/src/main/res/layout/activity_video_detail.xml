@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.videoDetail.VideoDetailViewModel" />
+            type="com.framgia.englishconversation.screen.videoDetail.VideoDetailViewModel"
+            />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+        <include
+            android:id="@+id/layout_header"
+            layout="@layout/item_header_timeline"
+            app:timelineModel="@{viewModel.timelineModel}"
+            />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_view"
@@ -20,9 +28,10 @@
             app:controller_layout_id="@layout/custom_video_playback_controller"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:resize_mode="fill"
-            app:videoPlayer="@{viewModel.simpleExoPlayer}" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_header"
+            app:resize_mode="fixed_height"
+            app:videoPlayer="@{viewModel.simpleExoPlayer}"
+            />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_avatar"
@@ -34,7 +43,8 @@
             app:imageError="@{@drawable/ic_person_black_24dp}"
             app:imageUrl="@{viewModel.timelineModel.createdUser.photoUrl}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/video_view" />
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            />
 
         <EditText
             android:id="@+id/et_input_comment"
@@ -50,7 +60,8 @@
             android:onClick="@{() -> viewModel.onCreateCommentTouched()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_user_avatar"
-            app:layout_constraintTop_toBottomOf="@id/video_view" />
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            />
 
     </android.support.constraint.ConstraintLayout>
 

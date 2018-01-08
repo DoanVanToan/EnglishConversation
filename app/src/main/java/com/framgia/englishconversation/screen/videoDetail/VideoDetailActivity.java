@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -21,18 +20,16 @@ public class VideoDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new VideoDetailViewModel(this,
-                (TimelineModel) getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE));
+        TimelineModel model = getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
+        mViewModel = new VideoDetailViewModel(this, model);
         VideoDetailContract.Presenter presenter = new VideoDetailPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
 
         ActivityVideoDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_video_detail);
         binding.setViewModel((VideoDetailViewModel) mViewModel);
-        if (getSupportActionBar() == null) {
-            return;
-        }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar(
+                getString(R.string.title_post_detail, model.getCreatedUser().getUserName()));
     }
 
     @Override
