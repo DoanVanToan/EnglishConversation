@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
-
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -39,10 +38,8 @@ public class AudioDetailActivity extends BaseActivity {
         AudioDetailPresenter presenter = new AudioDetailPresenter(mView);
         mView.setPresenter(presenter);
         binding.setViewModel((AudioDetailViewModel) mView);
-        if (getSupportActionBar() == null) {
-            return;
-        }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar(getString(R.string.title_post_detail,
+                timelineModel.getCreatedUser().getUserName()));
     }
 
     @Override
@@ -80,5 +77,4 @@ public class AudioDetailActivity extends BaseActivity {
         mView.onStop();
         super.onStop();
     }
-
 }
