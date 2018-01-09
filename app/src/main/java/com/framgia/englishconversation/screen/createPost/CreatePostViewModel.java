@@ -75,9 +75,12 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private static final int POSITION_AUDIO_CLICKED = 0;
+    private static final int POSITION_CONVERSATION_CLICK = 1;
 
     @AdapterType
     private int mAdapterType;
+    private int mClickedPosition;
     private long mPlaybackPosition;
     private int mCurrentWindow;
     private String mAudioFilePath;
@@ -292,7 +295,16 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermission(permissions, grantResults)) {
-            onAudioRecordingClick();
+            switch (mClickedPosition){
+                case POSITION_AUDIO_CLICKED:
+                    onAudioRecordingClick();
+                    break;
+                case POSITION_CONVERSATION_CLICK:
+                    onCreateConventionClick();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -542,6 +554,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onRecordAudioClick() {
+        mClickedPosition = POSITION_AUDIO_CLICKED;
         if (Utils.isAllowPermision(mActivity, PERMISSION)) {
             Utils.hideKeyBoard(mActivity);
             setAdapterType(AdapterType.MEDIA);
@@ -558,7 +571,10 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onCreateConventionClick() {
-        setAdapterType(AdapterType.CONVERSATION);
+        mClickedPosition = POSITION_CONVERSATION_CLICK;
+        if (Utils.isAllowPermision(mActivity, PERMISSION)) {
+            setAdapterType(AdapterType.CONVERSATION);
+        }
     }
 
     @Override

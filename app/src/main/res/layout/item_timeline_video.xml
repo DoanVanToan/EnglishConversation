@@ -38,15 +38,15 @@
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/video_view"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dp_240"
-                android:layout_gravity="center"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_8"
-                app:use_controller="false"
-                app:resize_mode="fixed_height"
-                app:surface_type="texture_view"
+                android:minHeight="@dimen/dp_240"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_header" />
+                app:layout_constraintTop_toBottomOf="@id/layout_header"
+                app:resize_mode="fixed_height"
+                app:surface_type="texture_view"
+                app:use_controller="false" />
 
             <View
                 android:id="@+id/view_separator_video_comment"

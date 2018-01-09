@@ -50,8 +50,7 @@ public class ConversationAdapter extends
                                 LayoutInflater.from(parent.getContext()),
                                 R.layout.item_left_conversation,
                                 parent,
-                                false
-                        );
+                                false);
                 return new LeftConversationViewHolder(leftBinding);
             case GravityType.RIGHT:
                 ItemRightConventionBinding rightBinding =
@@ -59,8 +58,7 @@ public class ConversationAdapter extends
                                 LayoutInflater.from(parent.getContext()),
                                 R.layout.item_right_convention,
                                 parent,
-                                false
-                        );
+                                false);
                 return new RightConversationViewHolder(rightBinding);
             default:
                 return null;

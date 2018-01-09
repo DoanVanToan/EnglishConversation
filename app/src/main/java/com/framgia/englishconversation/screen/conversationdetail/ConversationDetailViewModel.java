@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -27,10 +28,9 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 
 /**
  * Created by fs-sournary.
@@ -41,34 +41,31 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 public class ConversationDetailViewModel extends BaseObservable
         implements ConversationDetailContract.ViewModel {
 
-    private static final int IDLE_SCROLL_POSITION = -1;
-    private static final int DEFAULT_SCROLL_POSITION = 0;
-    private static final int NUMBER_INCREASE_SCROLL_POSITION = 1;
-    private static final int NUMBER_DECREASE_SCROLL_POSITION = 1;
-    private static final long DEFAULT_PLAYBACK_POSITION = 0;
+    private static final int DEF_WINDOW_INDEX = 0;
+    private static final int DEF_SCROLL_POSITION = 0;
 
-    private int mCurrentPosition;
     private int mScrollPosition;
     private boolean mIsPlaying;
-    private int mSelectedIndex;
+    private int mSelectedItemPosition;
     private long mPlaybackPosition;
-    private ComponentListener mComponentListener;
+    private TimelineModel mTimelineModel;
     private SimpleExoPlayer mExoPlayer;
+    private List<ConversationModel> mDetailModels;
+    private PlayerListener mPlayerListener;
+    private ConversationDetailActivity mDetailActivity;
     private ConversationDetailAdapter mAdapter;
     private ConversationDetailContract.Presenter mPresenter;
-    private ConversationDetailActivity mActivity;
-    private TimelineModel mTimelineModel;
     private FragmentManager mManager;
     private CommentFragment mFragment;
 
-    public ConversationDetailViewModel(ConversationDetailActivity activitiy,
-            FragmentManager manager, TimelineModel timelineModel) {
-        mActivity = activitiy;
+    public ConversationDetailViewModel(ConversationDetailActivity detailActivity,
+                                       FragmentManager manager, TimelineModel timelineModel) {
+        mDetailActivity = detailActivity;
         mTimelineModel = timelineModel;
-        mAdapter = new ConversationDetailAdapter(activitiy, timelineModel.getConversations(), this);
-        mComponentListener = new ComponentListener();
-        mScrollPosition = IDLE_SCROLL_POSITION;
-        setPlaying(false);
+        mAdapter = new ConversationDetailAdapter(
+                mDetailActivity, timelineModel.getConversations(), this);
+        mPlayerListener = new PlayerListener();
+        initDefaultData(timelineModel);
         mManager = manager;
         mFragment = CommentFragment.newInstance(timelineModel.getId());
     }
@@ -76,24 +73,17 @@ public class ConversationDetailViewModel extends BaseObservable
     @Override
     public void onStart() {
         mPresenter.onStart();
-        if (Util.SDK_INT > Build.VERSION_CODES.M) {
-            releaseExoPlayer();
+        if (Util.SDK_INT >= Build.VERSION_CODES.M) {
+            initPlayer();
             setPlaying(false);
         }
     }
 
     @Override
     public void onResume() {
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            releaseExoPlayer();
+        if (Util.SDK_INT < Build.VERSION_CODES.M) {
+            initPlayer();
             setPlaying(false);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            releaseExoPlayer();
         }
     }
 
@@ -101,7 +91,14 @@ public class ConversationDetailViewModel extends BaseObservable
     public void onStop() {
         mPresenter.onStop();
         if (Util.SDK_INT > Build.VERSION_CODES.M) {
-            releaseExoPlayer();
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
+            releasePlayer();
         }
     }
 
@@ -110,103 +107,82 @@ public class ConversationDetailViewModel extends BaseObservable
         mPresenter = presenter;
     }
 
-    public boolean isExitMedia() {
-        for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+    private void initDefaultData(TimelineModel timelineModel) {
+        int index = 0;
+        mDetailModels = new ArrayList<>();
+        for (ConversationModel conversationModel : timelineModel.getConversations()) {
             if (conversationModel.getMediaModel() != null) {
-                return true;
+                conversationModel.setIndex(index);
+                mDetailModels.add(conversationModel);
+                index++;
             }
         }
-        return false;
+        setScrollPosition(DEF_SCROLL_POSITION);
     }
 
-    private void initializeExoPlayer(int index) {
-        if (mExoPlayer != null
-                || mTimelineModel.getConversations().get(index).getMediaModel() == null) {
-            return;
-        }
-        mSelectedIndex = index;
-        mScrollPosition = index - NUMBER_DECREASE_SCROLL_POSITION;
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(), new DefaultLoadControl());
-        mExoPlayer.seekTo(DEFAULT_PLAYBACK_POSITION);
-        List<ConversationModel> conversationModels = mTimelineModel.getConversations()
-                .subList(index, mTimelineModel.getConversations().size());
+    private void initPlayer() {
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(mDetailActivity),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
         List<Uri> uris = new ArrayList<>();
-        for (ConversationModel conversationModel : conversationModels) {
-            if (conversationModel.getMediaModel() != null) {
-                String url = conversationModel.getMediaModel().getUrl();
-                uris.add(Uri.parse(url));
-            }
+        for (int i = 0; i < mDetailModels.size(); i++) {
+            String url = mDetailModels.get(i).getMediaModel().getUrl();
+            uris.add(Uri.parse(url));
         }
-        MediaSource mediaSource = getMediaSources(uris);
-        mExoPlayer.setPlayWhenReady(true);
-        mExoPlayer.prepare(mediaSource, true, false);
-        mExoPlayer.addListener(mComponentListener);
+        mExoPlayer.prepare(getMediaSource(uris), true, false);
+        mExoPlayer.addListener(mPlayerListener);
+    }
+
+    public void onMediaEntryClick() {
+        if (!mIsPlaying) {
+            play();
+        } else {
+            pause();
+        }
+        setPlaying(!mIsPlaying);
+    }
+
+    public void onMediaItemClick(ConversationModel conversationModel) {
         setPlaying(true);
-    }
-
-    private void initializeExoPlayer() {
-        if (mExoPlayer != null) {
-            return;
-        }
-        mScrollPosition = mSelectedIndex - NUMBER_DECREASE_SCROLL_POSITION;
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(), new DefaultLoadControl());
-        List<ConversationModel> conversationModels = mTimelineModel.getConversations()
-                .subList(mSelectedIndex, mTimelineModel.getConversations().size());
-        mExoPlayer.seekTo(mPlaybackPosition);
-        List<Uri> uris = new ArrayList<>();
-        for (ConversationModel conversationModel : conversationModels) {
-            if (conversationModel.getMediaModel() != null) {
-                String url = conversationModel.getMediaModel().getUrl();
-                uris.add(Uri.parse(url));
-            }
-        }
-        MediaSource mediaSource = getMediaSources(uris);
+        mExoPlayer.seekToDefaultPosition(conversationModel.getIndex());
         mExoPlayer.setPlayWhenReady(true);
-        mExoPlayer.prepare(mediaSource, true, false);
-        mExoPlayer.addListener(mComponentListener);
     }
 
-    private MediaSource getMediaSources(List<Uri> uris) {
-        DefaultHttpDataSourceFactory defaultHttpDataSourceFactory =
-                new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
-        DefaultExtractorsFactory defaultExtractorsFactory = new DefaultExtractorsFactory();
-        List<MediaSource> mediaSources = new ArrayList<>();
-        for (Uri uri : uris) {
-            MediaSource mediaSource = new ExtractorMediaSource(uri, defaultHttpDataSourceFactory,
-                    defaultExtractorsFactory, null, null);
-            mediaSources.add(mediaSource);
-        }
-        MediaSource[] mediaSourcesResults = new MediaSource[mediaSources.size()];
-        return new ConcatenatingMediaSource(mediaSources.toArray(mediaSourcesResults));
+    private void play() {
+        mExoPlayer.seekTo(mSelectedItemPosition, mPlaybackPosition);
+        mExoPlayer.setPlayWhenReady(true);
     }
 
-    private void releaseExoPlayer() {
+    private void pause() {
+        mExoPlayer.setPlayWhenReady(false);
+        mSelectedItemPosition = mExoPlayer.getCurrentWindowIndex();
+        mPlaybackPosition = mExoPlayer.getCurrentPosition();
+    }
+
+    private void releasePlayer() {
         if (mExoPlayer == null) {
             return;
         }
-        mSelectedIndex = mScrollPosition;
         mPlaybackPosition = mExoPlayer.getCurrentPosition();
+        mSelectedItemPosition = mExoPlayer.getCurrentWindowIndex();
+        mExoPlayer.removeListener(mPlayerListener);
         mExoPlayer.release();
         mExoPlayer = null;
     }
 
-    public void onAudioConversationClick(int index) {
-        if (mIsPlaying) {
-            setPlaying(false);
+    private MediaSource getMediaSource(List<Uri> uris) {
+        DefaultHttpDataSourceFactory httpDataSourceFactory =
+                new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
+        DefaultExtractorsFactory extractorsFactory =
+                new DefaultExtractorsFactory();
+        List<MediaSource> mediaSources = new ArrayList<>();
+        for (Uri uri : uris) {
+            mediaSources.add(new ExtractorMediaSource(uri, httpDataSourceFactory,
+                    extractorsFactory, null, null));
         }
-        releaseExoPlayer();
-        initializeExoPlayer(index);
-    }
-
-    public void onControllerConversationClick() {
-        if (mIsPlaying) {
-            releaseExoPlayer();
-        } else {
-            initializeExoPlayer();
-        }
-        setPlaying(!mIsPlaying);
+        MediaSource results[] = new MediaSource[mediaSources.size()];
+        return new ConcatenatingMediaSource(mediaSources.toArray(results));
     }
 
     @Bindable
@@ -220,98 +196,80 @@ public class ConversationDetailViewModel extends BaseObservable
     }
 
     @Bindable
-    public int getCurrentPosition() {
-        return mCurrentPosition;
+    public int getScrollPosition() {
+        return mScrollPosition;
     }
 
-    public void setCurrentPosition(int currentPosition) {
-        mCurrentPosition = currentPosition;
-        notifyPropertyChanged(BR.currentPosition);
-    }
-
-    public ConversationDetailAdapter getAdapter() {
-        return mAdapter;
+    public void setScrollPosition(int scrollPosition) {
+        mScrollPosition = scrollPosition;
+        notifyPropertyChanged(BR.scrollPosition);
     }
 
     public TimelineModel getTimelineModel() {
         return mTimelineModel;
     }
 
-    /**
-     * Event for ExoPlayer variable
-     */
-    private class ComponentListener implements ExoPlayer.EventListener {
+    public ConversationDetailAdapter getAdapter() {
+        return mAdapter;
+    }
 
-        @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
-            // no ops
-        }
-
-        /**
-         * Define: conversation audio list = CAL
-         * In this class I used ConcatenatingMediaSource which concat all the audio (with uri)
-         * When CAL is played, onTracksChanged method will be invoked.
-         * <p>
-         * In this case, trackSelectionArray = CAL
-         * trackGroupArray = 1 (style = audio)
-         *
-         * @param trackGroupArray: include number of render which is able to render tracks of
-         * single
-         * type (ex: audio, video ...)
-         * @param trackSelectionArray: include tracks is selected and rendered by each renderer
-         * of trackGroupArray
-         */
-        @Override
-        public void onTracksChanged(TrackGroupArray trackGroupArray,
-                TrackSelectionArray trackSelectionArray) {
-            // Reset to init position
-            // Timeline includes a lot of Periods that I concat them into a timeline.
-            int numberConversation = mTimelineModel.getConversations().size();
-            mScrollPosition += NUMBER_INCREASE_SCROLL_POSITION;
-            for (int i = 0; i < numberConversation; i++) {
-                if (i == mScrollPosition
-                        && mTimelineModel.getConversations().get(i).getMediaModel() == null) {
-                    mScrollPosition += NUMBER_INCREASE_SCROLL_POSITION;
-                }
-            }
-            setCurrentPosition(mScrollPosition);
-            if (mScrollPosition == numberConversation - 1) {
-                mScrollPosition = DEFAULT_SCROLL_POSITION;
-            }
-        }
-
-        @Override
-        public void onLoadingChanged(boolean isLoading) {
-            // no ops
-        }
-
-        @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState == STATE_ENDED) {
-                mExoPlayer.seekTo(DEFAULT_PLAYBACK_POSITION);
-                mExoPlayer.setPlayWhenReady(false);
-                releaseExoPlayer();
-                setPlaying(false);
-            }
-        }
-
-        @Override
-        public void onPlayerError(ExoPlaybackException error) {
-            // no ops
-        }
-
-        @Override
-        public void onPositionDiscontinuity() {
-
-        }
-
-        @Override
-        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-            // no ops
-        }
+    public List<ConversationModel> getDetailModels() {
+        return mDetailModels;
     }
 
     public void onClickComment() {
         mFragment.show(mManager, mFragment.getTag());
+    }
+
+    /**
+     * Event for ExoPlayer
+     */
+    private class PlayerListener implements ExoPlayer.EventListener {
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object o) {
+            // No ops
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroupArray,
+                                    TrackSelectionArray trackSelectionArray) {
+            // No ops
+        }
+
+        @Override
+        public void onLoadingChanged(boolean b) {
+            // No ops
+        }
+
+        @Override
+        public void onPlayerStateChanged(boolean b, int i) {
+            switch (i) {
+                case ExoPlayer.STATE_ENDED:
+                    mExoPlayer.seekToDefaultPosition(DEF_WINDOW_INDEX);
+                    mExoPlayer.setPlayWhenReady(false);
+                    setPlaying(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException e) {
+            // No ops
+        }
+
+        @Override
+        public void onPositionDiscontinuity() {
+            int position = mTimelineModel.getConversations()
+                    .indexOf(mDetailModels.get(mExoPlayer.getCurrentWindowIndex()));
+            setScrollPosition(position);
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+            // No ops
+        }
     }
 }

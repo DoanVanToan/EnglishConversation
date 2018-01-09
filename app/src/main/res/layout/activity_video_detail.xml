@@ -1,65 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.videoDetail.VideoDetailViewModel"
-            />
+            type="com.framgia.englishconversation.screen.videoDetail.VideoDetailViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <include
             android:id="@+id/layout_header"
             layout="@layout/item_header_timeline"
-            app:timelineModel="@{viewModel.timelineModel}"
-            />
+            app:timelineModel="@{viewModel.timelineModel}" />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_view"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/dp_240"
             app:controller_layout_id="@layout/custom_video_playback_controller"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_header"
             app:resize_mode="fixed_height"
-            app:videoPlayer="@{viewModel.simpleExoPlayer}"
-            />
+            app:videoPlayer="@{viewModel.simpleExoPlayer}" />
 
         <TextView
             android:id="@+id/text_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_8"
             android:onClick="@{()->viewModel.onClickComment()}"
             android:text="@string/title_comment"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/video_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="@dimen/dp_8"
-            />
+            app:layout_constraintTop_toBottomOf="@id/video_view" />
+
         <ImageView
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"
             android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
             android:layout_marginTop="@dimen/dp_8"
             android:contentDescription="@string/description_voted"
-            app:layout_constraintTop_toBottomOf="@id/video_view"
             app:layout_constraintRight_toLeftOf="@+id/text_comment"
-            app:srcCompat="@drawable/ic_comment"
-            />
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            app:srcCompat="@drawable/ic_comment" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>
