@@ -4,10 +4,11 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
-
+import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -26,7 +27,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,16 +58,19 @@ public class ConversationDetailViewModel extends BaseObservable
     private ConversationDetailContract.Presenter mPresenter;
     private ConversationDetailActivity mActivity;
     private TimelineModel mTimelineModel;
+    private FragmentManager mManager;
+    private CommentFragment mFragment;
 
     public ConversationDetailViewModel(ConversationDetailActivity activitiy,
-                                       TimelineModel timelineModel) {
+            FragmentManager manager, TimelineModel timelineModel) {
         mActivity = activitiy;
         mTimelineModel = timelineModel;
-        mAdapter = new ConversationDetailAdapter(
-                activitiy, timelineModel.getConversations(), this);
+        mAdapter = new ConversationDetailAdapter(activitiy, timelineModel.getConversations(), this);
         mComponentListener = new ComponentListener();
         mScrollPosition = IDLE_SCROLL_POSITION;
         setPlaying(false);
+        mManager = manager;
+        mFragment = CommentFragment.newInstance(timelineModel);
     }
 
     @Override
@@ -123,10 +126,8 @@ public class ConversationDetailViewModel extends BaseObservable
         }
         mSelectedIndex = index;
         mScrollPosition = index - NUMBER_DECREASE_SCROLL_POSITION;
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(),
-                new DefaultLoadControl());
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(), new DefaultLoadControl());
         mExoPlayer.seekTo(DEFAULT_PLAYBACK_POSITION);
         List<ConversationModel> conversationModels = mTimelineModel.getConversations()
                 .subList(index, mTimelineModel.getConversations().size());
@@ -149,10 +150,8 @@ public class ConversationDetailViewModel extends BaseObservable
             return;
         }
         mScrollPosition = mSelectedIndex - NUMBER_DECREASE_SCROLL_POSITION;
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(),
-                new DefaultLoadControl());
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(), new DefaultLoadControl());
         List<ConversationModel> conversationModels = mTimelineModel.getConversations()
                 .subList(mSelectedIndex, mTimelineModel.getConversations().size());
         mExoPlayer.seekTo(mPlaybackPosition);
@@ -172,13 +171,11 @@ public class ConversationDetailViewModel extends BaseObservable
     private MediaSource getMediaSources(List<Uri> uris) {
         DefaultHttpDataSourceFactory defaultHttpDataSourceFactory =
                 new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
-        DefaultExtractorsFactory defaultExtractorsFactory =
-                new DefaultExtractorsFactory();
+        DefaultExtractorsFactory defaultExtractorsFactory = new DefaultExtractorsFactory();
         List<MediaSource> mediaSources = new ArrayList<>();
         for (Uri uri : uris) {
-            MediaSource mediaSource = new ExtractorMediaSource(uri,
-                    defaultHttpDataSourceFactory, defaultExtractorsFactory,
-                    null, null);
+            MediaSource mediaSource = new ExtractorMediaSource(uri, defaultHttpDataSourceFactory,
+                    defaultExtractorsFactory, null, null);
             mediaSources.add(mediaSource);
         }
         MediaSource[] mediaSourcesResults = new MediaSource[mediaSources.size()];
@@ -258,14 +255,15 @@ public class ConversationDetailViewModel extends BaseObservable
          * In this case, trackSelectionArray = CAL
          * trackGroupArray = 1 (style = audio)
          *
-         * @param trackGroupArray:     include number of render which is able to render tracks of single
-         *                             type (ex: audio, video ...)
+         * @param trackGroupArray: include number of render which is able to render tracks of
+         * single
+         * type (ex: audio, video ...)
          * @param trackSelectionArray: include tracks is selected and rendered by each renderer
-         *                             of trackGroupArray
+         * of trackGroupArray
          */
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
-                                    TrackSelectionArray trackSelectionArray) {
+                TrackSelectionArray trackSelectionArray) {
             // Reset to init position
             // Timeline includes a lot of Periods that I concat them into a timeline.
             int numberConversation = mTimelineModel.getConversations().size();
@@ -313,4 +311,7 @@ public class ConversationDetailViewModel extends BaseObservable
         }
     }
 
+    public void onClickComment() {
+        mFragment.show(mManager, mFragment.getTag());
+    }
 }

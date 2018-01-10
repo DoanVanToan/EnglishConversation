@@ -7,8 +7,10 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
@@ -32,11 +34,16 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
     private TimelineModel mTimelineModel;
     private Context mContext;
     private Navigator mNavigator;
+    private FragmentManager mManager;
+    private CommentFragment mFragment;
 
-    VideoDetailViewModel(Context context, TimelineModel timelineModel) {
+    VideoDetailViewModel(Context context,
+            FragmentManager manager, TimelineModel timelineModel) {
         mContext = context;
         mTimelineModel = timelineModel;
         mNavigator = new Navigator((Activity) context);
+        mManager = manager;
+        mFragment = CommentFragment.newInstance(timelineModel);
     }
 
     @Bindable
@@ -125,11 +132,7 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
         }
     }
 
-    public void onCreateCommentTouched() {
-        releasePlayer();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
-        mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
-                Constant.RequestCode.POST_COMMENT);
+    public void onClickComment() {
+        mFragment.show(mManager, mFragment.getTag());
     }
 }

@@ -34,7 +34,7 @@ public class AudioDetailActivity extends BaseActivity {
         ActivityAudioDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_audio_detail);
         TimelineModel timelineModel = getIntent().getParcelableExtra(Constant.EXTRA_TIMELINE);
-        mView = new AudioDetailViewModel(this, timelineModel);
+        mView = new AudioDetailViewModel(this, timelineModel, getSupportFragmentManager());
         AudioDetailPresenter presenter = new AudioDetailPresenter(mView);
         mView.setPresenter(presenter);
         binding.setViewModel((AudioDetailViewModel) mView);
