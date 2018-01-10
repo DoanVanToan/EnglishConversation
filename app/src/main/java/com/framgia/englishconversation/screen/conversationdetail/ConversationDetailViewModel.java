@@ -70,7 +70,7 @@ public class ConversationDetailViewModel extends BaseObservable
         mScrollPosition = IDLE_SCROLL_POSITION;
         setPlaying(false);
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel);
+        mFragment = CommentFragment.newInstance(timelineModel.getId());
     }
 
     @Override

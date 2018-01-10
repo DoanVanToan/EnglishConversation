@@ -28,10 +28,10 @@ public class CommentFragment extends BottomSheetDialogFragment {
 
     private CommentContract.ViewModel mViewModel;
 
-    public static CommentFragment newInstance(TimelineModel timelineModel) {
+    public static CommentFragment newInstance(String timelineModelId) {
         CommentFragment commentFragment = new CommentFragment();
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_TIMELINE, timelineModel);
+        args.putString(EXTRA_TIMELINE, timelineModelId);
         commentFragment.setArguments(args);
         return commentFragment;
     }
@@ -39,12 +39,12 @@ public class CommentFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TimelineModel timelineModel = getArguments().getParcelable(EXTRA_TIMELINE);
-        mViewModel = new CommentViewModel(getActivity(), timelineModel);
+        String timelineModelId = getArguments().getString(EXTRA_TIMELINE);
+        mViewModel = new CommentViewModel(getActivity(), timelineModelId);
         AuthenicationRepository authenicationRepository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
         CommentRepository repository =
-                new CommentRepository(new CommentRemoteDataSource(timelineModel.getId()));
+                new CommentRepository(new CommentRemoteDataSource(timelineModelId));
         CommentContract.Presenter presenter =
                 new CommentPresenter(mViewModel, repository, authenicationRepository);
         mViewModel.setPresenter(presenter);

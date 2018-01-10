@@ -20,6 +20,7 @@
             android:id="@+id/image_avatar"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             app:layout_constraintLeft_toLeftOf="parent"

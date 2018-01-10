@@ -29,21 +29,20 @@ final class CreateCommentPresenter
     private final CreateCommentContract.ViewModel mViewModel;
     private Comment mComment;
     private MediaModel mMediaModel;
-    private TimelineModel mTimelineModel;
+    private String mTimelineModelId;
     private SharedPrefsApi mSharedPrefsApi;
     private CommentRepository mCommentRepository;
     private CompositeDisposable mDisposable;
 
     CreateCommentPresenter(UserModel userModel, CreateCommentContract.ViewModel viewModel,
-            TimelineModel timelineModel, SharedPrefsApi sharedPrefsApi) {
+            String timelineModelId, SharedPrefsApi sharedPrefsApi) {
         mViewModel = viewModel;
         mSharedPrefsApi = sharedPrefsApi;
         mComment = new Comment();
         mComment.setCreateUser(userModel);
-        mTimelineModel = timelineModel;
-        mCommentRepository =
-                new CommentRepository(new CommentRemoteDataSource(mTimelineModel.getId()));
-        mComment.setPostId(mTimelineModel.getId());
+        mTimelineModelId = timelineModelId;
+        mCommentRepository = new CommentRepository(new CommentRemoteDataSource(mTimelineModelId));
+        mComment.setPostId(mTimelineModelId);
         mComment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
         mDisposable = new CompositeDisposable();
     }
@@ -73,8 +72,7 @@ final class CreateCommentPresenter
             mComment.setMediaModel(mMediaModel);
         }
         mMediaModel.setUrl(uri);
-        mMediaModel.setName(
-                mTimelineModel.getCreatedUser().getId() + "-" + System.currentTimeMillis());
+        mMediaModel.setName(mTimelineModelId + "-" + System.currentTimeMillis());
         mMediaModel.setId(mMediaModel.getName());
         mViewModel.onMultimediaFileAttached(mMediaModel);
     }
@@ -86,8 +84,7 @@ final class CreateCommentPresenter
             mComment.setMediaModel(mMediaModel);
         }
         mMediaModel.setUrl(image.path);
-        mMediaModel.setName(
-                mTimelineModel.getCreatedUser().getId() + "-" + System.currentTimeMillis());
+        mMediaModel.setName(mTimelineModelId + "-" + System.currentTimeMillis());
         mMediaModel.setId(mMediaModel.getName());
         mViewModel.onMultimediaFileAttached(mMediaModel);
     }

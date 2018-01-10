@@ -7,7 +7,6 @@ import android.databinding.Bindable;
 import android.os.Bundle;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.utils.Constant;
@@ -30,16 +29,16 @@ public class CommentViewModel extends BaseObservable
     private Context mContext;
     private OnEndScrollListener mOnEndScrollListener;
     private Navigator mNavigator;
-    private TimelineModel mTimelineModel;
+    private String mTimelineModelId;
     private UserModel mUserModel;
     private int mDefaultHeight;
 
-    public CommentViewModel(Context context, TimelineModel timelineModel) {
+    public CommentViewModel(Context context, String timelineModelId) {
         mAdapter = new CommentAdapter(new ArrayList<Comment>(), this);
         mContext = context;
         mOnEndScrollListener = new OnEndScrollListener(this);
         mNavigator = new Navigator((Activity) mContext);
-        mTimelineModel = timelineModel;
+        mTimelineModelId = timelineModelId;
         mDefaultHeight =
                 ((Activity) context).getWindow().getDecorView().getHeight() - getStatusBarHeight(
                         context);
@@ -129,7 +128,7 @@ public class CommentViewModel extends BaseObservable
 
     public void onCreateCommentTouched() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
+        bundle.putString(Constant.EXTRA_TIMELINE, mTimelineModelId);
         bundle.putParcelable(Constant.EXTRA_USER, mUserModel);
         mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
                 Constant.RequestCode.POST_COMMENT);
