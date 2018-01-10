@@ -215,7 +215,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     /**
      * display timeline model with conversation
      */
-
     public class ConversationViewHolder extends BaseViewHolder<TimelineModel> {
         private ItemTimelineConversationBinding mBinding;
         private OnTimelineItemTouchListener mTouchListener;
@@ -231,6 +230,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mTouchListener);
+            mBinding.setViewModel(mViewModel);
             mBinding.executePendingBindings();
         }
     }

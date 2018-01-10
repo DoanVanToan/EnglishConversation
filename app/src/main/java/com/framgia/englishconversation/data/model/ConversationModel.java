@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.framgia.englishconversation.BR;
+import com.google.firebase.database.Exclude;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -34,6 +35,8 @@ public class ConversationModel extends BaseObservable implements Parcelable {
     @SerializedName("type")
     @GravityType
     private int mGravity;
+    @Exclude
+    private int mIndex;
 
     public ConversationModel() {
     }
@@ -76,6 +79,14 @@ public class ConversationModel extends BaseObservable implements Parcelable {
     public void setGravity(int gravity) {
         mGravity = gravity;
         notifyPropertyChanged(BR.gravity);
+    }
+
+    public int getIndex() {
+        return mIndex;
+    }
+
+    public void setIndex(int index) {
+        mIndex = index;
     }
 
     @Override

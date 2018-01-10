@@ -32,7 +32,7 @@
                 <include
                     android:id="@+id/layout_header"
                     layout="@layout/item_header_timeline"
-                    bind:timelineModel="@{viewModel.timelineModel}" />
+                    bind:timelineModel="@{viewModel.timelineModel}"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_conversation"
@@ -46,7 +46,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_header"
                     bind:adapter="@{viewModel.adapter}"
-                    bind:scrollPosition="@{viewModel.currentPosition}" />
+                    bind:scrollPosition="@{viewModel.scrollPosition}" />
 
                 <ImageView
                     android:id="@+id/player"
@@ -55,8 +55,8 @@
                     android:layout_marginTop="@dimen/dp_16"
                     android:background="@{viewModel.playing == true ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
                     android:contentDescription="@string/description_play_audio"
-                    android:onClick="@{() -> viewModel.onControllerConversationClick()}"
-                    android:visibility="@{viewModel.isExitMedia() == true ? View.VISIBLE : View.GONE}"
+                    android:onClick="@{() -> viewModel.onMediaEntryClick()}"
+                    android:visibility="@{viewModel.detailModels.size() == 0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent" />
 
             </android.support.constraint.ConstraintLayout>

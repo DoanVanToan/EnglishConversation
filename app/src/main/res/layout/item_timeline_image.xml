@@ -29,13 +29,12 @@
             <include
                 layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}"
-                bind:touchListener="@{touchListener}"
-                />
+                bind:touchListener="@{touchListener}" />
 
             <include
                 layout="@layout/item_list_image"
-                bind:timelineModel="@{timelineModel}"
-                bind:listener="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"/>
+                bind:listener="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"
+                bind:timelineModel="@{timelineModel}" />
 
             <View
                 android:layout_width="match_parent"
@@ -46,8 +45,8 @@
 
             <include
                 layout="@layout/item_footer_timeline"
-                bind:timelineModel="@{timelineModel}"
-                bind:onClick="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"/>
+                bind:onClick="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"
+                bind:timelineModel="@{timelineModel}" />
 
         </LinearLayout>
 

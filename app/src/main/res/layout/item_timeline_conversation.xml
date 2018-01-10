@@ -16,12 +16,17 @@
         <variable
             name="touchListener"
             type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
+        android:onClick="@{() -> viewModel.onConversationTimeLineClick(timelineModel)}"
         app:cardCornerRadius="@dimen/dp_4">
 
         <android.support.constraint.ConstraintLayout
@@ -42,6 +47,7 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginStart="@dimen/dp_8"
                 android:background="@drawable/bg_timeline_conversation"
+                android:onClick="@{() -> touchListener.onHeaderTouchListener(timelineModel)}"
                 android:padding="@dimen/dp_4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +105,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/image_second_audio" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/title_see_more"
+                    android:textColor="@android:color/holo_green_light"
+                    android:textStyle="bold"
+                    android:visibility="@{timelineModel.conversations.size() &lt;= 2 ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_second_content" />
+
             </android.support.constraint.ConstraintLayout>
 
             <View
@@ -113,23 +132,13 @@
 
             <include
                 layout="@layout/item_footer_timeline"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_separator_conversation_comment"
-                bind:timelineModel="@{timelineModel}" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_8"
-                android:layout_marginStart="@dimen/dp_8"
-                android:text="@string/title_see_more"
-                android:textColor="@android:color/holo_green_light"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_separator_conversation_comment" />
+                app:layout_constraintTop_toBottomOf="@id/view_separator_conversation_comment"
+                bind:onClick="@{() -> viewModel.onConversationTimeLineClick(timelineModel)}"
+                bind:timelineModel="@{timelineModel}" />
 
         </android.support.constraint.ConstraintLayout>
 

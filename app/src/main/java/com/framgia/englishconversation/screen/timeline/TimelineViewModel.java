@@ -140,6 +140,11 @@ public class TimelineViewModel extends BaseObservable
         mNavigator.startActivity(intent);
     }
 
+    public void onConversationTimeLineClick(TimelineModel timelineModel) {
+        Intent intent = ConversationDetailActivity.getInstance(mContext, timelineModel);
+        mNavigator.startActivity(intent);
+    }
+
     @Override
     public void onHeaderTouchListener(TimelineModel timelineModel) {
         switch (timelineModel.getPostType()) {
@@ -156,6 +161,7 @@ public class TimelineViewModel extends BaseObservable
                         ConversationDetailActivity.getInstance(mContext, timelineModel));
                 break;
             case MediaModel.MediaType.AUDIO:
+                mNavigator.startActivity(AudioDetailActivity.getInstance(mContext, timelineModel));
                 break;
             case MediaModel.MediaType.ONLY_TEXT:
                 break;

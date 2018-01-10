@@ -24,6 +24,7 @@ import im.ene.toro.widget.Container;
 public abstract class BaseMediaViewHolder<T> extends BaseViewHolder<T>
         implements ToroPlayer {
     private static final float VISIBLE_ARE_TIMELINE_ADAPTER = 0.85f;
+
     protected SimpleExoPlayerViewHelper mHelper;
     protected Uri mUri;
 
