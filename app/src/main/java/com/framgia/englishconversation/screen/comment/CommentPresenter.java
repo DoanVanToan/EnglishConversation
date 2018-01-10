@@ -1,7 +1,11 @@
 package com.framgia.englishconversation.screen.comment;
 
 import com.framgia.englishconversation.data.model.Comment;
+import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.data.source.callback.DataCallback;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
+import com.google.firebase.auth.FirebaseUser;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -18,15 +22,29 @@ final class CommentPresenter implements CommentContract.Presenter {
     private final CommentContract.ViewModel mViewModel;
     private CompositeDisposable mDisposable;
     private Comment mLastComment;
+    private AuthenicationRepository mAuthenicationRepository;
 
-    CommentPresenter(CommentContract.ViewModel viewModel, CommentRepository commentRepository) {
+    CommentPresenter(CommentContract.ViewModel viewModel, CommentRepository commentRepository,
+            AuthenicationRepository authenicationRepository) {
         mViewModel = viewModel;
         mRepository = commentRepository;
         mDisposable = new CompositeDisposable();
+        mAuthenicationRepository = authenicationRepository;
     }
 
     @Override
     public void onStart() {
+        mAuthenicationRepository.getCurrentUser(new DataCallback<FirebaseUser>() {
+            @Override
+            public void onGetDataSuccess(FirebaseUser data) {
+                mViewModel.onGetCurrentUserSuccess(new UserModel(data));
+            }
+
+            @Override
+            public void onGetDataFailed(String msg) {
+                mViewModel.onGetCurrentUserFailed(msg);
+            }
+        });
     }
 
     @Override

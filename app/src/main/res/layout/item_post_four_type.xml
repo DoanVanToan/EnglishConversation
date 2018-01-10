@@ -67,7 +67,7 @@
             android:alpha="0.7"
             android:background="@android:color/black"
             android:gravity="center"
-            android:onClick="@{()->listener.onTouchListener(listData,4)}"
+            android:onClick="@{()->listener.onTouchListener(listData,3)}"
             android:text="@{@string/item_format(String.valueOf(listData.size-4))}"
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_40"
