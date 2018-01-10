@@ -20,7 +20,6 @@ import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.BaseStorageService;
 import com.framgia.englishconversation.service.FirebaseUploadService;
@@ -63,7 +62,7 @@ public class CreateCommentViewModel extends BaseObservable
     private String mTimeInProgressAudio;
     private Navigator mNavigator;
     private MultimediaAdapter mMultimediaAdapter;
-    private TimelineModel mTimelineModel;
+    private String mTimelineModelId;
     private SimpleExoPlayer mSimpleExoPlayer;
     private long mCurrentPlaybackPosition = 0;
     private String mCurrentMultimediaFileUrl;
@@ -71,9 +70,9 @@ public class CreateCommentViewModel extends BaseObservable
     private BroadcastReceiver mReceiver;
     private ProgressDialog mProgressDialog;
 
-    public CreateCommentViewModel(Context context, TimelineModel timelineModel) {
+    public CreateCommentViewModel(Context context, String timelineModelId) {
         mContext = context;
-        mTimelineModel = timelineModel;
+        mTimelineModelId = timelineModelId;
         mProgressDialog = new ProgressDialog(mContext);
         mNavigator = new Navigator((Activity) mContext);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
@@ -163,10 +162,8 @@ public class CreateCommentViewModel extends BaseObservable
         if (mContext.getExternalCacheDir() == null) {
             return;
         }
-        String fileName = mTimelineModel.getCreatedUser().getId()
-                + "-"
-                + System.currentTimeMillis()
-                + Constant.DEFAULT_FORMAT_AUDIO;
+        String fileName =
+                mTimelineModelId + "-" + System.currentTimeMillis() + Constant.DEFAULT_FORMAT_AUDIO;
         String filePath = mContext.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
         RecordingAudioBuilder.with((AppCompatActivity) mContext, mRecordingAudioDialog)
                 .setFileName(fileName)

@@ -7,7 +7,6 @@ import android.widget.PopupMenu;
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsImpl;
 import com.framgia.englishconversation.databinding.ActivityCreateCommentBinding;
@@ -24,12 +23,11 @@ public class CreateCommentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TimelineModel timelineModel =
-                getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
-        mViewModel = new CreateCommentViewModel(this, timelineModel);
+        String timelineModelId = getIntent().getExtras().getString(Constant.EXTRA_TIMELINE);
+        mViewModel = new CreateCommentViewModel(this, timelineModelId);
         UserModel userModel = getIntent().getExtras().getParcelable(Constant.EXTRA_USER);
         CreateCommentContract.Presenter presenter =
-                new CreateCommentPresenter(userModel, mViewModel, timelineModel,
+                new CreateCommentPresenter(userModel, mViewModel, timelineModelId,
                         new SharedPrefsImpl(this));
         mViewModel.setPresenter(presenter);
 

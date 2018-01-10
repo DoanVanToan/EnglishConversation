@@ -58,7 +58,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         mNavigator = new Navigator(activity);
         initComponents();
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel);
+        mFragment = CommentFragment.newInstance(timelineModel.getId());
     }
 
     @Override

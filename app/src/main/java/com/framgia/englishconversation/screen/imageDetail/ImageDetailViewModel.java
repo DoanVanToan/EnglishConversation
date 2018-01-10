@@ -36,7 +36,7 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
         mContext = context;
         mTimelineModel = timelineModel;
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel);
+        mFragment = CommentFragment.newInstance(timelineModel.getId());
     }
 
     @Override
