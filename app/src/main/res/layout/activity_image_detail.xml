@@ -2,7 +2,6 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -19,97 +18,56 @@
 
         <include
             layout="@layout/item_header_timeline"
-            android:id="@+id/layout_header"
+            android:id="@+id/layout_item_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:timelineModel="@{viewModel.timelineModel}"
             />
 
-        <android.support.v4.widget.NestedScrollView
+        <include
+            layout="@layout/item_list_image"
+            android:id="@+id/layout_image_timeline"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/dp_8"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toTopOf="@+id/iv_user_avatar"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_header"
-            >
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:context="com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity"
-                >
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardElevation="@dimen/dp_4"
-                    >
-                    <include
-                        layout="@layout/item_header_timeline"
-                        android:id="@+id/layout_item_header"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:timelineModel="@{viewModel.timelineModel}"
-                        />
-
-                    <include
-                        layout="@layout/item_list_image"
-                        android:id="@+id/layout_image_timeline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/layout_item_header"
-                        app:listener="@{viewModel.listener}"
-                        app:timelineModel="@{viewModel.timelineModel}"
-                        />
-                </android.support.v7.widget.CardView>
-                <FrameLayout
-                    android:id="@+id/frame_comment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:fragment="@{viewModel.fragment}"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_detail"
-                    app:manager="@{viewModel.manager}"
-                    />
-
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_user_avatar"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
-            android:layout_margin="@dimen/dp_8"
-            app:imageError="@{@drawable/ic_person_black_24dp}"
-            app:imageUrl="@{viewModel.userModel.photoUrl}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_item_header"
+            app:listener="@{viewModel.listener}"
+            app:timelineModel="@{viewModel.timelineModel}"
             />
 
-        <EditText
-            android:id="@+id/et_input_comment"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_40"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_30"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginRight="@dimen/dp_30"
-            android:layout_marginStart="@dimen/dp_8"
+        <TextView
+            android:id="@+id/text_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_8"
-            android:inputType="text"
-            android:maxLines="1"
-            android:onClick="@{() -> viewModel.onCreateCommentTouched()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/iv_user_avatar"
-            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="@{()->viewModel.onClickComment()}"
+            android:text="@string/title_comment"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_image_timeline"
             />
-    </android.support.constraint.ConstraintLayout>
 
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_8"
+            android:contentDescription="@string/description_voted"
+            app:layout_constraintRight_toLeftOf="@+id/text_comment"
+            app:layout_constraintTop_toBottomOf="@id/layout_image_timeline"
+            app:srcCompat="@drawable/ic_comment"
+            />
+
+    </android.support.constraint.ConstraintLayout>
 
 </layout>

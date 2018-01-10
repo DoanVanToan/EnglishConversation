@@ -1,21 +1,14 @@
 package com.framgia.englishconversation.screen.imagedetail;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
-import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
-import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
-import com.framgia.englishconversation.utils.Constant;
-import com.framgia.englishconversation.utils.navigator.Navigator;
 import java.util.List;
 
 /**
@@ -27,10 +20,8 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     private ImageDetailContract.Presenter mPresenter;
     private TimelineModel mTimelineModel;
     private FragmentManager mManager;
-    private Fragment mFragment;
+    private CommentFragment mFragment;
     private Context mContext;
-    private UserModel mUserModel;
-    private Navigator mNavigator;
     private OnMediaModelItemTouchListener<List<MediaModel>> mListener =
             new OnMediaModelItemTouchListener<List<MediaModel>>() {
                 @Override
@@ -46,7 +37,6 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
         mTimelineModel = timelineModel;
         mManager = manager;
         mFragment = CommentFragment.newInstance(timelineModel);
-        mNavigator = new Navigator((Activity) context);
     }
 
     @Override
@@ -85,11 +75,11 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
     }
 
     @Bindable
-    public Fragment getFragment() {
+    public CommentFragment getFragment() {
         return mFragment;
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(CommentFragment fragment) {
         mFragment = fragment;
         notifyPropertyChanged(BR.fragment);
     }
@@ -104,32 +94,8 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
         notifyPropertyChanged(BR.listener);
     }
 
-    public void onCreateCommentTouched() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.EXTRA_TIMELINE, mTimelineModel);
-        bundle.putParcelable(Constant.EXTRA_USER, mUserModel);
-        mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
-                Constant.RequestCode.POST_COMMENT);
-    }
-
-    @Override
-    public void onGetCurrentUserSuccess(UserModel data) {
-        setUserModel(data);
-    }
-
-    @Override
-    public void onGetCurrentUserFailed(String msg) {
-
-    }
-
-    @Bindable
-    public UserModel getUserModel() {
-        return mUserModel;
-    }
-
-    public void setUserModel(UserModel userModel) {
-        mUserModel = userModel;
-        notifyPropertyChanged(BR.userModel);
+    public void onClickComment() {
+        mFragment.show(mManager, mFragment.getTag());
     }
 }
 

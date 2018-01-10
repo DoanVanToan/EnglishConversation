@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools"
+    >
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel" />
+            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel"
+            />
 
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_grey_200">
+        android:background="@color/color_grey_200"
+        >
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="@dimen/dp_4">
+            app:cardElevation="@dimen/dp_4"
+            >
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/dp_8">
+                android:padding="@dimen/dp_8"
+                >
 
                 <include
-                    android:id="@+id/layout_header"
                     layout="@layout/item_header_timeline"
-                    bind:timelineModel="@{viewModel.timelineModel}" />
+                    android:id="@+id/layout_header"
+                    bind:timelineModel="@{viewModel.timelineModel}"
+                    />
 
                 <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                    android:id="@+id/audio_player"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/dp_72"
                     android:layout_marginTop="@dimen/dp_8"
@@ -45,20 +52,40 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_header"
                     app:show_timeout="0"
-                    bind:player="@{viewModel.exoPlayer}" />
+                    bind:player="@{viewModel.exoPlayer}"
+                    />
 
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+        <TextView
+            android:id="@+id/text_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{()->viewModel.onClickComment()}"
+            android:text="@string/title_comment"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_detail" />
+            app:layout_constraintTop_toBottomOf="@id/card_detail"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_8"
+            android:contentDescription="@string/description_voted"
+            app:layout_constraintRight_toLeftOf="@+id/text_comment"
+            app:layout_constraintTop_toBottomOf="@id/card_detail"
+            app:srcCompat="@drawable/ic_comment"
+            />
 
     </android.support.constraint.ConstraintLayout>
 

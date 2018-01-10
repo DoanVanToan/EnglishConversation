@@ -52,7 +52,7 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 app:layoutManager="LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/iv_user_avatar"
+                app:layout_constraintBottom_toTopOf="@id/image_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_line"
@@ -60,7 +60,7 @@
                 app:scrollListener="@{viewModel.onEndScrollListener}"
                 />
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_user_avatar"
+                android:id="@+id/image_avatar"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
                 android:layout_marginLeft="@dimen/dp_8"
@@ -87,7 +87,7 @@
                 android:onClick="@{() -> viewModel.onCreateCommentTouched()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/iv_user_avatar"
+                app:layout_constraintLeft_toRightOf="@+id/image_avatar"
                 />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

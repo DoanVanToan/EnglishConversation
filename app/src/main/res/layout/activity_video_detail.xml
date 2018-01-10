@@ -33,36 +33,33 @@
             app:videoPlayer="@{viewModel.simpleExoPlayer}"
             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_user_avatar"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            app:imageError="@{@drawable/ic_person_black_24dp}"
-            app:imageUrl="@{viewModel.timelineModel.createdUser.photoUrl}"
-            app:layout_constraintStart_toStartOf="parent"
+        <TextView
+            android:id="@+id/text_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:onClick="@{()->viewModel.onClickComment()}"
+            android:text="@string/title_comment"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/video_view"
-            />
-
-        <EditText
-            android:id="@+id/et_input_comment"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_40"
-            android:layout_marginEnd="@dimen/dp_30"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginRight="@dimen/dp_30"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            android:inputType="text"
-            android:maxLines="1"
-            android:onClick="@{() -> viewModel.onCreateCommentTouched()}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_user_avatar"
-            app:layout_constraintTop_toBottomOf="@id/video_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/dp_8"
             />
-
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_8"
+            android:contentDescription="@string/description_voted"
+            app:layout_constraintTop_toBottomOf="@id/video_view"
+            app:layout_constraintRight_toLeftOf="@+id/text_comment"
+            app:srcCompat="@drawable/ic_comment"
+            />
     </android.support.constraint.ConstraintLayout>
 
 </layout>

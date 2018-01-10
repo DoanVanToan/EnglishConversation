@@ -31,7 +31,8 @@ public class ConversationDetailActivity extends BaseActivity {
         ActivityConversationDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_conversation_detail);
         TimelineModel timelineModel = getIntent().getParcelableExtra(Constant.EXTRA_TIMELINE);
-        mViewModel = new ConversationDetailViewModel(this, timelineModel);
+        mViewModel =
+                new ConversationDetailViewModel(this, getSupportFragmentManager(), timelineModel);
         ConversationDetailContract.Presenter presenter = new ConversationDetailPresenter();
         mViewModel.setPresenter(presenter);
         binding.setViewModel((ConversationDetailViewModel) mViewModel);

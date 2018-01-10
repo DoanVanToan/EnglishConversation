@@ -4,9 +4,10 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
-
+import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -47,12 +48,17 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     private TimelineModel mTimelineModel;
     private Navigator mNavigator;
     private AudioDetailContract.Presenter mPresenter;
+    private FragmentManager mManager;
+    private CommentFragment mFragment;
 
-    public AudioDetailViewModel(AudioDetailActivity activity, TimelineModel timelineModel) {
+    public AudioDetailViewModel(AudioDetailActivity activity, TimelineModel timelineModel,
+            FragmentManager manager) {
         mActivity = activity;
         mTimelineModel = timelineModel;
         mNavigator = new Navigator(activity);
         initComponents();
+        mManager = manager;
+        mFragment = CommentFragment.newInstance(timelineModel);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
     @Override
     public void onResume() {
-        if (Util.SDK_INT < Build.VERSION_CODES.M && mExoPlayer == null) {
+        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
             setUpExoPlayer();
         }
     }
@@ -94,10 +100,8 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         if (mExoPlayer != null) {
             return;
         }
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(),
-                new DefaultLoadControl());
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(), new DefaultLoadControl());
         Uri uriAudio = Uri.parse(mPathAudio);
         mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
         mExoPlayer.prepare(getMediaSource(uriAudio), true, false);
@@ -106,8 +110,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     }
 
     private MediaSource getMediaSource(Uri uri) {
-        return new ExtractorMediaSource(uri,
-                new DefaultHttpDataSourceFactory(Constant.USER_AGENT),
+        return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory(Constant.USER_AGENT),
                 new DefaultExtractorsFactory(), null, null);
     }
 
@@ -146,6 +149,10 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         return mTimelineModel;
     }
 
+    public void onClickComment() {
+        mFragment.show(mManager, mFragment.getTag());
+    }
+
     /**
      * Listen ExoPlayer
      */
@@ -158,7 +165,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
-                                    TrackSelectionArray trackSelectionArray) {
+                TrackSelectionArray trackSelectionArray) {
             // no opsListener
         }
 
@@ -189,6 +196,5 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
         public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
             // no ops
         }
-
     }
 }
