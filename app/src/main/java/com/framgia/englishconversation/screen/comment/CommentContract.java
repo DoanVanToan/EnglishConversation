@@ -3,6 +3,7 @@ package com.framgia.englishconversation.screen.comment;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.Comment;
+import com.framgia.englishconversation.data.model.UserModel;
 import java.util.List;
 
 /**
@@ -24,6 +25,10 @@ interface CommentContract {
         void onGetCommentsFailure(String message);
 
         void onGetCommentSuccess(Comment comment);
+
+        void onGetCurrentUserSuccess(UserModel data);
+
+        void onGetCurrentUserFailed(String msg);
     }
 
     /**
