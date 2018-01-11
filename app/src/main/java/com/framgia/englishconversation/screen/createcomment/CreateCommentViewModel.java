@@ -13,18 +13,23 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.service.BaseStorageService;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.FileUtils;
+import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
@@ -40,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.framgia.englishconversation.service.FirebaseUploadService
         .ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
@@ -69,9 +75,13 @@ public class CreateCommentViewModel extends BaseObservable
     private boolean mIsUploading = false;
     private BroadcastReceiver mReceiver;
     private ProgressDialog mProgressDialog;
+    private PopupMenu mPopupMenu;
+    private CreateCommentFragment mCommentFragment;
+    private UserModel mUserModel;
 
-    public CreateCommentViewModel(Context context, String timelineModelId) {
-        mContext = context;
+    public CreateCommentViewModel(CreateCommentFragment commentFragment, String timelineModelId) {
+        mCommentFragment = commentFragment;
+        mContext = commentFragment.getActivity();
         mTimelineModelId = timelineModelId;
         mProgressDialog = new ProgressDialog(mContext);
         mNavigator = new Navigator((Activity) mContext);
@@ -143,19 +153,27 @@ public class CreateCommentViewModel extends BaseObservable
 
     public void setInputtedComment(String inputtedComment) {
         mInputtedComment = inputtedComment;
+        notifyPropertyChanged(BR.inputtedComment);
     }
 
-    public void onSubmitComment() {
-        if (mPresenter.getComment().getMediaModel() != null) {
-            uploadFiles(mPresenter.getComment().getMediaModel());
+    public void onSubmitComment(View view) {
+        Comment comment = new Comment();
+        InputMethodManager imm =
+                (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (mMultimediaAdapter.getMediaModel() != null) {
+            uploadFiles(mMultimediaAdapter.getMediaModel());
         } else {
-            mPresenter.getComment().setContent(mInputtedComment);
-            mPresenter.postLiteralComment();
+            comment.setPostId(mTimelineModelId);
+            comment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
+            comment.setContent(mInputtedComment);
+            comment.setCreateUser(mUserModel);
+            mPresenter.postLiteralComment(comment);
         }
     }
 
     public void onMultimediaIconTouch() {
-        ((CreateCommentActivity) mContext).onMultimediaIconTouch();
+        mPopupMenu.show();
     }
 
     private void showAudioRecordDialog() {
@@ -178,7 +196,6 @@ public class CreateCommentViewModel extends BaseObservable
         return mIsPlaying;
     }
 
-    @Override
     public void setPlaying(boolean playing) {
         mIsPlaying = playing;
         notifyPropertyChanged(BR.playing);
@@ -189,7 +206,6 @@ public class CreateCommentViewModel extends BaseObservable
         return mTimeInProgressAudio;
     }
 
-    @Override
     public void setTimeInProgressAudio(String timeInProgressAudio) {
         mTimeInProgressAudio = timeInProgressAudio;
         notifyPropertyChanged(BR.timeInProgressAudio);
@@ -235,18 +251,24 @@ public class CreateCommentViewModel extends BaseObservable
     }
 
     @Override
-    public void onPostLiteralCommentResult(boolean isSuccess, Intent resultData) {
-        if (isSuccess) {
-            ((AppCompatActivity) mContext).setResult(Activity.RESULT_OK, resultData);
-        } else {
-            ((AppCompatActivity) mContext).setResult(Activity.RESULT_CANCELED, resultData);
-        }
-        ((AppCompatActivity) mContext).finish();
+    public void onPostLiteralCommentSuccess(Comment comment) {
+        mMultimediaAdapter.setData(new ArrayList<MediaModel>());
+        setInputtedComment(null);
+    }
+
+    @Override
+    public void onPostLiteralCommentFailure(String message) {
+        mNavigator.showToast(message);
     }
 
     @Override
     public void onDestroy() {
         mPresenter.onDestroy();
+    }
+
+    @Override
+    public void setPopUpMenu(PopupMenu popUpMenu) {
+        mPopupMenu = popUpMenu;
     }
 
     @Bindable
@@ -297,13 +319,13 @@ public class CreateCommentViewModel extends BaseObservable
 
     public void showVideoRecordScreen() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        mNavigator.startActivityForResult(intent, Constant.RequestCode.RECORD_VIDEO);
+        mCommentFragment.startActivityForResult(intent, Constant.RequestCode.RECORD_VIDEO);
     }
 
     public void showAlbumPicker() {
         Intent intent = new Intent(mContext, AlbumSelectActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, Constant.Timeline.ONE_IMAGE);
-        mNavigator.startActivityForResult(intent, Constant.RequestCode.SELECT_IMAGE);
+        mCommentFragment.startActivityForResult(intent, Constant.RequestCode.SELECT_IMAGE);
     }
 
     public void uploadFiles(MediaModel mediaModel) {
@@ -321,9 +343,13 @@ public class CreateCommentViewModel extends BaseObservable
     }
 
     private void postLiteralComment(MediaModel model) {
-        mPresenter.getComment().setMediaModel(model);
-        mPresenter.getComment().setContent(mInputtedComment);
-        mPresenter.postLiteralComment();
+        Comment comment = new Comment();
+        comment.setPostId(mTimelineModelId);
+        comment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
+        comment.setMediaModel(model);
+        comment.setContent(mInputtedComment);
+        comment.setCreateUser(mUserModel);
+        mPresenter.postLiteralComment(comment);
     }
 
     private void registerBroadcastReceiver() {
@@ -395,5 +421,25 @@ public class CreateCommentViewModel extends BaseObservable
     private void unregisterBroadcastReceiver() {
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(mContext);
         manager.unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onGetCurrentUserSuccess(UserModel data) {
+        setUserModel(data);
+    }
+
+    @Override
+    public void onGetCurrentUserFailed(String msg) {
+
+    }
+
+    @Bindable
+    public UserModel getUserModel() {
+        return mUserModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        mUserModel = userModel;
+        notifyPropertyChanged(BR.userModel);
     }
 }
