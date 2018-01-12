@@ -37,6 +37,7 @@ public class Constant {
         public static final int RECORD_VIDEO = 136;
         public static final int SELECT_IMAGE = 137;
         public static final int POST_COMMENT = 138;
+        public static final int REQUEST_PERMISSION = 138;
     }
 
     public static final String USER_AGENT = "user-agent";

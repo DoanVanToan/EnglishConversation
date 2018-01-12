@@ -29,6 +29,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
+import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
+
 /**
  * Created by toand on 5/13/2017.
  */
@@ -63,14 +65,16 @@ public class Utils {
         }
     }
 
-    public static boolean isAllowPermision(Activity activity, String[] permission) {
+    public static boolean isAllowPermision(Activity activity, String[] permissions) {
         boolean isAllowPermison = true;
-        for (String s : permission) {
-            if (ContextCompat.checkSelfPermission(activity, s)
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 isAllowPermison = false;
-                ActivityCompat.requestPermissions(activity, new String[]{s}, 0);
             }
+        }
+        if (!isAllowPermison) {
+            ActivityCompat.requestPermissions(activity, permissions, REQUEST_PERMISSION);
         }
         return isAllowPermison;
     }
