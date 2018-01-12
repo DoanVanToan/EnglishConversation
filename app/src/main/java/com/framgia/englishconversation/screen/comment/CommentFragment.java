@@ -12,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.framgia.englishconversation.R;
-import com.framgia.englishconversation.data.model.TimelineModel;
-import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
-import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.databinding.FragmentCommentBinding;
@@ -40,13 +37,11 @@ public class CommentFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String timelineModelId = getArguments().getString(EXTRA_TIMELINE);
-        mViewModel = new CommentViewModel(getActivity(), timelineModelId);
-        AuthenicationRepository authenicationRepository =
-                new AuthenicationRepository(new AuthenicationRemoteDataSource());
+        mViewModel =
+                new CommentViewModel(getActivity(), timelineModelId, getChildFragmentManager());
         CommentRepository repository =
                 new CommentRepository(new CommentRemoteDataSource(timelineModelId));
-        CommentContract.Presenter presenter =
-                new CommentPresenter(mViewModel, repository, authenicationRepository);
+        CommentContract.Presenter presenter = new CommentPresenter(mViewModel, repository);
         mViewModel.setPresenter(presenter);
     }
 

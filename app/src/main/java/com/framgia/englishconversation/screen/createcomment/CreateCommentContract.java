@@ -1,11 +1,13 @@
 package com.framgia.englishconversation.screen.createcomment;
 
 import android.content.Intent;
+import android.widget.PopupMenu;
 import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
+import com.framgia.englishconversation.data.model.UserModel;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -19,19 +21,23 @@ interface CreateCommentContract {
 
         void onResume();
 
-        void setPlaying(boolean playing);
-
-        void setTimeInProgressAudio(String timeInProgressAudio);
-
         void showToast(int stringId);
 
         void onGetMultimediaDataDone(Intent intent, @MediaModel.MediaType int type);
 
         void onMultimediaFileAttached(MediaModel mediaModel);
 
-        void onPostLiteralCommentResult(boolean isSuccess, Intent intent);
+        void onPostLiteralCommentSuccess(Comment comment);
+
+        void onPostLiteralCommentFailure(String message);
 
         void onDestroy();
+
+        void setPopUpMenu(PopupMenu popUpMenu);
+
+        void onGetCurrentUserSuccess(UserModel data);
+
+        void onGetCurrentUserFailed(String msg);
     }
 
     /**
@@ -48,11 +54,9 @@ interface CreateCommentContract {
 
         void onImageSelectDone(Image image);
 
-        Comment getComment();
-
         void onDeleteItemMediaClicked();
 
-        void postLiteralComment();
+        void postLiteralComment(Comment comment);
 
         void onDestroy();
     }

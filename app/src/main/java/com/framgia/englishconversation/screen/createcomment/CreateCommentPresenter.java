@@ -1,25 +1,24 @@
 package com.framgia.englishconversation.screen.createcomment;
 
-import android.content.Intent;
 import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsApi;
+import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
-import com.framgia.englishconversation.utils.Constant;
-import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
+import com.google.firebase.auth.FirebaseUser;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Listens to user actions from the UI ({@link CreateCommentActivity}), retrieves the data and
+ * Listens to user actions from the UI ({@link CreateCommentFragment}), retrieves the data and
  * updates
  * the UI as required.
  */
@@ -27,28 +26,36 @@ final class CreateCommentPresenter
         implements CreateCommentContract.Presenter, RecordingAudioDialog.OnRecordingAudioListener {
 
     private final CreateCommentContract.ViewModel mViewModel;
-    private Comment mComment;
     private MediaModel mMediaModel;
     private String mTimelineModelId;
     private SharedPrefsApi mSharedPrefsApi;
     private CommentRepository mCommentRepository;
     private CompositeDisposable mDisposable;
+    private AuthenicationRepository mAuthenicationRepository;
 
-    CreateCommentPresenter(UserModel userModel, CreateCommentContract.ViewModel viewModel,
-            String timelineModelId, SharedPrefsApi sharedPrefsApi) {
+    CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, String timelineModelId,
+            SharedPrefsApi sharedPrefsApi, AuthenicationRepository authenicationRepository) {
         mViewModel = viewModel;
         mSharedPrefsApi = sharedPrefsApi;
-        mComment = new Comment();
-        mComment.setCreateUser(userModel);
         mTimelineModelId = timelineModelId;
         mCommentRepository = new CommentRepository(new CommentRemoteDataSource(mTimelineModelId));
-        mComment.setPostId(mTimelineModelId);
-        mComment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
         mDisposable = new CompositeDisposable();
+        mAuthenicationRepository = authenicationRepository;
     }
 
     @Override
     public void onStart() {
+        mAuthenicationRepository.getCurrentUser(new DataCallback<FirebaseUser>() {
+            @Override
+            public void onGetDataSuccess(FirebaseUser data) {
+                mViewModel.onGetCurrentUserSuccess(new UserModel(data));
+            }
+
+            @Override
+            public void onGetDataFailed(String msg) {
+                mViewModel.onGetCurrentUserFailed(msg);
+            }
+        });
     }
 
     @Override
@@ -69,7 +76,6 @@ final class CreateCommentPresenter
     public void onRecordVideoDone(String uri, int type) {
         if (mMediaModel == null) {
             mMediaModel = new MediaModel(MediaModel.MediaType.VIDEO);
-            mComment.setMediaModel(mMediaModel);
         }
         mMediaModel.setUrl(uri);
         mMediaModel.setName(mTimelineModelId + "-" + System.currentTimeMillis());
@@ -81,7 +87,6 @@ final class CreateCommentPresenter
     public void onImageSelectDone(Image image) {
         if (mMediaModel == null) {
             mMediaModel = new MediaModel(MediaModel.MediaType.IMAGE);
-            mComment.setMediaModel(mMediaModel);
         }
         mMediaModel.setUrl(image.path);
         mMediaModel.setName(mTimelineModelId + "-" + System.currentTimeMillis());
@@ -90,32 +95,27 @@ final class CreateCommentPresenter
     }
 
     @Override
-    public Comment getComment() {
-        return mComment;
-    }
-
-    @Override
     public void onDeleteItemMediaClicked() {
-        resetAttachMultimedia();
+        mMediaModel = null;
     }
 
     @Override
-    public void postLiteralComment() {
-        mDisposable.add(mCommentRepository.createNewComment(mComment)
+    public void postLiteralComment(Comment comment) {
+        if (comment.getContent() == null && comment.getMediaModel() == null) {
+            return;
+        }
+        mDisposable.add(mCommentRepository.createNewComment(comment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<Comment>() {
                     @Override
                     public void onNext(Comment comment) {
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(Constant.EXTRA_COMMENT, mComment);
-                        mViewModel.onPostLiteralCommentResult(true, returnIntent);
+                        mViewModel.onPostLiteralCommentSuccess(comment);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Intent returnIntent = new Intent();
-                        mViewModel.onPostLiteralCommentResult(false, returnIntent);
+                        mViewModel.onPostLiteralCommentFailure(e.getMessage());
                     }
 
                     @Override
@@ -133,11 +133,6 @@ final class CreateCommentPresenter
     @Override
     public void onMultimediaMenuItemClick(int type) {
         mMediaModel = new MediaModel(type);
-        mComment.setMediaModel(mMediaModel);
-    }
-
-    public void onDeleteItemMediaClicked(MediaModel mediaModel) {
-        mComment.setMediaModel(null);
     }
 
     //TODO: Consult with Boruto about this method name, this is an after recording event
@@ -150,12 +145,7 @@ final class CreateCommentPresenter
 
     @Override
     public void onRecordCancel() {
-        resetAttachMultimedia();
+        onDeleteItemMediaClicked();
         mViewModel.showToast(R.string.message_record_cancel);
-    }
-
-    private void resetAttachMultimedia() {
-        mMediaModel = null;
-        mComment.setMediaModel(null);
     }
 }

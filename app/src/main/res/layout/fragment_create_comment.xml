@@ -16,22 +16,26 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_black_translucent"
-        tools:context="com.framgia.englishconversation.screen.createcomment.CreateCommentActivity"
+        android:layout_height="wrap_content"
+        tools:context="com.framgia.englishconversation.screen.createcomment.CreateCommentFragment"
         >
 
         <ImageView
             android:id="@+id/iv_multimedia"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
             android:onClick="@{() -> viewModel.onMultimediaIconTouch()}"
-            android:src="@mipmap/ic_launcher_round"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/et_input_comment"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/et_input_comment"
+            app:layout_constraintRight_toLeftOf="@+id/et_input_comment"
+            app:srcCompat="@drawable/ic_add_black_24dp"
             />
 
         <EditText
@@ -42,38 +46,47 @@
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
+            android:background="@drawable/bg_corner_edit_text"
+            android:hint="@string/description_write_a_comment"
             android:inputType="text"
             android:maxLines="1"
+            android:paddingEnd="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingStart="@dimen/dp_5"
             android:text="@={viewModel.inputtedComment}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_post_comment"
             app:layout_constraintStart_toEndOf="@id/iv_multimedia"
             >
-            <requestFocus/>
         </EditText>
 
         <ImageView
             android:id="@+id/iv_post_comment"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
-            android:onClick="@{(v) -> viewModel.onSubmitComment()}"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:onClick="@{(v) -> viewModel.onSubmitComment(etInputComment)}"
             android:src="@drawable/ic_send"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/et_input_comment"
+            app:layout_constraintBottom_toBottomOf="@+id/et_input_comment"
+            app:layout_constraintLeft_toRightOf="@+id/et_input_comment"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_media"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
             android:orientation="vertical"
             app:adapter="@{viewModel.multimediaAdapter}"
             app:layoutManager="LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/et_input_comment"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

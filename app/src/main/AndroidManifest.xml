@@ -86,7 +86,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".screen.createcomment.CreateCommentActivity"
+            android:name=".screen.createcomment.CreateCommentFragment"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="stateVisible" />

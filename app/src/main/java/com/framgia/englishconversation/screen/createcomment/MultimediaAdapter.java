@@ -44,6 +44,10 @@ public class MultimediaAdapter extends RecyclerView.Adapter<MultimediaAdapter.Ba
         updateData(mediaModels);
     }
 
+    public MediaModel getMediaModel() {
+        return mMediaModels == null || mMediaModels.isEmpty() ? null : mMediaModels.get(0);
+    }
+
     void removeItem(MediaModel mediaModel) {
         mMediaModels.remove(mediaModel);
         notifyDataSetChanged();

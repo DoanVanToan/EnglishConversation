@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.screen.createcomment.CreateCommentActivity;
-import com.framgia.englishconversation.utils.Constant;
+import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import java.util.ArrayList;
@@ -30,10 +29,11 @@ public class CommentViewModel extends BaseObservable
     private OnEndScrollListener mOnEndScrollListener;
     private Navigator mNavigator;
     private String mTimelineModelId;
-    private UserModel mUserModel;
     private int mDefaultHeight;
+    private FragmentManager mManager;
+    private Fragment mFragment;
 
-    public CommentViewModel(Context context, String timelineModelId) {
+    public CommentViewModel(Context context, String timelineModelId, FragmentManager manager) {
         mAdapter = new CommentAdapter(new ArrayList<Comment>(), this);
         mContext = context;
         mOnEndScrollListener = new OnEndScrollListener(this);
@@ -42,6 +42,8 @@ public class CommentViewModel extends BaseObservable
         mDefaultHeight =
                 ((Activity) context).getWindow().getDecorView().getHeight() - getStatusBarHeight(
                         context);
+        mManager = manager;
+        mFragment = CreateCommentFragment.getInstance(timelineModelId);
     }
 
     @Override
@@ -112,36 +114,16 @@ public class CommentViewModel extends BaseObservable
     }
 
     @Override
-    public void onGetCurrentUserSuccess(UserModel data) {
-        setUserModel(data);
-    }
-
-    @Override
-    public void onGetCurrentUserFailed(String msg) {
-
-    }
-
-    @Override
     public void onEndScrolled() {
         mPresenter.fetchCommentData(mAdapter.getLastComment());
     }
 
     public void onCreateCommentTouched() {
-        Bundle bundle = new Bundle();
+      /*  Bundle bundle = new Bundle();
         bundle.putString(Constant.EXTRA_TIMELINE, mTimelineModelId);
         bundle.putParcelable(Constant.EXTRA_USER, mUserModel);
-        mNavigator.startActivityForResult(CreateCommentActivity.class, bundle,
-                Constant.RequestCode.POST_COMMENT);
-    }
-
-    @Bindable
-    public UserModel getUserModel() {
-        return mUserModel;
-    }
-
-    public void setUserModel(UserModel userModel) {
-        mUserModel = userModel;
-        notifyPropertyChanged(BR.userModel);
+        mNavigator.startActivityForResult(CreateCommentFragment.class, bundle,
+                Constant.RequestCode.POST_COMMENT);*/
     }
 
     @Bindable
@@ -161,5 +143,24 @@ public class CommentViewModel extends BaseObservable
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    @Bindable
+    public FragmentManager getManager() {
+        return mManager;
+    }
+
+    public void setManager(FragmentManager manager) {
+        mManager = manager;
+        notifyPropertyChanged(BR.manager);
+    }
+
+    @Bindable
+    public Fragment getFragment() {
+        return mFragment;
+    }
+
+    public void setFragment(Fragment fragment) {
+        mFragment = fragment;
     }
 }
