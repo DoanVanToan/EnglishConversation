@@ -116,5 +116,7 @@
     <string name="title_remove_audio">Remove audio</string>
     <string name="title_preview_audio">Preview audio</string>
     <string name="title_delete_item">Delete conversation item</string>
-    <string name="hint_create_conversation">Create a conversation &#8230;</string>
+    <string name="hint_create_conversation">Insert message &#8230;</string>
+    <string name="title_upload_file">Upload files</string>
+    <string name="msg_uploading">Uploading..............</string>
 </resources>

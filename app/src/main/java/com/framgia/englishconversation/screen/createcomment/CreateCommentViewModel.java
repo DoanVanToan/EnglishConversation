@@ -1,7 +1,6 @@
 package com.framgia.englishconversation.screen.createcomment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
+
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
@@ -25,12 +25,14 @@ import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
+import com.framgia.englishconversation.screen.createPost.UploadBroadcastReceiver;
 import com.framgia.englishconversation.service.BaseStorageService;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.FileUtils;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.framgia.englishconversation.widget.dialog.UploadProgressDialog;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -40,18 +42,17 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static com.framgia.englishconversation.service.FirebaseUploadService
-        .ACTION_UPLOAD_MULTI_FILE;
+import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_MEDIA_MODEL;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_URI;
+
 
 /**
  * Exposes the data to be used in the CreateComment screen.
@@ -74,7 +75,7 @@ public class CreateCommentViewModel extends BaseObservable
     private String mCurrentMultimediaFileUrl;
     private boolean mIsUploading = false;
     private BroadcastReceiver mReceiver;
-    private ProgressDialog mProgressDialog;
+    private UploadProgressDialog mProgressDialog;
     private PopupMenu mPopupMenu;
     private CreateCommentFragment mCommentFragment;
     private UserModel mUserModel;
@@ -83,7 +84,7 @@ public class CreateCommentViewModel extends BaseObservable
         mCommentFragment = commentFragment;
         mContext = commentFragment.getActivity();
         mTimelineModelId = timelineModelId;
-        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog = new UploadProgressDialog(mContext);
         mNavigator = new Navigator((Activity) mContext);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         mMultimediaAdapter = new MultimediaAdapter(this);
@@ -332,6 +333,7 @@ public class CreateCommentViewModel extends BaseObservable
         if (mIsUploading) {
             return;
         }
+        mProgressDialog.show();
         mIsUploading = true;
         ArrayList<MediaModel> mediaModels = new ArrayList<>();
         mediaModels.add(mediaModel);
@@ -358,63 +360,32 @@ public class CreateCommentViewModel extends BaseObservable
             manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
             return;
         }
-        mReceiver = new BroadcastReceiver() {
+        mReceiver = new UploadBroadcastReceiver(new UploadBroadcastReceiver.OnReceiverListenner() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() == null) {
-                    return;
-                }
-                switch (intent.getAction()) {
-                    case FirebaseUploadService.UPLOAD_PROGRESS:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        int percent = intent.getExtras()
-                                .getInt(FirebaseUploadService.EXTRA_UPLOADED_PERCENT);
-                        MediaModel mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        mediaModel.setUploadPercent(percent);
-                        String message = mContext.getString(R.string.prefix_uploading) + percent;
-                        mProgressDialog.setMessage(message);
-                        mProgressDialog.show();
-                        break;
-                    case FirebaseUploadService.UPLOAD_COMPLETE:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        Uri downloadUri = (Uri) intent.getExtras().get(EXTRA_URI);
-                        if (downloadUri == null) {
-                            return;
-                        }
-                        mediaModel.setUrl(downloadUri.toString());
-                        mProgressDialog.dismiss();
-                        postLiteralComment(mediaModel);
-                        mIsUploading = false;
-                        break;
-                    case FirebaseUploadService.UPLOAD_FINNISH_ALL:
-
-                        break;
-                    case FirebaseUploadService.UPLOAD_ERROR:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        mNavigator.showToast(
-                                String.format(mContext.getString(R.string.msg_upload_error),
-                                        mediaModel.getName()));
-                        break;
-                }
+            public void onUploadProgress(MediaModel mediaModel) {
+                mProgressDialog.setProgressPercent(mediaModel.getUploadPercent());
             }
-        };
+
+            @Override
+            public void onUploadFinnish(MediaModel mediaModel) {
+                mProgressDialog.dismiss();
+                postLiteralComment(mediaModel);
+                mIsUploading = false;
+            }
+
+            @Override
+            public void onUploadComplete() {
+
+            }
+
+            @Override
+            public void onUploadError(MediaModel mediaModel) {
+                String errorMsg = String.format(mContext.getString(R.string.msg_upload_error),
+                        mediaModel.getName());
+                mNavigator.showToast(errorMsg);
+                mProgressDialog.dismiss();
+            }
+        });
         manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
     }
 

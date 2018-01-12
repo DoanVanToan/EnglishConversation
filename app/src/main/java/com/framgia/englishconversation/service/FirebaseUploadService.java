@@ -32,10 +32,10 @@ public class FirebaseUploadService extends BaseStorageService {
     public final static String ACTION_UPLOAD_MULTI_FILE =
             "com.toandoan.action.ACTION_UPLOAD_MULTI_FILE";
 
-    public final static String UPLOAD_COMPLETE = "upload_complete";
+    public final static String UPLOAD_FINNISH = "upload_finish";
     public final static String UPLOAD_ERROR = "upload_error";
     public final static String UPLOAD_PROGRESS = "upload_progress";
-    public final static String UPLOAD_FINNISH_ALL = "upload_finnish_all";
+    public final static String UPLOAD_COMPLETE = "upload_complete";
     /**
      * Intent Extra
      **/
@@ -54,10 +54,10 @@ public class FirebaseUploadService extends BaseStorageService {
 
     public static IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(UPLOAD_COMPLETE);
+        filter.addAction(UPLOAD_FINNISH);
         filter.addAction(UPLOAD_ERROR);
         filter.addAction(UPLOAD_PROGRESS);
-        filter.addAction(UPLOAD_FINNISH_ALL);
+        filter.addAction(UPLOAD_COMPLETE);
         return filter;
     }
 
@@ -145,7 +145,7 @@ public class FirebaseUploadService extends BaseStorageService {
 
     private boolean broadcastUploadFinished(MediaModel mediaModel, @Nullable Uri downloadUrl) {
         if (downloadUrl != null) {
-            Intent broadcast = new Intent(UPLOAD_COMPLETE).putExtra(EXTRA_MEDIA_MODEL, mediaModel)
+            Intent broadcast = new Intent(UPLOAD_FINNISH).putExtra(EXTRA_MEDIA_MODEL, mediaModel)
                     .putExtra(EXTRA_URI, downloadUrl);
             return LocalBroadcastManager.getInstance(getApplicationContext())
                     .sendBroadcast(broadcast);
@@ -207,7 +207,7 @@ public class FirebaseUploadService extends BaseStorageService {
     private boolean broadcastUploadFinished(@Nullable Uri downloadUrl, @Nullable Uri fileUri) {
         boolean success = downloadUrl != null;
 
-        String action = success ? UPLOAD_COMPLETE : UPLOAD_ERROR;
+        String action = success ? UPLOAD_FINNISH : UPLOAD_ERROR;
 
         Intent broadcast = new Intent(action).putExtra(EXTRA_DOWNLOAD_URL, downloadUrl)
                 .putExtra(EXTRA_URI, fileUri);
