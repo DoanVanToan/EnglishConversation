@@ -60,6 +60,7 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_MEDIA_MODEL;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_URI;
+import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
 
 /**
  * Exposes the data to be used in the CreatePost screen.
@@ -69,18 +70,15 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int SELECT_IMAGE_REQUEST = 2;
-    private static final int REQUEST_RECORD_AUDIO = 3;
-    private static final int REQUEST_RECORD_VIDEO = 4;
+    private static final int REQUEST_RECORD_VIDEO = 3;
     private static final int LIMIT_IMAGES = 10;
     private static final String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    private static final int POSITION_AUDIO_CLICKED = 0;
-    private static final int POSITION_CONVERSATION_CLICK = 1;
 
     @AdapterType
     private int mAdapterType;
-    private int mClickedPosition;
+    private int mCurrentTypeClicked;
     private long mPlaybackPosition;
     private int mCurrentWindow;
     private String mAudioFilePath;
@@ -294,13 +292,16 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-        if (requestCode == REQUEST_RECORD_AUDIO && isEnablePermission(permissions, grantResults)) {
-            switch (mClickedPosition){
-                case POSITION_AUDIO_CLICKED:
+        if (requestCode == REQUEST_PERMISSION && isEnablePermission(permissions, grantResults)) {
+            switch (mCurrentTypeClicked) {
+                case MediaModel.MediaType.AUDIO:
                     onAudioRecordingClick();
                     break;
-                case POSITION_CONVERSATION_CLICK:
+                case MediaModel.MediaType.CONVERSATION:
                     onCreateConventionClick();
+                    break;
+                case MediaModel.MediaType.VIDEO:
+                    onVideoPickerClick();
                     break;
                 default:
                     break;
@@ -503,10 +504,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 .showRecordingAudioFromActivity();
     }
 
-    private void showRecordCancelMessage() {
-        mNavigator.showToast(mActivity.getString(R.string.message_record_cancel));
-    }
-
     public void onAudioConversationClick(final ConversationModel conversations) {
         showAudioDialog();
         RecordingAudioDialog.OnRecordingAudioListener recordingAudioClickListener =
@@ -523,7 +520,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
                     @Override
                     public void onRecordCancel() {
-                        showRecordCancelMessage();
+                        // no ops
                     }
                 };
         mRecordingAudioDialog.setOnRecordingAudioClickListener(recordingAudioClickListener);
@@ -547,22 +544,27 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
                     @Override
                     public void onRecordCancel() {
-                        showRecordCancelMessage();
+                        // no ops
                     }
                 };
         mRecordingAudioDialog.setOnRecordingAudioClickListener(recordingAudioClickListener);
     }
 
     public void onRecordAudioClick() {
-        mClickedPosition = POSITION_AUDIO_CLICKED;
-        if (Utils.isAllowPermision(mActivity, PERMISSION)) {
-            Utils.hideKeyBoard(mActivity);
-            setAdapterType(AdapterType.MEDIA);
-            onAudioRecordingClick();
+        mCurrentTypeClicked = MediaModel.MediaType.AUDIO;
+        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
+            return;
         }
+        Utils.hideKeyBoard(mActivity);
+        setAdapterType(AdapterType.MEDIA);
+        onAudioRecordingClick();
     }
 
     public void onVideoPickerClick() {
+        mCurrentTypeClicked = MediaModel.MediaType.VIDEO;
+        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
+            return;
+        }
         setAdapterType(AdapterType.MEDIA);
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
@@ -571,10 +573,11 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onCreateConventionClick() {
-        mClickedPosition = POSITION_CONVERSATION_CLICK;
-        if (Utils.isAllowPermision(mActivity, PERMISSION)) {
-            setAdapterType(AdapterType.CONVERSATION);
+        mCurrentTypeClicked = MediaModel.MediaType.CONVERSATION;
+        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
+            return;
         }
+        setAdapterType(AdapterType.CONVERSATION);
     }
 
     @Override
