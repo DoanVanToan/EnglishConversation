@@ -2,13 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.main.MainViewModel" />
+            type="com.framgia.englishconversation.screen.main.MainViewModel"
+            />
 
     </data>
 
@@ -16,14 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.framgia.englishconversation.screen.main.MainActivity">
+        tools:context="com.framgia.englishconversation.screen.main.MainActivity"
+        >
 
         <include
-            android:visibility="gone"
             layout="@layout/toolbar"
+            android:visibility="gone"
             bind:email="@{viewModel.userEmail}"
             bind:uri="@{viewModel.userPhotoUrl}"
-            bind:userName="@{viewModel.username}" />
+            bind:userName="@{viewModel.username}"
+            />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -34,27 +38,32 @@
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
             app:tabMode="fixed"
-            bind:onTabSelected="@{viewModel.tabSelectedListener}">
+            bind:onTabSelected="@{viewModel.tabSelectedListener}"
+            >
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:icon="@drawable/ic_new" />
+                android:icon="@drawable/ic_new"
+                />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:icon="@drawable/ic_top_rated" />
+                android:icon="@drawable/ic_top_rated"
+                />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:icon="@drawable/ic_your_post" />
+                android:icon="@drawable/ic_your_post"
+                />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:icon="@drawable/ic_account" />
+                android:icon="@drawable/ic_account"
+                />
 
         </android.support.design.widget.TabLayout>
 
@@ -65,8 +74,8 @@
             android:layout_weight="1"
             android:background="@color/color_brown_50"
             android:orientation="vertical"
-            android:padding="@dimen/dp_8"
-            bind:adapter="@{viewModel.pagerAdapter}" />
+            bind:adapter="@{viewModel.pagerAdapter}"
+            />
 
     </LinearLayout>
 </layout>
