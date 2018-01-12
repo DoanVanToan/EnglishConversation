@@ -57,8 +57,10 @@
                     android:id="@+id/image_first_audio"
                     android:layout_width="@dimen/dp_24"
                     android:layout_height="@dimen/dp_24"
-                    android:background="@drawable/ic_audio_conversation"
+                    android:background="@drawable/bg_menu_media_creating_conversation"
                     android:contentDescription="@string/description_recording_audio_convention"
+                    android:padding="@dimen/dp_4"
+                    android:src="@drawable/ic_menu_media"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,8 +84,10 @@
                     android:layout_width="@dimen/dp_24"
                     android:layout_height="@dimen/dp_24"
                     android:layout_marginTop="@dimen/dp_16"
-                    android:background="@drawable/ic_audio_conversation"
+                    android:background="@drawable/bg_menu_media_creating_conversation"
                     android:contentDescription="@string/description_recording_audio_convention"
+                    android:padding="@dimen/dp_4"
+                    android:src="@drawable/ic_menu_media"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_first_content" />
@@ -108,13 +112,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:text="@string/title_see_more"
-                    android:textColor="@android:color/holo_green_light"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:visibility="@{timelineModel.conversations.size() &lt;= 2 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_second_content" />
 

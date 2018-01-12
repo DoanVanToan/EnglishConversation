@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.framgia.englishconversation.utils.Utils" />
+
         <variable
             name="conversations"
             type="com.framgia.englishconversation.data.model.ConversationModel" />
@@ -22,16 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_8"
-        android:layout_marginEnd="@dimen/dp_56"
-        android:layout_marginStart="@dimen/dp_8">
+        android:layout_marginEnd="@dimen/dp_56">
 
         <ImageView
             android:id="@+id/image_recording_audio"
             android:layout_width="@dimen/dp_24"
             android:layout_height="@dimen/dp_24"
-            android:background="@drawable/ic_audio_conversation"
+            android:background="@drawable/bg_menu_media_creating_conversation"
             android:contentDescription="@string/description_recording_audio_convention"
-            android:onClick="@{() -> viewModel.onAudioConversationClick(conversations)}"
+            android:onClick="@{(v) -> viewModel.showMenu(v, position, conversations)}"
+            android:padding="@dimen/dp_4"
+            android:src="@drawable/ic_menu_media"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,10 +43,11 @@
             android:id="@+id/edit_conversation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:layout_marginStart="@dimen/dp_4"
             android:background="@drawable/bg_recording_audio_layout"
             android:gravity="center_vertical"
+            android:hint="@string/hint_create_conversation"
             android:minHeight="@dimen/dp_48"
             android:padding="@dimen/dp_4"
             android:text="@={conversations.content}"
@@ -53,18 +57,25 @@
             app:layout_constraintStart_toEndOf="@id/image_recording_audio"
             bind:onTouchListen="@{viewModel.getTouchListener(position)}" />
 
-        <ImageView
+        <TextView
             android:id="@+id/imageView4"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:background="@drawable/bg_recording_audio_layout"
             android:contentDescription="@string/description_delete_conversation"
+            android:fontFamily="serif"
+            android:gravity="center"
             android:onClick="@{() -> viewModel.onDeleteConversationClick(position)}"
+            android:padding="@dimen/dp_4"
+            android:text="@{Utils.getFormatTimeFile(conversations.mediaModel.url)}"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.48"
-            app:srcCompat="@drawable/ic_cancel" />
+            app:layout_constraintVertical_bias="0.48" />
 
         <ImageView
             android:id="@+id/imageView5"

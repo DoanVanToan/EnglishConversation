@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -66,7 +68,7 @@ import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST
  * Exposes the data to be used in the CreatePost screen.
  */
 
-public class CreatePostViewModel extends BaseObservable implements CreatePostContract.ViewModel {
+public class CreatePostViewModel extends BaseObservable implements CreatePostContract.ViewModel{
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int SELECT_IMAGE_REQUEST = 2;
@@ -662,5 +664,50 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 return false;
             }
         };
+    }
+
+    public void showMenu(View view, final int position, final ConversationModel conversationModel) {
+        Utils.hideKeyBoard(mActivity);
+        PopupMenu popupMenu = new PopupMenu(mActivity, view);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_record:
+                        onAudioConversationClick(conversationModel);
+                        return true;
+                    case R.id.action_preview_audio:
+                        onPreviewAudioClick(conversationModel);
+                        return true;
+                    case R.id.action_remove_audio:
+                        conversationModel.setMediaModel(null);
+                        return true;
+                    case R.id.action_delete_conversation_item:
+                        onDeleteConversationClick(position);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        popupMenu.inflate(R.menu.menu_item_creating_conversation);
+        if (conversationModel.getMediaModel() == null) {
+            popupMenu.getMenu().findItem(R.id.action_remove_audio).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.action_preview_audio).setVisible(false);
+        }
+        popupMenu.show();
+    }
+
+    private void onPreviewAudioClick(ConversationModel conversationModel) {
+        if (conversationModel.getMediaModel() == null || mExoPlayer != null) {
+            return;
+        }
+        String path = conversationModel.getMediaModel().getUrl();
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(), new DefaultLoadControl());
+        mExoPlayer.seekTo(0);
+        Uri uri = Uri.parse(path);
+        mExoPlayer.prepare(getMediaSource(uri), true, false);
+        setExoPlayer(mExoPlayer);
     }
 }

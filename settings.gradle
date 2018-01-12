@@ -1,1 +1,1 @@
-include ':app', ':multipleimageselect'
+include ':app', ':multipleimageselect', ':audioselect'
