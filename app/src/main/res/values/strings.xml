@@ -111,5 +111,10 @@
     <string name="symbol_percent"> %</string>
     <string name="title_post_detail">%1$s Post</string>
     <string name="title_selected_image_deital">Image detail</string>
-    <string name="description_write_a_comment">Write a comment...</string>
+    <string name="description_write_a_comment">Write a comment &#8230;</string>
+    <string name="title_recording_audio">Record audio</string>
+    <string name="title_remove_audio">Remove audio</string>
+    <string name="title_preview_audio">Preview audio</string>
+    <string name="title_delete_item">Delete conversation item</string>
+    <string name="hint_create_conversation">Create a conversation &#8230;</string>
 </resources>
