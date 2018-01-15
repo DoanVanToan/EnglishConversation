@@ -52,7 +52,7 @@ public class EditProfileViewModel extends BaseObservable implements EditProfileC
             public void onReceive(Context context, Intent intent) {
                 switch (intent.getAction()) {
 
-                    case FirebaseUploadService.UPLOAD_COMPLETE:
+                    case FirebaseUploadService.UPLOAD_FINNISH:
                         Uri uri =
                                 intent.getParcelableExtra(FirebaseUploadService.EXTRA_DOWNLOAD_URL);
                         setPhotoUri(uri);

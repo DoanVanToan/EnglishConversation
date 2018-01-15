@@ -1,9 +1,6 @@
 package com.framgia.englishconversation.screen.createPost;
 
 import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
@@ -35,6 +32,7 @@ import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.FileUtils;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+import com.framgia.englishconversation.widget.dialog.UploadProgressDialog;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -56,12 +54,11 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Build.VERSION.SDK_INT;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
 import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_MEDIA_MODEL;
-import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_URI;
 import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
 
 /**
@@ -92,8 +89,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private CreatePostContract.Presenter mPresenter;
     private CreatePostActivity mActivity;
     private Navigator mNavigator;
-    private ProgressDialog mProgressDialog;
-    private BroadcastReceiver mReceiver;
+    private UploadProgressDialog mProgressDialog;
+    private UploadBroadcastReceiver mReceiver;
     private MediaAdapter mMediaAdapter;
     private ConversationAdapter mConversationAdapter;
     private SimpleExoPlayer mExoPlayer;
@@ -102,7 +99,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mActivity = activity;
         mNavigator = navigator;
         mTimelineModel = new TimelineModel();
-        mProgressDialog = new ProgressDialog(mActivity);
+        mProgressDialog = new UploadProgressDialog(mActivity);
         mAdapterType = AdapterType.MEDIA;
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         mMediaAdapter = new MediaAdapter(this);
@@ -112,72 +109,41 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     @Override
     public void onStart() {
         mPresenter.onStart();
-        mReceiver = new BroadcastReceiver() {
+        registerBroadcastReceiver();
+    }
+
+    private void registerBroadcastReceiver() {
+        mReceiver = new UploadBroadcastReceiver(new UploadBroadcastReceiver.OnReceiverListenner() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() == null) {
-                    return;
-                }
-                switch (intent.getAction()) {
-                    case FirebaseUploadService.UPLOAD_PROGRESS:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        int percent = intent.getExtras()
-                                .getInt(FirebaseUploadService.EXTRA_UPLOADED_PERCENT);
-                        MediaModel mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        mediaModel.setUploadPercent(percent);
-                        String message = mActivity.getString(R.string.prefix_uploading)
-                                + percent + mActivity.getString(R.string.symbol_percent);
-                        mProgressDialog.setMessage(message);
-                        mProgressDialog.show();
-                        updateUploadProgress(mediaModel);
-                        break;
-                    case FirebaseUploadService.UPLOAD_COMPLETE:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        Uri downloadUri = (Uri) intent.getExtras().get(EXTRA_URI);
-                        if (downloadUri == null) {
-                            return;
-                        }
-                        mediaModel.setUrl(downloadUri.toString());
-                        handleFinish(mediaModel);
-                        break;
-                    case FirebaseUploadService.UPLOAD_FINNISH_ALL:
-                        mIsUploading = false;
-                        mPresenter.createPost(mTimelineModel);
-                        mProgressDialog.dismiss();
-                        break;
-                    case FirebaseUploadService.UPLOAD_ERROR:
-                        if (intent.getExtras() == null) {
-                            return;
-                        }
-                        mediaModel = intent.getExtras().getParcelable(EXTRA_MEDIA_MODEL);
-                        if (mediaModel == null) {
-                            return;
-                        }
-                        mNavigator.showToast(
-                                String.format(mActivity.getString(R.string.msg_upload_error),
-                                        mediaModel.getName()));
-                        break;
-                }
+            public void onUploadProgress(MediaModel mediaModel) {
+                handleUploadProgress(mediaModel);
             }
-        };
+
+            @Override
+            public void onUploadFinnish(MediaModel mediaModel) {
+                handleFinish(mediaModel);
+            }
+
+            @Override
+            public void onUploadComplete() {
+                mIsUploading = false;
+                mPresenter.createPost(mTimelineModel);
+            }
+
+            @Override
+            public void onUploadError(MediaModel mediaModel) {
+                String errorMsg = String.format(mActivity.getString(R.string.msg_upload_error),
+                        mediaModel.getName());
+                mNavigator.showToast(errorMsg);
+            }
+        });
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(mActivity);
         manager.registerReceiver(mReceiver, FirebaseUploadService.getIntentFilter());
     }
 
     @Override
     public void onPause() {
-        if (com.google.android.exoplayer2.util.Util.SDK_INT <= Build.VERSION_CODES.M) {
+        if (SDK_INT <= Build.VERSION_CODES.M) {
             releaseExoAudioPlayer();
         }
     }
@@ -186,7 +152,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onStop() {
         mPresenter.onStop();
         LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
-        if (com.google.android.exoplayer2.util.Util.SDK_INT > Build.VERSION_CODES.M) {
+        if (SDK_INT > Build.VERSION_CODES.M) {
             releaseMedia();
         }
     }
@@ -218,6 +184,68 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 break;
             default:
                 break;
+        }
+    }
+
+    private void handleUploadProgress(MediaModel model) {
+        if (model == null || mTimelineModel == null) {
+            return;
+        }
+        switch (mAdapterType) {
+            case AdapterType.CONVERSATION:
+                handleUploadConversationFile(model);
+                break;
+            case AdapterType.MEDIA:
+                handleUploadMediaFiles(model);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void handleUploadConversationFile(MediaModel model) {
+        int totalMediaFile = getTotalMediafile(mTimelineModel.getConversations());
+        if (mTimelineModel.getConversations() == null || totalMediaFile == 0) {
+            return;
+        }
+        int uploadPercent = 0;
+        for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+            MediaModel mediaTimeLine = conversationModel.getMediaModel();
+            updateMediaModel(mediaTimeLine, model);
+            uploadPercent += mediaTimeLine.getUploadPercent();
+        }
+        mProgressDialog.setProgressPercent(uploadPercent / totalMediaFile);
+    }
+
+    private int getTotalMediafile(List<ConversationModel> conversations) {
+        if (conversations == null) {
+            return 0;
+        }
+        int result = 0;
+        for (ConversationModel conversationModel : conversations) {
+            if (conversationModel != null && conversationModel.getMediaModel() != null) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    private void handleUploadMediaFiles(MediaModel model) {
+        if (mTimelineModel.getMedias() == null) {
+            return;
+        }
+        int uploadPercent = 0;
+        for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
+            updateMediaModel(mediaTimeLine, model);
+            uploadPercent += mediaTimeLine.getUploadPercent();
+        }
+        mProgressDialog.setProgressPercent(uploadPercent / mTimelineModel.getMedias().size());
+    }
+
+
+    private void updateMediaModel(MediaModel mediaTimeLine, MediaModel model) {
+        if (mediaTimeLine != null && mediaTimeLine.getId().equals(model.getId())) {
+            mediaTimeLine.setUploadPercent(model.getUploadPercent());
         }
     }
 
@@ -273,6 +301,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
             return;
         }
         mIsUploading = true;
+        mProgressDialog.show();
         mActivity.startService(
                 new Intent(mActivity, FirebaseUploadService.class).putParcelableArrayListExtra(
                         EXTRA_FILES, (ArrayList<? extends Parcelable>) mediaModels)
@@ -289,6 +318,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     @Override
     public void onCreatePostFailed(String msg) {
         mNavigator.showToast(msg);
+        mProgressDialog.dismiss();
     }
 
     @Override
@@ -399,35 +429,6 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private void updateTimelineModel() {
         mTimelineModel.setCreatedUser(mUser);
         mTimelineModel.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
-    }
-
-    private boolean updatePercentUpload(MediaModel mediaTimeLine, MediaModel model) {
-        if (mediaTimeLine != null && mediaTimeLine.getId().equals(model.getId())) {
-            mediaTimeLine.setUploadPercent(model.getUploadPercent());
-            return true;
-        }
-        return false;
-    }
-
-    private void updateUploadProgress(MediaModel model) {
-        switch (mAdapterType) {
-            case AdapterType.CONVERSATION:
-                for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
-                    MediaModel mediaTimeLine = conversationModel.getMediaModel();
-                    if (updatePercentUpload(mediaTimeLine, model)) {
-                        return;
-                    }
-                }
-                break;
-            case AdapterType.MEDIA:
-                for (MediaModel mediaTimeLine : mTimelineModel.getMedias()) {
-                    if (updatePercentUpload(mediaTimeLine, model)) {
-                        return;
-                    }
-                }
-            default:
-                break;
-        }
     }
 
     private boolean updateMediaAfterUploadSuccessful(MediaModel mediaTimeLine, MediaModel model) {

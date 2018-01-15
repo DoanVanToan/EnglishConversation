@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.framgia.englishconversation.R;
-import com.framgia.englishconversation.data.model.MediaModel;
 
 /**
  * Created by framgia on 11/05/2017.
@@ -46,7 +45,7 @@ public abstract class BaseStorageService extends Service {
     }
 
     private boolean broadcastUploadFinnish() {
-        Intent broadcast = new Intent(FirebaseUploadService.UPLOAD_FINNISH_ALL);
+        Intent broadcast = new Intent(FirebaseUploadService.UPLOAD_COMPLETE);
         return LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcast);
     }
 

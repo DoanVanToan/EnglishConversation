@@ -73,7 +73,6 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
 
                     @Override
                     public void onComplete() {
-
                     }
                 }));
     }
