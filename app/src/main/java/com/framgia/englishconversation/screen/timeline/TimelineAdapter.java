@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.databinding.ItemTimelineAudioBinding;
@@ -15,7 +14,6 @@ import com.framgia.englishconversation.databinding.ItemTimelineVideoBinding;
 import com.framgia.englishconversation.screen.BaseMediaViewHolder;
 import com.framgia.englishconversation.screen.BaseViewHolder;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-
 import java.util.List;
 
 /**
@@ -62,18 +60,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                     int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case MediaModel.MediaType.ONLY_TEXT:
                 ItemTimelineOnlyTextBinding onlyTextBinding = ItemTimelineOnlyTextBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false);
-                return new OnlyTextViewHolder(onlyTextBinding);
+                return new OnlyTextViewHolder(onlyTextBinding, mItemTouchListener);
             case MediaModel.MediaType.AUDIO:
                 ItemTimelineAudioBinding audioBinding =
                         ItemTimelineAudioBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
-                return new AudioViewHolder(audioBinding);
+                return new AudioViewHolder(audioBinding, mItemTouchListener);
             case MediaModel.MediaType.VIDEO:
                 ItemTimelineVideoBinding videoBinding =
                         ItemTimelineVideoBinding.inflate(LayoutInflater.from(parent.getContext()),
@@ -117,15 +114,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class OnlyTextViewHolder extends BaseViewHolder<TimelineModel> {
         private ItemTimelineOnlyTextBinding mBinding;
+        private OnTimelineItemTouchListener mOnTouchListener;
 
-        public OnlyTextViewHolder(ItemTimelineOnlyTextBinding itemView) {
+        public OnlyTextViewHolder(ItemTimelineOnlyTextBinding itemView,
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mOnTouchListener = onTouchListener;
         }
 
         @Override
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
+            mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
         }
     }
@@ -135,10 +136,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class AudioViewHolder extends BaseMediaViewHolder<TimelineModel> {
         private ItemTimelineAudioBinding mBinding;
+        private OnTimelineItemTouchListener mOnTouchListener;
 
-        public AudioViewHolder(ItemTimelineAudioBinding itemView) {
+        public AudioViewHolder(ItemTimelineAudioBinding itemView,
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mOnTouchListener = onTouchListener;
         }
 
         @Override
@@ -149,6 +153,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mUri = Uri.parse(model.getMedias().get(0).getUrl());
             mBinding.setTimelineModel(model);
             mBinding.setViewModel(mViewModel);
+            mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
         }
 
@@ -166,7 +171,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener mOnTouchListener;
 
         public ImageViewHolder(ItemTimelineImageBinding itemView,
-                               OnTimelineItemTouchListener onTouchListener) {
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -188,7 +193,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener mOnTouchListener;
 
         VideoViewHolder(ItemTimelineVideoBinding itemView,
-                        OnTimelineItemTouchListener onTouchListener) {
+                OnTimelineItemTouchListener onTouchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mOnTouchListener = onTouchListener;
@@ -205,7 +210,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mBinding.executePendingBindings();
         }
 
-
         @Override
         protected SimpleExoPlayerView getMediaPlayerView() {
             return mBinding.videoView;
@@ -220,7 +224,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener mTouchListener;
 
         ConversationViewHolder(ItemTimelineConversationBinding itemView,
-                               OnTimelineItemTouchListener touchListener) {
+                OnTimelineItemTouchListener touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;
@@ -234,5 +238,4 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mBinding.executePendingBindings();
         }
     }
-
 }

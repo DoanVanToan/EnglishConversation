@@ -53,7 +53,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     }
 
     @Override
-    public void fetchTimelineData(final TimelineModel timelineModel) {
+    public void fetchTimelineData(final TimelineModel timelineModel, final UserModel userModel) {
         mDisposable.add(mTimelineRepository.getTimeline(timelineModel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -64,7 +64,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
                         if (mLastTimelineModel == null) {
                             mLastTimelineModel =
                                     timelineModels.isEmpty() ? null : timelineModels.get(0);
-                            registerModifyTimelines(mLastTimelineModel);
+                            registerModifyTimelines(mLastTimelineModel, userModel);
                         }
                     }
 
@@ -84,7 +84,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
         mDisposable.dispose();
     }
 
-    public void registerModifyTimelines(TimelineModel timelineModel) {
+    public void registerModifyTimelines(TimelineModel timelineModel, UserModel userModel) {
         mDisposable.add(mTimelineRepository.registerModifyTimelines(timelineModel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
