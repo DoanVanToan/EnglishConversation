@@ -60,48 +60,40 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    Map<String, String> dependencies = rootProject.ext.dependencies
-    compile dependencies.supportDesign
-    compile dependencies.constraintLayout
-    compile dependencies.cardView
-    compile dependencies.vector
-
-    compile dependencies.rxJava
-    compile dependencies.rxAndroid
-    compile dependencies.retrofit2
-    compile dependencies.retrofit2Adapter
-    compile dependencies.retrofitGson
-    compile dependencies.loggingInterceptor
-
-    compile dependencies.circleImage
-
-    compile dependencies.omRecorder
-    compile dependencies.audiovisualization
-
-    compile dependencies.googleAuth
-    compile dependencies.googlePlace
-
-    compile dependencies.facebookAuth
-
-    compile dependencies.firebaseAuth
-    compile dependencies.firebaseStorage
-    compile dependencies.firebaseDataBase
-
-    compile dependencies.exoPlayer
-    compile dependencies.toroExo
-
-    compile project(':multipleimageselect')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile dependencies.junit
-    testCompile dependencies.mockito
-
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
-    }
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+  Map<String, String> dependencies = rootProject.ext.dependencies
+  compile dependencies.supportDesign
+  compile dependencies.constraintLayout
+  compile dependencies.cardView
+  compile dependencies.vector
+  compile dependencies.rxJava
+  compile dependencies.rxAndroid
+  compile dependencies.retrofit2
+  compile dependencies.retrofit2Adapter
+  compile dependencies.retrofitGson
+  compile dependencies.loggingInterceptor
+  compile dependencies.circleImage
+  compile dependencies.omRecorder
+  compile dependencies.audiovisualization
+  compile dependencies.googleAuth
+  compile dependencies.googlePlace
+  compile dependencies.facebookAuth
+  compile dependencies.firebaseAuth
+  compile dependencies.firebaseStorage
+  compile dependencies.firebaseDataBase
+  compile dependencies.exoPlayer
+  compile dependencies.toroExo
+  compile project(':multipleimageselect')
+  compile 'com.android.support.constraint:constraint-layout:1.0.2'
+  testCompile dependencies.junit
+  testCompile dependencies.mockito
+  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    transitive = true;
+  }
+  implementation project(':videoselector')
 }
 apply plugin: 'com.google.gms.google-services'
 

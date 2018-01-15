@@ -1,0 +1,62 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="video"
+            type="com.framgia.videoselector.data.model.VideoModel"
+            />
+        <variable
+            name="viewModel"
+            type="com.framgia.videoselector.screen.VideoSelectorViewModel"
+            />
+    </data>
+    <com.framgia.videoselector.widget.SquareFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foregroundGravity="center"
+        android:onClick="@{()-> viewModel.onItemVideoClicked(video)}"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            imageUrl="@{video.filePath}"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_black"
+            android:alpha="@{video.selected? 0.5f : 0.0f}"
+            android:visibility="@{video.selected? View.VISIBLE: View.GONE}"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_done_white"
+            android:visibility="@{video.selected? View.VISIBLE: View.GONE}"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/color_black"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@{video.displayName}"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            />
+
+    </com.framgia.videoselector.widget.SquareFrameLayout>
+</layout>
