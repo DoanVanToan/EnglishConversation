@@ -15,6 +15,8 @@ import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepos
 import com.framgia.englishconversation.databinding.FragmentTimelineBinding;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
+
 /**
  * Timeline Screen.
  */
@@ -22,8 +24,12 @@ public class TimelineFragment extends BaseFragment {
 
     private TimelineContract.ViewModel mViewModel;
 
-    public static TimelineFragment newInstance() {
-        return new TimelineFragment();
+    public static TimelineFragment newInstance(String userModelId) {
+        TimelineFragment fragment = new TimelineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_USER, userModelId);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -37,7 +43,6 @@ public class TimelineFragment extends BaseFragment {
                 new TimelineRepository(new TimelineRemoteDataSource());
         TimelineContract.Presenter presenter =
                 new TimelinePresenter(mViewModel, repository, timelineRepository);
-
         mViewModel.setPresenter(presenter);
     }
 

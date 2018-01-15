@@ -11,7 +11,6 @@ import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.FragmentProfileBinding;
-import com.framgia.englishconversation.screen.main.MainActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
 ;
@@ -30,8 +29,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ProfileViewModel((MainActivity) getActivity(),
-                new Navigator(getActivity()));
+        mViewModel = new ProfileViewModel(new Navigator(getActivity()), getChildFragmentManager());
 
         AuthenicationRepository repository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());

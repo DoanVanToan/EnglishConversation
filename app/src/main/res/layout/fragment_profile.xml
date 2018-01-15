@@ -28,143 +28,91 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll"
-                app:title="@{viewModel.userName}"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 >
 
-                <ImageView
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_240"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/bg_place_holder"
-                    app:layout_collapseMode="pin"
-                    />
-
-                <RelativeLayout
-                    android:layout_width="@dimen/dp_120"
-                    android:layout_height="@dimen/dp_120"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginBottom="@dimen/dp_70"
-                    android:layout_marginLeft="@dimen/dp_16"
-                    android:background="@drawable/bg_circle_textview"
-                    android:padding="@dimen/dp_2"
+                    android:layout_height="wrap_content"
                     >
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        bind:imageError="@{@drawable/ic_person_black_24dp}"
-                        bind:imageUrl="@{viewModel.userUrl}"
-                        />
-                    <ImageView
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/bg_circle_red"
-                        android:onClick="@{() -> viewModel.onChangeAvtClick()}"
-                        android:padding="@dimen/dp_5"
-                        android:scaleType="centerInside"
-                        android:visibility="@{viewModel.editing? View.VISIBLE: View.GONE}"
-                        app:srcCompat="@drawable/ic_mode_edit_black_24px"
-                        />
-                </RelativeLayout>
 
-                <android.support.v7.widget.Toolbar
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:subtitleTextColor="@android:color/white"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:titleTextColor="@android:color/white"
-                    />
+                    <RelativeLayout
+                        android:id="@+id/relative_avatar"
+                        android:layout_width="@dimen/dp_120"
+                        android:layout_height="@dimen/dp_120"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:layout_marginBottom="@dimen/dp_24"
+                        android:layout_marginTop="@dimen/dp_24"
+                        android:background="@drawable/bg_circle_textview"
+                        android:padding="@dimen/dp_2"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        >
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            bind:imageError="@{@drawable/ic_person_black_24dp}"
+                            bind:imageUrl="@{viewModel.userModel.photoUrl}"
+                            />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/text_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="@{viewModel.userModel.userName}"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                        android:textColor="@android:color/white"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/relative_avatar"
+                        />
+                    <TextView
+                        android:id="@+id/text_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_60"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:text="@{viewModel.userModel.email}"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                        android:textColor="@android:color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/text_username"
+                        />
+
+                    <android.support.v7.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="?actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:subtitleTextColor="@android:color/white"
+                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                        app:titleTextColor="@android:color/white"
+                        />
+                </android.support.constraint.ConstraintLayout>
+
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginRight="@dimen/dp_10"
-            android:onClick="@{() -> viewModel.onEditUserClick()}"
-            android:visibility="@{viewModel.user != null ? View.VISIBLE : View.GONE}"
-            app:backgroundTint="@color/color_red_500"
-            app:layout_anchor="@id/app_bar_layout"
-            app:layout_anchorGravity="bottom|right"
-            app:rippleColor="@color/color_green_500"
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginEnd="@dimen/dp_70"
-            android:layout_marginRight="@dimen/dp_70"
-            android:onClick="@{() -> viewModel.showChangePasswordDialog()}"
-            android:visibility="@{viewModel.allowChangePassword? View.VISIBLE : View.GONE}"
-            app:backgroundTint="@color/color_red_500"
-            app:layout_anchor="@id/app_bar_layout"
-            app:layout_anchorGravity="bottom|end"
-            app:rippleColor="@color/color_green_500"
-            app:srcCompat="@drawable/ic_lock_white_24px"
-            />
-
-        <android.support.v4.widget.NestedScrollView
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            app:behavior_overlapTop="@dimen/dp_50"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/frame_timeline"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="HELP : Upload new version APK to Google play
-Chào mọi người. Mình đang gặp chút vấn đề về upload new version apk lên store. Cụ thể như sau :
-Version 1 mình signed bằng máy tính cũ của mình có kèm theo keystore. Bây giờ mình nâng cấp máy tính mới, mình mới build bản version 2 signed bằng máy tính mới. Sau khi upload apk thì Google play không cho phép release vì 2 key khác nhau.
-Hình minh họa bên dưới. Bây giờ mình muốn upload từ máy tính mới của mình signed app. Có được không ạ ?
-Có ai bị như vậy chưa ạ, Mong nhận được sự giúp đỡ của mọi người.
-Cảm ơn."
-                    android:textSize="15sp"
-                    android:visibility="visible"
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="@dimen/dp_50"
-                    android:layout_marginRight="@dimen/dp_5"
-                    android:background="@color/color_brown_50"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewModel.onSignOutClick()}"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/dp_5"
-                    >
-                    <ImageView
-                        android:layout_width="@dimen/dp_40"
-                        android:layout_height="@dimen/dp_40"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:padding="@dimen/dp_5"
-                        app:srcCompat="@drawable/ic_logout"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/dp_10"
-                        android:text="@string/action_logout"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/sp_18"
-                        />
+                android:layout_height="match_parent"
+                app:fragment="@{viewModel.fragment}"
+                app:manager="@{viewModel.manager}"
+                />
+        </android.support.constraint.ConstraintLayout>
 
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

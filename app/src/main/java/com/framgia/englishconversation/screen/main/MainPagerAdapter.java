@@ -26,7 +26,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case NEW:
-                return TimelineFragment.newInstance();
+                return TimelineFragment.newInstance(null);
             case TOP_VOTE:
 
             case YOUR_POST:
