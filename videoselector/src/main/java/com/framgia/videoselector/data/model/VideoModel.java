@@ -1,15 +1,19 @@
 package com.framgia.videoselector.data.model;
 
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import com.framgia.videoselector.BR;
 
 /**
  * Created by doan.van.toan on 1/15/18.
  */
 
-public class VideoModel implements Parcelable{
+public class VideoModel extends BaseObservable implements Parcelable {
     private String mId;
     private String mFilePath;
     private String mCreatedAt;
@@ -18,17 +22,20 @@ public class VideoModel implements Parcelable{
     private String mDisplayName;
     private long mSize;
     private String mThumb;
+    private boolean mIsSelected;
 
     public VideoModel(Cursor cursor) {
         mId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns._ID));
         mFilePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
-        mCreatedAt = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATE_ADDED));
-        mModifyAt = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATE_MODIFIED));
+        mCreatedAt =
+            cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATE_ADDED));
+        mModifyAt =
+            cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATE_MODIFIED));
         mTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.TITLE));
-        mDisplayName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DISPLAY_NAME));
+        mDisplayName =
+            cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DISPLAY_NAME));
         mThumb = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
         mSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.SIZE));
-
     }
 
     protected VideoModel(Parcel in) {
@@ -112,11 +119,17 @@ public class VideoModel implements Parcelable{
 
     @Override
     public String toString() {
-        return "VideoModel{" +
-                "mId='" + mId + '\'' +
-                ", mFilePath='" + mFilePath + '\'' +
-                ", mThumb='" + mThumb + '\'' +
-                '}';
+        return "VideoDataSource{"
+            + "mId='"
+            + mId
+            + '\''
+            + ", mFilePath='"
+            + mFilePath
+            + '\''
+            + ", mThumb='"
+            + mThumb
+            + '\''
+            + '}';
     }
 
     @Override
@@ -134,5 +147,15 @@ public class VideoModel implements Parcelable{
         dest.writeString(mDisplayName);
         dest.writeLong(mSize);
         dest.writeString(mThumb);
+    }
+
+    @Bindable
+    public boolean isSelected() {
+        return mIsSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mIsSelected = selected;
+        notifyPropertyChanged(BR.selected);
     }
 }

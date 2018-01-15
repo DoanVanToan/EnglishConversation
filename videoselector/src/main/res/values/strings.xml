@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Video Selector</string>
+    <string name="title_request_permission">Request permission</string>
+    <string name="msg_request_permission">We want acceess to external storage to show all video files</string>
+    <string name="title_select_video">Select video</string>
+    <string name="action_add">Add</string>
+    <string name="title_selected">selected</string>
+    <string name="limit_exceeded">Can select a maximum of %d video</string>
 </resources>
