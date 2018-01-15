@@ -31,7 +31,7 @@ interface TimelineContract {
      * Presenter.
      */
     interface Presenter extends BasePresenter {
-        void fetchTimelineData(TimelineModel timelineModel);
+        void fetchTimelineData(TimelineModel timelineModel, UserModel userModel);
 
         void onDestroy();
     }

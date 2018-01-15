@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
+            />
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/dp_4">
+        app:cardCornerRadius="@dimen/dp_4"
+        >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_72"
             android:background="@android:color/white"
             android:onClick="@{() ->viewModel.onCreateNewPostClick()}"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_avatar"
@@ -34,7 +38,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 bind:imageError="@{@drawable/ic_person_black_24dp}"
-                bind:imageUrl="@{viewModel.userUrl}" />
+                bind:imageUrl="@{viewModel.userModel.photoUrl}"
+                />
 
             <TextView
                 android:layout_width="0dp"
@@ -48,7 +53,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/image_avatar"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -46,7 +46,7 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     @Override
     public void onGetUserSuccesss(UserModel data) {
         setUserModel(data);
-        mFragment = TimelineFragment.newInstance(data.getId());
+        mFragment = TimelineFragment.newInstance(data);
     }
 
     @Override

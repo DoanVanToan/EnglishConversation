@@ -5,5 +5,7 @@ package com.framgia.englishconversation.screen.timeline;
  */
 
 public interface OnTimelineItemTouchListener<T> {
-    void onHeaderTouchListener(T item);
+    void onItemTimelineClick(T item);
+
+    void onItemUserNameClick(T item);
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRemoteDataSource;
@@ -24,10 +25,10 @@ public class TimelineFragment extends BaseFragment {
 
     private TimelineContract.ViewModel mViewModel;
 
-    public static TimelineFragment newInstance(String userModelId) {
+    public static TimelineFragment newInstance(UserModel userModel) {
         TimelineFragment fragment = new TimelineFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_USER, userModelId);
+        bundle.putParcelable(EXTRA_USER, userModel);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -35,7 +36,8 @@ public class TimelineFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new TimelineViewModel(getContext(), new Navigator(getActivity()));
+        UserModel userModel = getArguments().getParcelable(EXTRA_USER);
+        mViewModel = new TimelineViewModel(getContext(), new Navigator(getActivity()), userModel);
 
         AuthenicationRepository repository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
