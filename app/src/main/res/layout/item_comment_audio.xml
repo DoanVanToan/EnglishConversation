@@ -9,7 +9,10 @@
             name="commentViewModel"
             type="com.framgia.englishconversation.data.model.Comment"
             />
-
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
+            />
     </data>
 
 
@@ -22,6 +25,7 @@
             layout="@layout/item_comment_only_text"
             android:id="@+id/layout_user"
             app:commentViewModel="@{commentViewModel}"
+            app:listener="@{listener}"
             />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView

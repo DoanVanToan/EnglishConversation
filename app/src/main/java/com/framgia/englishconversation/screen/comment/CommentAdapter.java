@@ -117,6 +117,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void bindData(Comment model) {
             mBinding.setCommentViewModel(model);
+            mBinding.setListener(mTouchListener);
             mBinding.executePendingBindings();
         }
     }
@@ -139,6 +140,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void bindData(Comment model) {
             mUri = Uri.parse(model.getMediaModel().getUrl());
             mBinding.setCommentViewModel(model);
+            mBinding.setListener(mTouchListener);
             mBinding.executePendingBindings();
         }
 
@@ -165,6 +167,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void bindData(Comment model) {
             mBinding.setCommentViewModel(model);
+            mBinding.setListener(mTouchListener);
             mBinding.executePendingBindings();
         }
     }
@@ -187,6 +190,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void bindData(Comment model) {
             mUri = Uri.parse(model.getMediaModel().getUrl());
             mBinding.setCommentViewModel(model);
+            mBinding.setListener(mTouchListener);
             mBinding.executePendingBindings();
         }
 

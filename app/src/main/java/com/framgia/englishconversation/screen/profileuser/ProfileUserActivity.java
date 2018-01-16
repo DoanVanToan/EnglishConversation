@@ -29,7 +29,7 @@ public class ProfileUserActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         UserModel userModel = getIntent().getParcelableExtra(EXTRA_USER);
-        mViewModel = new ProfileUserViewModel(userModel, getSupportFragmentManager());
+        mViewModel = new ProfileUserViewModel(this, userModel, getSupportFragmentManager());
         ProfileUserContract.Presenter presenter = new ProfileUserPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
         ActivityProfileUserBinding binding =

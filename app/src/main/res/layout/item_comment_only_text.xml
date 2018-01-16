@@ -9,7 +9,10 @@
             name="commentViewModel"
             type="com.framgia.englishconversation.data.model.Comment"
             />
-
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
+            />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -20,13 +23,14 @@
             android:id="@+id/image_avatar"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
-            android:layout_marginTop="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:imageError="@{@drawable/ic_person_black_24dp}"
             bind:imageUrl="@{commentViewModel.createUser.photoUrl}"
+            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
             />
 
         <TextView
@@ -42,6 +46,7 @@
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
             />
         <TextView
             android:id="@+id/text_time"

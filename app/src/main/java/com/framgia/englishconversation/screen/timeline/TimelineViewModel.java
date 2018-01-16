@@ -158,6 +158,9 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onItemUserNameClick(TimelineModel item) {
+        if (mTimelineUser != null && mTimelineUser.getId().equals(item.getCreatedUser().getId())) {
+            return;
+        }
         mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
     }
 

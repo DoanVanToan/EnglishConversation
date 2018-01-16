@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.screen.profileuser.ProfileType;
 import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
@@ -23,14 +22,11 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     private UserModel mUserModel;
     private Fragment mFragment;
     private FragmentManager mManager;
-    private int mProfileType;
 
-    ProfileViewModel(Navigator navigator, FragmentManager manager, UserModel userModel,
-            int profileType) {
+    ProfileViewModel(Navigator navigator, FragmentManager manager, UserModel userModel) {
         mNavigator = navigator;
         mManager = manager;
         mUserModel = userModel;
-        mProfileType = profileType;
     }
 
     @Override
@@ -119,14 +115,5 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     public void setManager(FragmentManager manager) {
         mManager = manager;
         notifyPropertyChanged(BR.manager);
-    }
-
-    public void back() {
-        mNavigator.finishActivity();
-    }
-
-    @Bindable
-    public boolean isAllowShowBackButton() {
-        return mProfileType == ProfileType.ACTIVITY ? true : false;
     }
 }
