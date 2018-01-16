@@ -15,10 +15,10 @@
         android:layout_height="match_parent"
         android:foregroundGravity="center"
         android:onClick="@{()-> viewModel.onItemVideoClicked(video)}"
-        android:paddingBottom="1dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:paddingTop="1dp"
+        android:paddingBottom="@dimen/dp_1"
+        android:paddingLeft="@dimen/dp_1"
+        android:paddingRight="@dimen/dp_1"
+        android:paddingTop="@dimen/dp_1"
         >
 
         <ImageView
@@ -51,11 +51,11 @@
             android:background="@color/color_black"
             android:gravity="center"
             android:ellipsize="end"
-            android:padding="5dp"
+            android:padding="@dimen/dp_5"
             android:singleLine="true"
             android:text="@{video.displayName}"
             android:textColor="@color/color_white"
-            android:textSize="16sp"
+            android:textSize="@dimen/sp_16"
             />
 
     </com.framgia.videoselector.widget.SquareFrameLayout>

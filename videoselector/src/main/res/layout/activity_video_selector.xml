@@ -15,6 +15,20 @@
         tools:context="com.framgia.videoselector.screen.VideoSelectorActivity"
         >
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_record_video"
+            android:onClick="@{()-> viewModel.onRecordVideoClick()}"
+            android:layout_marginRight="@dimen/dp_8"
+            tools:ignore="VectorDrawableCompat" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
