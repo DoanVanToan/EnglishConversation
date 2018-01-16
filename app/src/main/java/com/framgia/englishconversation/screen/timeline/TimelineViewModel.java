@@ -4,8 +4,10 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Bundle;
+
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
+import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
@@ -17,6 +19,7 @@ import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class TimelineViewModel extends BaseObservable
     private OnEndScrollListener mOnEndScrollListener;
     private UserModel mTimelineUser;
     private boolean mIsAllowCreatePost;
+    private Setting mSetting;
 
     public TimelineViewModel(Context context, Navigator navigator, UserModel userModel) {
         mContext = context;
@@ -115,6 +119,11 @@ public class TimelineViewModel extends BaseObservable
         mPresenter.onDestroy();
     }
 
+    @Override
+    public void onGetSettingSuccess(Setting setting) {
+        setSetting(setting);
+    }
+
     public TimelineAdapter getAdapter() {
         return mAdapter;
     }
@@ -175,5 +184,15 @@ public class TimelineViewModel extends BaseObservable
     public void setAllowCreatePost(boolean allowCreatePost) {
         mIsAllowCreatePost = allowCreatePost;
         notifyPropertyChanged(BR.allowCreatePost);
+    }
+
+    @Bindable
+    public Setting getSetting() {
+        return mSetting;
+    }
+
+    public void setSetting(Setting setting) {
+        mSetting = setting;
+        notifyPropertyChanged(BR.setting);
     }
 }

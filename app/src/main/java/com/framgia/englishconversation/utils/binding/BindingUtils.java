@@ -32,6 +32,9 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.Calendar;
 
+import im.ene.toro.PlayerSelector;
+import im.ene.toro.widget.Container;
+
 /**
  *
  */
@@ -222,5 +225,10 @@ public final class BindingUtils {
     @BindingAdapter({"bind:scrollPosition"})
     public static void setScrollPosition(RecyclerView recyclerView, int position) {
         recyclerView.smoothScrollToPosition(position);
+    }
+
+    @BindingAdapter({"isEnableAutoPlay"})
+    public static void setScrollPosition(Container container, boolean isEnabled) {
+        container.setPlayerSelector(isEnabled ? PlayerSelector.DEFAULT : PlayerSelector.NONE);
     }
 }

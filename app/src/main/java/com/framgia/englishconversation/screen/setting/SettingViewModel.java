@@ -4,6 +4,8 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.framgia.englishconversation.BR;
+import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.login.LoginActivity;
 import com.framgia.englishconversation.screen.main.MainActivity;
@@ -19,6 +21,7 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
     private UserModel mCurrentUser;
     private Navigator mNavigator;
     private MainActivity mActivity;
+    private Setting mSetting;
 
     public SettingViewModel(MainActivity activity) {
         mNavigator = new Navigator(activity);
@@ -77,5 +80,26 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
     @Override
     public GoogleApiClient getGoogleApiCliennt() {
         return mActivity.getGoogleApiClient();
+    }
+
+    @Override
+    public void onGetSettingSuccess(Setting setting) {
+        setSetting(setting);
+    }
+
+    @Bindable
+    public Setting getSetting() {
+        return mSetting;
+    }
+
+    public void setSetting(Setting setting) {
+        mSetting = setting;
+        notifyPropertyChanged(BR.setting);
+    }
+
+    public void onCheckBoxChanged() {
+        mSetting.setEnableAutoPlay(!mSetting.isEnableAutoPlay());
+        mPresenter.saveSetting(mSetting);
+        mNavigator.showToast(R.string.msg_change_setting_enable_success);
     }
 }

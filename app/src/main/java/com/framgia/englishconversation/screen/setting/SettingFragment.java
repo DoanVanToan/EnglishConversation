@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.source.SettingRepository;
+import com.framgia.englishconversation.data.source.local.setting.SettingLocalDataSource;
+import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsImpl;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.FragmentSettingBinding;
@@ -34,9 +37,15 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         mViewModel = new SettingViewModel((MainActivity) getActivity());
 
-        AuthenicationRepository repository =
+        AuthenicationRepository authenicationRepository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
-        SettingContract.Presenter presenter = new SettingPresenter(mViewModel, repository);
+        SettingRepository settingRepository =
+                new SettingRepository(
+                        new SettingLocalDataSource(new SharedPrefsImpl(getContext())));
+        SettingContract.Presenter presenter = new SettingPresenter(
+                mViewModel,
+                authenicationRepository,
+                settingRepository);
 
         mViewModel.setPresenter(presenter);
 

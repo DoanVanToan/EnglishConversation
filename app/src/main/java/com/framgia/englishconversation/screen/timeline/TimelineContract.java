@@ -2,6 +2,7 @@ package com.framgia.englishconversation.screen.timeline;
 
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
+import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import java.util.List;
@@ -25,6 +26,8 @@ interface TimelineContract {
         void onGetTimelineSuccess(TimelineModel timelineModel);
 
         void onDestroy();
+
+        void onGetSettingSuccess(Setting setting);
     }
 
     /**
