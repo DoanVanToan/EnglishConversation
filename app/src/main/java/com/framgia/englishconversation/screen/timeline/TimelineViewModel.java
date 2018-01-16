@@ -34,7 +34,8 @@ public class TimelineViewModel extends BaseObservable
     private UserModel mUserModel;
     private TimelineAdapter mAdapter;
     private OnEndScrollListener mOnEndScrollListener;
-    private UserModel mUserModelTimeline;
+    private UserModel mTimelineUser;
+    private boolean mIsAllowCreatePost;
 
     public TimelineViewModel(Context context, Navigator navigator, UserModel userModel) {
         mContext = context;
@@ -42,8 +43,7 @@ public class TimelineViewModel extends BaseObservable
         mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>(), this);
         mAdapter.setRecyclerViewItemClickListener(this);
         mOnEndScrollListener = new OnEndScrollListener(this);
-        mUserModel = userModel;
-        mUserModelTimeline = userModel;
+        mTimelineUser = userModel;
     }
 
     @Override
@@ -59,12 +59,24 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void setPresenter(TimelineContract.Presenter presenter) {
         mPresenter = presenter;
-        mPresenter.fetchTimelineData(null, mUserModelTimeline);
+        mPresenter.fetchTimelineData(null, mTimelineUser);
     }
 
     @Override
     public void onGetUserSuccess(UserModel data) {
         setUserModel(data);
+        setAllowCreatePost(allowCreatePost(data));
+    }
+
+    /**
+     * allow show create post button
+     * if this screen is timeline main screen, or this screen is current user profile
+     */
+    private boolean allowCreatePost(UserModel currentUser) {
+        if (mTimelineUser == null) {
+            return true;
+        }
+        return currentUser != null && currentUser.getId().equals(mTimelineUser.getId());
     }
 
     @Override
@@ -142,7 +154,7 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onEndScrolled() {
-        mPresenter.fetchTimelineData(mAdapter.getLastItem(), mUserModelTimeline);
+        mPresenter.fetchTimelineData(mAdapter.getLastItem(), mTimelineUser);
     }
 
     public void setUserModel(UserModel userModel) {
@@ -153,5 +165,15 @@ public class TimelineViewModel extends BaseObservable
     @Bindable
     public UserModel getUserModel() {
         return mUserModel;
+    }
+
+    @Bindable
+    public boolean isAllowCreatePost() {
+        return mIsAllowCreatePost;
+    }
+
+    public void setAllowCreatePost(boolean allowCreatePost) {
+        mIsAllowCreatePost = allowCreatePost;
+        notifyPropertyChanged(BR.allowCreatePost);
     }
 }

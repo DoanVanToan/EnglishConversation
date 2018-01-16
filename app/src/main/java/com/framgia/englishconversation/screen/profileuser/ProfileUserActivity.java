@@ -27,6 +27,7 @@ public class ProfileUserActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         UserModel userModel = getIntent().getParcelableExtra(EXTRA_USER);
         mViewModel = new ProfileUserViewModel(userModel, getSupportFragmentManager());
         ProfileUserContract.Presenter presenter = new ProfileUserPresenter(mViewModel);

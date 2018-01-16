@@ -12,6 +12,7 @@ import com.framgia.englishconversation.databinding.ItemCommentOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemCommentVideoBinding;
 import com.framgia.englishconversation.screen.BaseMediaViewHolder;
 import com.framgia.englishconversation.screen.BaseViewHolder;
+import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import java.util.List;
 
@@ -21,9 +22,12 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<Comment> mComments;
+    private OnTimelineItemTouchListener<Comment> mTouchListener;
 
-    public CommentAdapter(List<Comment> comments, CommentViewModel viewModel) {
+    public CommentAdapter(List<Comment> comments,
+            OnTimelineItemTouchListener<Comment> touchListener) {
         mComments = comments;
+        mTouchListener = touchListener;
     }
 
     public void updateData(List<Comment> comments) {
@@ -59,23 +63,23 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 ItemCommentOnlyTextBinding onlyTextBinding =
                         ItemCommentOnlyTextBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
-                return new OnlyTextViewHolder(onlyTextBinding);
+                return new OnlyTextViewHolder(onlyTextBinding, mTouchListener);
             case MediaModel.MediaType.AUDIO:
                 ItemCommentAudioBinding audioBinding =
                         ItemCommentAudioBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
 
-                return new AudioViewHolder(audioBinding);
+                return new AudioViewHolder(audioBinding, mTouchListener);
             case MediaModel.MediaType.VIDEO:
                 ItemCommentVideoBinding videoBinding =
                         ItemCommentVideoBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
-                return new VideoViewHolder(videoBinding);
+                return new VideoViewHolder(videoBinding, mTouchListener);
             case MediaModel.MediaType.IMAGE:
                 ItemCommentImageBinding imageBinding =
                         ItemCommentImageBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
-                return new ImageViewHolder(imageBinding);
+                return new ImageViewHolder(imageBinding, mTouchListener);
             default:
                 return null;
         }
@@ -101,10 +105,13 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class OnlyTextViewHolder extends BaseViewHolder<Comment> {
         private ItemCommentOnlyTextBinding mBinding;
+        private OnTimelineItemTouchListener<Comment> mTouchListener;
 
-        public OnlyTextViewHolder(ItemCommentOnlyTextBinding itemView) {
+        public OnlyTextViewHolder(ItemCommentOnlyTextBinding itemView,
+                OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mTouchListener = touchListener;
         }
 
         @Override
@@ -119,10 +126,13 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class AudioViewHolder extends BaseMediaViewHolder<Comment> {
         private ItemCommentAudioBinding mBinding;
+        private OnTimelineItemTouchListener<Comment> mTouchListener;
 
-        public AudioViewHolder(ItemCommentAudioBinding itemView) {
+        public AudioViewHolder(ItemCommentAudioBinding itemView,
+                OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mTouchListener = touchListener;
         }
 
         @Override
@@ -143,10 +153,13 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class ImageViewHolder extends BaseViewHolder<Comment> {
         private ItemCommentImageBinding mBinding;
+        private OnTimelineItemTouchListener<Comment> mTouchListener;
 
-        public ImageViewHolder(ItemCommentImageBinding itemView) {
+        public ImageViewHolder(ItemCommentImageBinding itemView,
+                OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mTouchListener = touchListener;
         }
 
         @Override
@@ -161,10 +174,13 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      */
     public class VideoViewHolder extends BaseMediaViewHolder<Comment> {
         private ItemCommentVideoBinding mBinding;
+        private OnTimelineItemTouchListener<Comment> mTouchListener;
 
-        VideoViewHolder(ItemCommentVideoBinding itemView) {
+        VideoViewHolder(ItemCommentVideoBinding itemView,
+                OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
+            mTouchListener = touchListener;
         }
 
         @Override
