@@ -3,8 +3,10 @@ package com.framgia.englishconversation.screen.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
 import com.framgia.englishconversation.screen.profile.ProfileFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileType;
+import com.framgia.englishconversation.screen.setting.SettingFragment;
 import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 
 /**
@@ -29,11 +31,10 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case NEW:
                 return TimelineFragment.newInstance(null);
             case TOP_VOTE:
-
             case YOUR_POST:
-
-            case SETTING:
                 return ProfileFragment.newInstance(null, ProfileType.FRAGMENT);
+            case SETTING:
+                return SettingFragment.newInstance();
             default:
                 return null;
         }

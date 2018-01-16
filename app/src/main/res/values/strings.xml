@@ -119,4 +119,7 @@
     <string name="hint_create_conversation">Insert message &#8230;</string>
     <string name="title_upload_file">Upload files</string>
     <string name="msg_uploading">Uploading..............</string>
+    <string name="title_system">System</string>
+    <string name="setting_auto_play">Auto play</string>
+    <string name="setting_title">Settings</string>
 </resources>
