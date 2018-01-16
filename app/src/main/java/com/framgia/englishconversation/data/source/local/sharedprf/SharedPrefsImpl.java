@@ -35,6 +35,11 @@ public class SharedPrefsImpl implements SharedPrefsApi {
     }
 
     @Override
+    public Boolean get(String key, boolean defaultValue) {
+        return Boolean.valueOf(mSharedPreferences.getBoolean(key, defaultValue));
+    }
+
+    @Override
     public <T> void put(String key, T data) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         if (data instanceof String) {

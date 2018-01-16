@@ -31,6 +31,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case NEW:
                 return TimelineFragment.newInstance(null);
             case TOP_VOTE:
+                return new Fragment();
             case YOUR_POST:
                 return ProfileFragment.newInstance(null, ProfileType.FRAGMENT);
             case SETTING:

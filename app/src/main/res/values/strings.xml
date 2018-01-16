@@ -122,4 +122,5 @@
     <string name="title_system">System</string>
     <string name="setting_auto_play">Auto play</string>
     <string name="setting_title">Settings</string>
+    <string name="msg_change_setting_enable_success">Setting was changed successfuly, pls reopen app co apply change!</string>
 </resources>

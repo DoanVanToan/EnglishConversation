@@ -6,6 +6,7 @@ package com.framgia.englishconversation.screen.setting;
 
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
+import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -17,7 +18,6 @@ public interface SettingContract {
      * Setting ViewModel
      */
     interface ViewModel extends BaseViewModel<Presenter> {
-
         void onSignOutSuccess();
 
         void onSignOutFailed(String msg);
@@ -27,13 +27,18 @@ public interface SettingContract {
         void onGetUserFailed(String msg);
 
         GoogleApiClient getGoogleApiCliennt();
+
+        void onGetSettingSuccess(Setting setting);
     }
 
     /**
      * Setting Presenter
      */
     interface Presenter extends BasePresenter {
-
         void signOut();
+
+        void getSetting();
+
+        void saveSetting(Setting setting);
     }
 }

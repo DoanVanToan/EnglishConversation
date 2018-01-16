@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.data.source.SettingRepository;
+import com.framgia.englishconversation.data.source.local.setting.SettingLocalDataSource;
+import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsImpl;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRemoteDataSource;
@@ -43,8 +46,16 @@ public class TimelineFragment extends BaseFragment {
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
         TimelineRepository timelineRepository =
                 new TimelineRepository(new TimelineRemoteDataSource());
+        SettingRepository settingRepository = new SettingRepository(
+                new SettingLocalDataSource(new SharedPrefsImpl(getContext())));
+
         TimelineContract.Presenter presenter =
-                new TimelinePresenter(mViewModel, repository, timelineRepository);
+                new TimelinePresenter(
+                        mViewModel,
+                        repository,
+                        timelineRepository,
+                        settingRepository);
+
         mViewModel.setPresenter(presenter);
     }
 

@@ -1,7 +1,9 @@
 package com.framgia.englishconversation.screen.setting;
 
 import com.facebook.login.LoginManager;
+import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.data.source.SettingRepository;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -17,15 +19,19 @@ import java.util.List;
 public class SettingPresenter implements SettingContract.Presenter {
 
     private AuthenicationRepository mAuthenicationRepository;
+    private SettingRepository mSettingRepository;
     private SettingContract.ViewModel mViewModel;
     private DataCallback mSignOutCallback;
     private FirebaseUser mUser;
 
     public SettingPresenter(SettingContract.ViewModel viewModel,
-                            AuthenicationRepository authenicationRepository) {
+                            AuthenicationRepository authenicationRepository,
+                            SettingRepository settingRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
+        mSettingRepository = settingRepository;
         getUser();
+        getSetting();
     }
 
     @Override
@@ -51,6 +57,16 @@ public class SettingPresenter implements SettingContract.Presenter {
                 mViewModel.onGetUserFailed(msg);
             }
         });
+    }
+
+    @Override
+    public void getSetting() {
+        mViewModel.onGetSettingSuccess(mSettingRepository.getSetting());
+    }
+
+    @Override
+    public void saveSetting(Setting setting) {
+        mSettingRepository.saveSetting(setting);
     }
 
     private void initSignOutCallback() {

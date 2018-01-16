@@ -2,15 +2,18 @@ package com.framgia.englishconversation.screen.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.data.source.SettingRepository;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.google.firebase.auth.FirebaseUser;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
 import java.util.List;
 
 /**
@@ -24,14 +27,18 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     private TimelineRepository mTimelineRepository;
     private TimelineModel mLastTimelineModel;
     private CompositeDisposable mDisposable;
+    private SettingRepository mSettingRepository;
 
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
-            AuthenicationRepository authenicationRepository,
-            TimelineRepository timelineRepository) {
+                             AuthenicationRepository authenicationRepository,
+                             TimelineRepository timelineRepository,
+                             SettingRepository settingRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
         mDisposable = new CompositeDisposable();
+        mSettingRepository = settingRepository;
+        getSetting();
     }
 
     @Override
@@ -47,6 +54,10 @@ final class TimelinePresenter implements TimelineContract.Presenter {
 
             }
         });
+    }
+
+    private void getSetting() {
+        mViewModel.onGetSettingSuccess(mSettingRepository.getSetting());
     }
 
     @Override
