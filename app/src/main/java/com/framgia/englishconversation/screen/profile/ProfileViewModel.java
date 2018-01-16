@@ -23,9 +23,10 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
     private Fragment mFragment;
     private FragmentManager mManager;
 
-    ProfileViewModel(Navigator navigator, FragmentManager manager) {
+    ProfileViewModel(Navigator navigator, FragmentManager manager, UserModel userModel) {
         mNavigator = navigator;
         mManager = manager;
+        mUserModel = userModel;
     }
 
     @Override
@@ -45,8 +46,10 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
 
     @Override
     public void onGetUserSuccesss(UserModel data) {
-        setUserModel(data);
-        mFragment = TimelineFragment.newInstance(data);
+        if (mUserModel == null) {
+            setUserModel(data);
+        }
+        mFragment = TimelineFragment.newInstance(mUserModel);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case YOUR_POST:
 
             case SETTING:
-                return ProfileFragment.newInstance();
+                return ProfileFragment.newInstance(null);
             default:
                 return null;
         }

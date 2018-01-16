@@ -94,7 +94,10 @@
             android:name=".screen.conversationdetail.ConversationDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
-
+        <activity
+            android:name=".screen.profileuser.ProfileUserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

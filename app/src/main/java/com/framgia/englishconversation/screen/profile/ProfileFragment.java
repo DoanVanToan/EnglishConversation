@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.FragmentProfileBinding;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 ;
 
@@ -22,15 +25,20 @@ public class ProfileFragment extends BaseFragment {
 
     private ProfileContract.ViewModel mViewModel;
 
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+    public static ProfileFragment newInstance(UserModel userModel) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_USER, userModel);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ProfileViewModel(new Navigator(getActivity()), getChildFragmentManager());
-
+        UserModel userModel = getArguments().getParcelable(EXTRA_USER);
+        mViewModel = new ProfileViewModel(new Navigator(getActivity()), getChildFragmentManager(),
+                userModel);
         AuthenicationRepository repository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
         ProfileContract.Presenter presenter = new ProfilePresenter(mViewModel, repository);
