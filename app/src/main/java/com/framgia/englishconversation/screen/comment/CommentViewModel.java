@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
@@ -37,8 +38,10 @@ public class CommentViewModel extends BaseObservable
     private int mDefaultHeight;
     private FragmentManager mManager;
     private Fragment mFragment;
+    private UserModel mTimelineUser;
 
-    public CommentViewModel(Context context, String timelineModelId, FragmentManager manager) {
+    public CommentViewModel(Context context, String timelineModelId, FragmentManager manager,
+            UserModel userModel) {
         mAdapter = new CommentAdapter(new ArrayList<Comment>(), this);
         mContext = context;
         mOnEndScrollListener = new OnEndScrollListener(this);
@@ -49,6 +52,7 @@ public class CommentViewModel extends BaseObservable
                         context);
         mManager = manager;
         mFragment = CreateCommentFragment.getInstance(timelineModelId);
+        mTimelineUser = userModel;
     }
 
     @Override
@@ -171,13 +175,15 @@ public class CommentViewModel extends BaseObservable
 
     @Override
     public void onItemTimelineClick(Comment item) {
-
         mContext.startActivity(SelectedImageDetailActivity.getIntent(mContext,
                 new ArrayList(Arrays.asList(item.getMediaModel())), 0));
     }
 
     @Override
     public void onItemUserNameClick(Comment item) {
+        if (mTimelineUser != null && mTimelineUser.getId().equals(item.getCreateUser().getId())) {
+            return;
+        }
         mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreateUser()));
     }
 }

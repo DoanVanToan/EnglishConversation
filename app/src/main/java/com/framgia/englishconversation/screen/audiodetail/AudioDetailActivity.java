@@ -9,8 +9,11 @@ import android.view.MenuItem;
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.databinding.ActivityAudioDetailBinding;
 import com.framgia.englishconversation.utils.Constant;
+
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 /**
  * Created by fs-sournary.
@@ -22,9 +25,16 @@ public class AudioDetailActivity extends BaseActivity {
 
     private AudioDetailContract.View mView;
 
-    public static Intent getInstance(Context context, TimelineModel timelineModel) {
+    /**
+     * @param timelineModel truyền sang detail khi người dùng click vào 1 bài post trong timeline
+     * @param timelineUser của activity profile truyền vào để so sánh nếu user bài post trùng với
+     * timelineUser thì sẽ không điều hướng đến activity profile nữa
+     */
+    public static Intent getInstance(Context context, TimelineModel timelineModel,
+            UserModel timelineUser) {
         Intent intent = new Intent(context, AudioDetailActivity.class);
         intent.putExtra(Constant.EXTRA_TIMELINE, timelineModel);
+        intent.putExtra(EXTRA_USER, timelineUser);
         return intent;
     }
 
@@ -34,7 +44,9 @@ public class AudioDetailActivity extends BaseActivity {
         ActivityAudioDetailBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_audio_detail);
         TimelineModel timelineModel = getIntent().getParcelableExtra(Constant.EXTRA_TIMELINE);
-        mView = new AudioDetailViewModel(this, timelineModel, getSupportFragmentManager());
+        UserModel userModel = getIntent().getExtras().getParcelable(EXTRA_USER);
+        mView = new AudioDetailViewModel(this, timelineModel, getSupportFragmentManager(),
+                userModel);
         AudioDetailPresenter presenter = new AudioDetailPresenter(mView);
         mView.setPresenter(presenter);
         binding.setViewModel((AudioDetailViewModel) mView);

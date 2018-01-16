@@ -16,7 +16,8 @@
         <include
             android:id="@+id/layout_header"
             layout="@layout/item_header_timeline"
-            app:timelineModel="@{viewModel.timelineModel}" />
+            app:timelineModel="@{viewModel.timelineModel}"
+            app:touchListener="@{viewModel.touchListener}"/>
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_view"

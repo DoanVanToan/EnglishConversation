@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
@@ -39,19 +40,30 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
                     //TODO
                 }
 
+                /**
+                 * @param item truyền vào khi người dùng click vào layout header item
+                 * check điều kiện nếu userModel từ profile gừi sang trùng với user người tạo
+                 * post thì không điều hướng sang activity profile mới
+                 */
                 @Override
                 public void onItemUserNameClick(TimelineModel item) {
+                    if (mTimelineUser != null && mTimelineUser.getId()
+                            .equals(item.getCreatedUser().getId())) {
+                        return;
+                    }
                     mContext.startActivity(
                             ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
                 }
             };
+    private UserModel mTimelineUser;
 
     public ImageDetailViewModel(Context context, TimelineModel timelineModel,
-            FragmentManager manager) {
+            FragmentManager manager, UserModel userModel) {
         mContext = context;
         mTimelineModel = timelineModel;
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel.getId());
+        mFragment = CommentFragment.newInstance(timelineModel.getId(), userModel);
+        mTimelineUser = userModel;
     }
 
     @Override
