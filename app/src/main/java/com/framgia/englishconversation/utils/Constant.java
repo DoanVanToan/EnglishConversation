@@ -30,6 +30,7 @@ public class Constant {
         public static final String POST = "post";
         public static final String COMMENT = "comment";
         public static final String CREATED_AT = "createdAt";
+        public static final String ID = "createdUser/id";
     }
 
     public class RequestCode {

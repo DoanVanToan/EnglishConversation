@@ -6,6 +6,7 @@ import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.google.firebase.auth.FirebaseUser;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -54,8 +55,11 @@ final class TimelinePresenter implements TimelineContract.Presenter {
 
     @Override
     public void fetchTimelineData(final TimelineModel timelineModel, final UserModel userModel) {
-        mDisposable.add(mTimelineRepository.getTimeline(timelineModel)
-                .observeOn(AndroidSchedulers.mainThread())
+        Observable<List<TimelineModel>> observable = mTimelineRepository.getTimeline(timelineModel);
+        if (userModel != null) {
+            observable = mTimelineRepository.getTimeline(timelineModel, userModel);
+        }
+        mDisposable.add(observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<List<TimelineModel>>() {
                     @Override
@@ -85,8 +89,12 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     }
 
     public void registerModifyTimelines(TimelineModel timelineModel, UserModel userModel) {
-        mDisposable.add(mTimelineRepository.registerModifyTimelines(timelineModel)
-                .observeOn(AndroidSchedulers.mainThread())
+        Observable<TimelineModel> observable =
+                mTimelineRepository.registerModifyTimelines(timelineModel);
+        if (userModel != null) {
+            observable = mTimelineRepository.registerModifyTimelines(timelineModel, userModel);
+        }
+        mDisposable.add(observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<TimelineModel>() {
                     @Override

@@ -12,6 +12,7 @@ import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
 import com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
 import com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity;
+import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
@@ -33,6 +34,7 @@ public class TimelineViewModel extends BaseObservable
     private UserModel mUserModel;
     private TimelineAdapter mAdapter;
     private OnEndScrollListener mOnEndScrollListener;
+    private UserModel mUserModelTimeline;
 
     public TimelineViewModel(Context context, Navigator navigator, UserModel userModel) {
         mContext = context;
@@ -41,6 +43,7 @@ public class TimelineViewModel extends BaseObservable
         mAdapter.setRecyclerViewItemClickListener(this);
         mOnEndScrollListener = new OnEndScrollListener(this);
         mUserModel = userModel;
+        mUserModelTimeline = userModel;
     }
 
     @Override
@@ -56,14 +59,11 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void setPresenter(TimelineContract.Presenter presenter) {
         mPresenter = presenter;
-        mPresenter.fetchTimelineData(null, mUserModel);
+        mPresenter.fetchTimelineData(null, mUserModelTimeline);
     }
 
     @Override
     public void onGetUserSuccess(UserModel data) {
-        if (mUserModel != null) {
-            return;
-        }
         setUserModel(data);
     }
 
@@ -137,12 +137,12 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onItemUserNameClick(TimelineModel item) {
-        //TODO
+        mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
     }
 
     @Override
     public void onEndScrolled() {
-        mPresenter.fetchTimelineData(mAdapter.getLastItem(), mUserModel);
+        mPresenter.fetchTimelineData(mAdapter.getLastItem(), mUserModelTimeline);
     }
 
     public void setUserModel(UserModel userModel) {

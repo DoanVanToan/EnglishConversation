@@ -52,6 +52,7 @@ public class UserModel implements Parcelable {
     }
 
     protected UserModel(Parcel in) {
+        mId = in.readString();
         mUserName = in.readString();
         mEmail = in.readString();
         mToken = in.readString();
@@ -65,6 +66,7 @@ public class UserModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
         dest.writeString(mUserName);
         dest.writeString(mEmail);
         dest.writeString(mToken);

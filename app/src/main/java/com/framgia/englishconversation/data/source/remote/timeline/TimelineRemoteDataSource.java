@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import android.support.annotation.NonNull;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.Utils;
@@ -75,18 +76,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        List<TimelineModel> timelineModels = new ArrayList<>();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            TimelineModel timelineModel = snapshot.getValue(TimelineModel.class);
-                            timelineModel.setCreatedAt(
-                                    Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-                            timelineModel.setId(snapshot.getKey());
-                            if (lastTimeline == null || !lastTimeline.getId()
-                                    .equals(snapshot.getKey())) {
-                                timelineModels.add(timelineModel);
-                            }
-                        }
-                        e.onNext(timelineModels);
+                        e.onNext(getTimelineData(dataSnapshot, lastTimeline, null));
                     }
 
                     @Override
@@ -114,40 +104,22 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                                 .equals(dataSnapshot.getKey())) {
                             return;
                         }
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        timelineModel.setCreatedAt(
-                                Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-                        timelineModel.setId(dataSnapshot.getKey());
-                        e.onNext(timelineModel);
+                        e.onNext(getTimelineData(dataSnapshot));
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        timelineModel.setCreatedAt(
-                                Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-                        timelineModel.setModifiedAt(
-                                Utils.generateOppositeNumber(timelineModel.getModifiedAt()));
-                        timelineModel.setId(dataSnapshot.getKey());
-                        e.onNext(timelineModel);
+                        e.onNext(getTimelineData(dataSnapshot));
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        timelineModel.setCreatedAt(
-                                Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-                        timelineModel.setId(dataSnapshot.getKey());
-                        e.onNext(timelineModel);
+                        e.onNext(getTimelineData(dataSnapshot));
                     }
 
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        timelineModel.setCreatedAt(
-                                Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-                        timelineModel.setId(dataSnapshot.getKey());
-                        e.onNext(timelineModel);
+                        e.onNext(getTimelineData(dataSnapshot));
                     }
 
                     @Override
@@ -157,5 +129,109 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                 });
             }
         });
+    }
+
+    @Override
+    public Observable<List<TimelineModel>> getTimeline(final TimelineModel lastTimeline,
+            final UserModel userModel) {
+        return Observable.create(new ObservableOnSubscribe<List<TimelineModel>>() {
+            @Override
+            public void subscribe(final ObservableEmitter<List<TimelineModel>> e) throws Exception {
+                final Query query;
+                if (lastTimeline == null) {
+                    query = mReference.orderByChild(Constant.DatabaseTree.ID)
+                            .limitToLast(NUM_OF_TIMELINE_PER_PAGE)
+                            .equalTo(userModel.getId());
+                } else {
+                    query = mReference.orderByChild(Constant.DatabaseTree.ID)
+                            .limitToLast(NUM_OF_TIMELINE_PER_PAGE)
+                            .startAt(userModel.getId())
+                            .endAt(userModel.getId(), lastTimeline.getId());
+                }
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        e.onNext(getTimelineData(dataSnapshot, lastTimeline, userModel));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        e.onError(databaseError.toException());
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public Observable<TimelineModel> updateTimeline(final TimelineModel lastTimeline,
+            final UserModel userModel) {
+        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
+            @Override
+            public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
+                final Query query = mReference.orderByChild(Constant.DatabaseTree.ID)
+                        .startAt(userModel.getId(),
+                                lastTimeline != null ? lastTimeline.getId() : null)
+                        .endAt(userModel.getId());
+
+                query.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        if (lastTimeline != null && lastTimeline.getId()
+                                .equals(dataSnapshot.getKey())) {
+                            return;
+                        }
+                        e.onNext(getTimelineData(dataSnapshot));
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        e.onNext(getTimelineData(dataSnapshot));
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        e.onNext(getTimelineData(dataSnapshot));
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        e.onNext(getTimelineData(dataSnapshot));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        e.onError(databaseError.toException());
+                    }
+                });
+            }
+        });
+    }
+
+    public List<TimelineModel> getTimelineData(DataSnapshot dataSnapshot,
+            TimelineModel lastTimeline, UserModel userModel) {
+        List<TimelineModel> timelineModels = new ArrayList<>();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            TimelineModel timelineModel = snapshot.getValue(TimelineModel.class);
+            timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
+            timelineModel.setId(snapshot.getKey());
+            if (lastTimeline == null || !lastTimeline.getId().equals(snapshot.getKey())) {
+                if (userModel != null) {
+                    timelineModels.add(0, timelineModel);
+                } else {
+                    timelineModels.add(timelineModel);
+                }
+            }
+        }
+        return timelineModels;
+    }
+
+    public TimelineModel getTimelineData(DataSnapshot dataSnapshot) {
+        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
+        timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
+        timelineModel.setModifiedAt(Utils.generateOppositeNumber(timelineModel.getModifiedAt()));
+        timelineModel.setId(dataSnapshot.getKey());
+        return timelineModel;
     }
 }
