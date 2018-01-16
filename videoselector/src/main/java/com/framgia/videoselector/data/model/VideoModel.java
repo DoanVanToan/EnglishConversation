@@ -24,6 +24,9 @@ public class VideoModel extends BaseObservable implements Parcelable {
     private String mThumb;
     private boolean mIsSelected;
 
+    public VideoModel() {
+    }
+
     public VideoModel(Cursor cursor) {
         mId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns._ID));
         mFilePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
