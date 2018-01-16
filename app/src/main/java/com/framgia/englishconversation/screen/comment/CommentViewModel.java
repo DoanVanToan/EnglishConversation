@@ -9,10 +9,13 @@ import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
+import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
+import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
 import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -169,10 +172,12 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void onItemTimelineClick(Comment item) {
 
+        mContext.startActivity(SelectedImageDetailActivity.getIntent(mContext,
+                new ArrayList(Arrays.asList(item.getMediaModel())), 0));
     }
 
     @Override
     public void onItemUserNameClick(Comment item) {
-
+        mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreateUser()));
     }
 }

@@ -9,7 +9,10 @@
             name="commentViewModel"
             type="com.framgia.englishconversation.data.model.Comment"
             />
-
+        <variable
+            name="listener"
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
+            />
     </data>
 
 
@@ -21,6 +24,7 @@
             layout="@layout/item_comment_only_text"
             android:id="@+id/layout_user"
             app:commentViewModel="@{commentViewModel}"
+            app:listener="@{listener}"
             />
         <ImageView
             android:layout_width="match_parent"
@@ -35,6 +39,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_user"
             bind:ignore="ContentDescription"
+            android:onClick="@{() -> listener.onItemTimelineClick(commentViewModel)}"
             />
     </android.support.constraint.ConstraintLayout>
 </layout>
