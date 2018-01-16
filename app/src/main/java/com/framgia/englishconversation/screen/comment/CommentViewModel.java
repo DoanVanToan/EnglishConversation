@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
+import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import java.util.List;
  */
 
 public class CommentViewModel extends BaseObservable
-        implements CommentContract.ViewModel, OnEndScrollListener.OnEndScroll {
+        implements CommentContract.ViewModel, OnEndScrollListener.OnEndScroll,
+        OnTimelineItemTouchListener<Comment> {
     private static final String STATUS_BAR_HEIGHT = "status_bar_height";
     private static final String DIMEN = "dimen";
     private static final String ANDROID = "android";
@@ -162,5 +164,15 @@ public class CommentViewModel extends BaseObservable
 
     public void setFragment(Fragment fragment) {
         mFragment = fragment;
+    }
+
+    @Override
+    public void onItemTimelineClick(Comment item) {
+
+    }
+
+    @Override
+    public void onItemUserNameClick(Comment item) {
+
     }
 }

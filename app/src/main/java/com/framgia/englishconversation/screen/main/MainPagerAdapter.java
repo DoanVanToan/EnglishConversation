@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.framgia.englishconversation.screen.profile.ProfileFragment;
+import com.framgia.englishconversation.screen.profileuser.ProfileType;
 import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 
 /**
@@ -32,7 +33,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case YOUR_POST:
 
             case SETTING:
-                return ProfileFragment.newInstance(null);
+                return ProfileFragment.newInstance(null, ProfileType.FRAGMENT);
             default:
                 return null;
         }

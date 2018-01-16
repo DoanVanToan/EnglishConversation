@@ -14,6 +14,7 @@ import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepo
 import com.framgia.englishconversation.databinding.FragmentProfileBinding;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
+import static com.framgia.englishconversation.utils.Constant.EXTRA_TYPE;
 import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 ;
@@ -25,10 +26,11 @@ public class ProfileFragment extends BaseFragment {
 
     private ProfileContract.ViewModel mViewModel;
 
-    public static ProfileFragment newInstance(UserModel userModel) {
+    public static ProfileFragment newInstance(UserModel userModel, int typeProfile) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_USER, userModel);
+        bundle.putInt(EXTRA_TYPE, typeProfile);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -37,8 +39,9 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UserModel userModel = getArguments().getParcelable(EXTRA_USER);
+        int profileType = getArguments().getInt(EXTRA_TYPE);
         mViewModel = new ProfileViewModel(new Navigator(getActivity()), getChildFragmentManager(),
-                userModel);
+                userModel, profileType);
         AuthenicationRepository repository =
                 new AuthenicationRepository(new AuthenicationRemoteDataSource());
         ProfileContract.Presenter presenter = new ProfilePresenter(mViewModel, repository);

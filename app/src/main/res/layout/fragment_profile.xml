@@ -84,17 +84,24 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/text_username"
                         />
-
-                    <android.support.v7.widget.Toolbar
-                        android:layout_width="match_parent"
-                        android:layout_height="?actionBarSize"
-                        app:layout_collapseMode="pin"
-                        app:subtitleTextColor="@android:color/white"
-                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                        app:titleTextColor="@android:color/white"
-                        />
                 </android.support.constraint.ConstraintLayout>
-
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:subtitleTextColor="@android:color/white"
+                    app:theme="@style/AppTheme.ActionBar.Transparent"
+                    app:titleTextColor="@android:color/white"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{()->viewModel.back()}"
+                        android:padding="@dimen/dp_8"
+                        android:visibility="@{viewModel.isAllowShowBackButton ? View.VISIBLE : View.GONE}"
+                        app:srcCompat="@drawable/ic_arrow_back_white_24dp"
+                        />
+                </android.support.v7.widget.Toolbar>
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>

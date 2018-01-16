@@ -20,7 +20,7 @@ public class ProfileUserViewModel extends BaseObservable implements ProfileUserC
 
     public ProfileUserViewModel(UserModel userModel, FragmentManager manager) {
         mManager = manager;
-        mFragment = ProfileFragment.newInstance(userModel);
+        mFragment = ProfileFragment.newInstance(userModel, ProfileType.ACTIVITY);
     }
 
     @Override
