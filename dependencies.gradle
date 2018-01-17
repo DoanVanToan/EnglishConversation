@@ -32,6 +32,8 @@ ext {
                   omRecorder        : 'com.kailashdabhi:om-recorder:1.1.0',
                   audiovisualization: 'com.cleveroad:audiovisualization:1.0.0',
 
+                  jsoup             : 'org.jsoup:jsoup:1.11.2',
+
                   exoPlayer       : 'com.google.android.exoplayer:exoplayer:r2.4.4',
                   toroExo           : "im.ene.toro3:toro:3.0.0-beta1",
 

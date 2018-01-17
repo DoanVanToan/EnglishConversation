@@ -84,6 +84,7 @@ dependencies {
     compile dependencies.firebaseDataBase
     compile dependencies.exoPlayer
     compile dependencies.toroExo
+    compile dependencies.jsoup
     compile project(':multipleimageselect')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile dependencies.junit
