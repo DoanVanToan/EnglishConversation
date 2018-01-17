@@ -5,6 +5,8 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
@@ -27,6 +29,8 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -41,6 +45,7 @@ import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 public class AudioDetailViewModel extends BaseObservable implements AudioDetailContract.View {
 
     public static final int INDEX_AUDIO = 0;
+    private static final String TAG = "AudioDetailViewModel";
 
     private int mCurrentWindow;
     private long mPlaybackPosition;
@@ -78,7 +83,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
             };
 
     public AudioDetailViewModel(AudioDetailActivity activity, TimelineModel timelineModel,
-            FragmentManager manager, UserModel userModel) {
+                                FragmentManager manager, UserModel userModel) {
         mActivity = activity;
         mTimelineModel = timelineModel;
         mNavigator = new Navigator(activity);
@@ -124,11 +129,15 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     }
 
     private void setUpExoPlayer() {
+        Log.d(TAG, "setUpExoPlayer: "+mPathAudio);
         if (mExoPlayer != null) {
             return;
         }
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
-                new DefaultTrackSelector(), new DefaultLoadControl());
+
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(mActivity),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
         Uri uriAudio = Uri.parse(mPathAudio);
         mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
         mExoPlayer.prepare(getMediaSource(uriAudio), true, false);
@@ -137,8 +146,25 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     }
 
     private MediaSource getMediaSource(Uri uri) {
-        return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory(Constant.USER_AGENT),
-                new DefaultExtractorsFactory(), null, null);
+        DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(
+                Constant.USER_AGENT,
+                null,
+                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                true
+        );
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
+                mActivity,
+                null,
+                httpDataSourceFactory
+        );
+        ExtractorMediaSource dataSource =
+                new ExtractorMediaSource(uri,
+                        dataSourceFactory,
+                        new DefaultExtractorsFactory(),
+                        null,
+                        null);
+        return dataSource;
     }
 
     private void releasePlayer() {
@@ -192,7 +218,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
 
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
-                TrackSelectionArray trackSelectionArray) {
+                                    TrackSelectionArray trackSelectionArray) {
             // no opsListener
         }
 

@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -230,5 +231,13 @@ public final class BindingUtils {
     @BindingAdapter({"isEnableAutoPlay"})
     public static void setScrollPosition(Container container, boolean isEnabled) {
         container.setPlayerSelector(isEnabled ? PlayerSelector.DEFAULT : PlayerSelector.NONE);
+    }
+
+    @BindingAdapter({"textHtml"})
+    public static void setTextHtml(TextView textView, String text) {
+        if (text == null || textView == null) {
+            return;
+        }
+        textView.setText(Html.fromHtml(text));
     }
 }

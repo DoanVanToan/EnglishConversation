@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginStart="@dimen/dp_8"
-                android:text="@string/title_timeline_header"
+                android:text="@{@string/title_timeline_header(viewModel.userModel.userName)}"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"

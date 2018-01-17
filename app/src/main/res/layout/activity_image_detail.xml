@@ -4,70 +4,91 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.imagedetail.ImageDetailViewModel"
-            />
+            type="com.framgia.englishconversation.screen.imagedetail.ImageDetailViewModel" />
     </data>
-    <android.support.constraint.ConstraintLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <include
-            layout="@layout/item_header_timeline"
-            android:id="@+id/layout_item_header"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:touchListener="@{viewModel.touchListener}"
-            app:timelineModel="@{viewModel.timelineModel}"
-            />
+            android:layout_height="match_parent">
 
-        <include
-            layout="@layout/item_list_image"
-            android:id="@+id/layout_image_timeline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            bind:listener="@{viewModel.listener}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_item_header"
-            app:timelineModel="@{viewModel.timelineModel}"
-            />
+            <include
+                android:id="@+id/layout_item_header"
+                layout="@layout/item_header_timeline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:timelineModel="@{viewModel.timelineModel}"
+                app:touchListener="@{viewModel.touchListener}" />
 
-        <TextView
-            android:id="@+id/text_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_8"
-            android:onClick="@{()->viewModel.onClickComment()}"
-            android:text="@string/title_comment"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_image_timeline"
-            />
+            <TextView
+                android:id="@+id/text_content"
+                textHtml="@{viewModel.timelineModel.content}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:padding="@dimen/dp_8"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_14"
+                android:visibility="@{TextUtils.isEmpty(viewModel.timelineModel.content)? View.GONE: View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_item_header" />
 
-        <ImageView
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_marginTop="@dimen/dp_8"
-            android:contentDescription="@string/description_voted"
-            app:layout_constraintRight_toLeftOf="@+id/text_comment"
-            app:layout_constraintTop_toBottomOf="@id/layout_image_timeline"
-            app:srcCompat="@drawable/ic_comment"
-            />
+            <include
+                android:id="@+id/layout_image_timeline"
+                layout="@layout/item_list_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_content"
+                app:timelineModel="@{viewModel.timelineModel}"
+                bind:listener="@{viewModel.listener}" />
 
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/text_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_8"
+                android:onClick="@{()->viewModel.onClickComment()}"
+                android:text="@string/title_comment"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_image_timeline" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_8"
+                android:contentDescription="@string/description_voted"
+                app:layout_constraintRight_toLeftOf="@+id/text_comment"
+                app:layout_constraintTop_toBottomOf="@id/layout_image_timeline"
+                app:srcCompat="@drawable/ic_comment" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </layout>
