@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.framgia.audioselector.util.Utils" />
+
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="viewModel"
+            type="com.framgia.audioselector.screen.audioselector.ItemAudioViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_72">
+
+        <ImageView
+            android:id="@+id/image_audio"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:background="@drawable/bg_playing_audio"
+            android:contentDescription="@string/description_audio"
+            android:onClick="@{(v) -> viewModel.onItemClick(v, viewModel.audio, position)}"
+            android:padding="@dimen/dp_8"
+            android:src="@drawable/ic_menu_media"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/checkbox_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:background="@{viewModel.audio.choose == true ? @drawable/ic_check_box : @drawable/ic_check_box_outline}"
+            android:contentDescription="@string/description_choose_audio_file"
+            android:onClick="@{(v) -> viewModel.onCheckClick(v, position)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_16"
+            android:maxLines="1"
+            android:text="@{viewModel.audio.name}"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/checkbox_audio"
+            app:layout_constraintStart_toEndOf="@id/image_audio"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:text="@{viewModel.duration}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/checkbox_audio"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/image_audio" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_2"
+            android:background="@color/grey_500"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

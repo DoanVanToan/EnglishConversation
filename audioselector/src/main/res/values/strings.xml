@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">audioselector</string>
+    <string name="description_audio">Playing audio</string>
+    <string name="title_audio_selector">Audio selector</string>
+    <string name="description_choose_audio_file">Choose an audio file</string>
+    <string name="title_add">Add</string>
+</resources>
