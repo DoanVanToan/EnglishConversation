@@ -63,7 +63,7 @@ public class ConversationDetailViewModel extends BaseObservable
             new OnTimelineItemTouchListener<TimelineModel>() {
                 @Override
                 public void onItemTimelineClick(TimelineModel item) {
-                    //TODO
+                    //TODO 
                 }
 
                 /**

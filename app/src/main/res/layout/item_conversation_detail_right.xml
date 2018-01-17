@@ -22,34 +22,33 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginLeft="@dimen/dp_56"
-        android:layout_marginRight="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_56"
-        android:layout_marginTop="@dimen/dp_16">
+        android:layout_marginTop="@dimen/dp_8">
 
         <ImageView
             android:id="@+id/image_recording_audio"
             android:layout_width="@dimen/dp_24"
             android:layout_height="@dimen/dp_24"
-            android:background="@drawable/ic_audio_conversation"
+            android:background="@drawable/bg_menu_media_creating_conversation"
             android:contentDescription="@string/description_recording_audio_convention"
             android:onClick="@{() -> viewModel.onMediaItemClick(conversation)}"
+            android:padding="@dimen/dp_4"
             android:visibility="@{conversation.mediaModel == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_menu_media" />
 
         <TextView
             android:id="@+id/edit_conversation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
             android:background="@drawable/bg_recording_audio_layout"
             android:gravity="center_vertical"
             android:maxWidth="@dimen/dp_240"
-            android:minHeight="@dimen/dp_56"
             android:padding="@dimen/dp_8"
             android:text="@={conversation.content}"
             android:textColor="@{viewModel.scrollPosition == position ? @android:color/holo_red_light : @android:color/black}"
