@@ -11,6 +11,10 @@
             type="int" />
 
         <variable
+            name="audio"
+            type="com.framgia.audioselector.data.model.Audio" />
+
+        <variable
             name="viewModel"
             type="com.framgia.audioselector.screen.audioselector.ItemAudioViewModel" />
     </data>
@@ -40,9 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
-            android:background="@{viewModel.audio.choose == true ? @drawable/ic_check_box : @drawable/ic_check_box_outline}"
+            android:background="@{viewModel.audio.selected == true ? @drawable/ic_check_box : @drawable/ic_check_box_outline}"
             android:contentDescription="@string/description_choose_audio_file"
-            android:onClick="@{(v) -> viewModel.onCheckClick(v, position)}"
+            android:onClick="@{() -> viewModel.onCheckClick(audio)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -69,10 +73,10 @@
             android:layout_marginBottom="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
+            android:text="@{viewModel.duration}"
             android:textColor="@android:color/holo_red_light"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            android:text="@{viewModel.duration}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/checkbox_audio"
             app:layout_constraintHorizontal_bias="0"

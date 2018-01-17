@@ -4,4 +4,7 @@
     <string name="title_audio_selector">Audio selector</string>
     <string name="description_choose_audio_file">Choose an audio file</string>
     <string name="title_add">Add</string>
+    <string name="msg_permission_denied">Please grant the required permission to enable this feature !</string>
+    <string name="title_action">Grant permission</string>
+    <string name="title_select">Selected</string>
 </resources>
