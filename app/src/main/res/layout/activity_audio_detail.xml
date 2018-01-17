@@ -38,6 +38,7 @@
                     layout="@layout/item_header_timeline"
                     android:id="@+id/layout_header"
                     bind:timelineModel="@{viewModel.timelineModel}"
+                    app:touchListener="@{viewModel.touchListener}"
                     />
 
                 <com.google.android.exoplayer2.ui.SimpleExoPlayerView

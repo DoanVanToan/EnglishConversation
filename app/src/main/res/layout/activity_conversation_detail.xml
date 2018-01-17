@@ -32,7 +32,8 @@
                 <include
                     android:id="@+id/layout_header"
                     layout="@layout/item_header_timeline"
-                    bind:timelineModel="@{viewModel.timelineModel}"/>
+                    bind:timelineModel="@{viewModel.timelineModel}"
+                    app:touchListener="@{viewModel.touchListener}"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_conversation"

@@ -5,11 +5,13 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
-
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
+import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
+import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -28,7 +30,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,17 +58,41 @@ public class ConversationDetailViewModel extends BaseObservable
     private ConversationDetailContract.Presenter mPresenter;
     private FragmentManager mManager;
     private CommentFragment mFragment;
+    private UserModel mTimelineUser;
+    private OnTimelineItemTouchListener mTouchListener =
+            new OnTimelineItemTouchListener<TimelineModel>() {
+                @Override
+                public void onItemTimelineClick(TimelineModel item) {
+                    //TODO
+                }
+
+                /**
+                 * @param item truyền vào khi người dùng click vào layout header item
+                 * check điều kiện nếu userModel từ profile gừi sang trùng với user người tạo
+                 * post thì không điều hướng sang activity profile mới
+                 */
+                @Override
+                public void onItemUserNameClick(TimelineModel item) {
+                    if (mTimelineUser != null && mTimelineUser.getId()
+                            .equals(item.getCreatedUser().getId())) {
+                        return;
+                    }
+                    mDetailActivity.startActivity(ProfileUserActivity.getInstance(mDetailActivity,
+                            item.getCreatedUser()));
+                }
+            };
 
     public ConversationDetailViewModel(ConversationDetailActivity detailActivity,
-                                       FragmentManager manager, TimelineModel timelineModel) {
+            FragmentManager manager, TimelineModel timelineModel, UserModel userModel) {
         mDetailActivity = detailActivity;
         mTimelineModel = timelineModel;
-        mAdapter = new ConversationDetailAdapter(
-                mDetailActivity, timelineModel.getConversations(), this);
+        mAdapter = new ConversationDetailAdapter(mDetailActivity, timelineModel.getConversations(),
+                this);
         mPlayerListener = new PlayerListener();
         initDefaultData(timelineModel);
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel.getId());
+        mFragment = CommentFragment.newInstance(timelineModel.getId(), userModel);
+        mTimelineUser = userModel;
     }
 
     @Override
@@ -121,10 +146,9 @@ public class ConversationDetailViewModel extends BaseObservable
     }
 
     private void initPlayer() {
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(mDetailActivity),
-                new DefaultTrackSelector(),
-                new DefaultLoadControl());
+        mExoPlayer =
+                ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mDetailActivity),
+                        new DefaultTrackSelector(), new DefaultLoadControl());
         List<Uri> uris = new ArrayList<>();
         for (int i = 0; i < mDetailModels.size(); i++) {
             String url = mDetailModels.get(i).getMediaModel().getUrl();
@@ -174,12 +198,12 @@ public class ConversationDetailViewModel extends BaseObservable
     private MediaSource getMediaSource(List<Uri> uris) {
         DefaultHttpDataSourceFactory httpDataSourceFactory =
                 new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
-        DefaultExtractorsFactory extractorsFactory =
-                new DefaultExtractorsFactory();
+        DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         List<MediaSource> mediaSources = new ArrayList<>();
         for (Uri uri : uris) {
-            mediaSources.add(new ExtractorMediaSource(uri, httpDataSourceFactory,
-                    extractorsFactory, null, null));
+            mediaSources.add(
+                    new ExtractorMediaSource(uri, httpDataSourceFactory, extractorsFactory, null,
+                            null));
         }
         MediaSource results[] = new MediaSource[mediaSources.size()];
         return new ConcatenatingMediaSource(mediaSources.toArray(results));
@@ -233,7 +257,7 @@ public class ConversationDetailViewModel extends BaseObservable
 
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
-                                    TrackSelectionArray trackSelectionArray) {
+                TrackSelectionArray trackSelectionArray) {
             // No ops
         }
 
@@ -271,5 +295,15 @@ public class ConversationDetailViewModel extends BaseObservable
         public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
             // No ops
         }
+    }
+
+    @Bindable
+    public OnTimelineItemTouchListener getTouchListener() {
+        return mTouchListener;
+    }
+
+    public void setTouchListener(OnTimelineItemTouchListener touchListener) {
+        mTouchListener = touchListener;
+        notifyPropertyChanged(BR.touchListener);
     }
 }

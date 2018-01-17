@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Bundle;
-
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.Setting;
@@ -19,9 +18,10 @@ import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 /**
  * Exposes the data to be used in the Timeline screen.
@@ -138,18 +138,22 @@ public class TimelineViewModel extends BaseObservable
             case MediaModel.MediaType.VIDEO:
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constant.EXTRA_TIMELINE, timelineModel);
+                bundle.putParcelable(EXTRA_USER, mTimelineUser);
                 mNavigator.startActivity(VideoDetailActivity.class, bundle);
                 break;
             case MediaModel.MediaType.ONLY_TEXT:
             case MediaModel.MediaType.IMAGE:
-                mNavigator.startActivity(ImageDetailActivity.getInstance(mContext, timelineModel));
+                mNavigator.startActivity(
+                        ImageDetailActivity.getInstance(mContext, timelineModel, mTimelineUser));
                 break;
             case MediaModel.MediaType.CONVERSATION:
                 mNavigator.startActivity(
-                        ConversationDetailActivity.getInstance(mContext, timelineModel));
+                        ConversationDetailActivity.getInstance(mContext, timelineModel,
+                                mTimelineUser));
                 break;
             case MediaModel.MediaType.AUDIO:
-                mNavigator.startActivity(AudioDetailActivity.getInstance(mContext, timelineModel));
+                mNavigator.startActivity(
+                        AudioDetailActivity.getInstance(mContext, timelineModel, mTimelineUser));
                 break;
             default:
                 break;

@@ -6,8 +6,11 @@ import android.view.MenuItem;
 import com.framgia.englishconversation.BaseActivity;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.databinding.ActivityVideoDetailBinding;
 import com.framgia.englishconversation.utils.Constant;
+
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 /**
  * VideoDetail Screen.
@@ -20,7 +23,8 @@ public class VideoDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TimelineModel model = getIntent().getExtras().getParcelable(Constant.EXTRA_TIMELINE);
-        mViewModel = new VideoDetailViewModel(this, getSupportFragmentManager(), model);
+        UserModel userModel = getIntent().getExtras().getParcelable(EXTRA_USER);
+        mViewModel = new VideoDetailViewModel(this, getSupportFragmentManager(), model, userModel);
         VideoDetailContract.Presenter presenter = new VideoDetailPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
 

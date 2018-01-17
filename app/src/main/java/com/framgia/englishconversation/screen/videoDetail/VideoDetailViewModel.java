@@ -9,7 +9,10 @@ import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.comment.CommentFragment;
+import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
+import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -34,13 +37,38 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
     private Navigator mNavigator;
     private FragmentManager mManager;
     private CommentFragment mFragment;
+    private UserModel mTimelineUser;
+    private OnTimelineItemTouchListener mTouchListener =
+            new OnTimelineItemTouchListener<TimelineModel>() {
+                @Override
+                public void onItemTimelineClick(TimelineModel item) {
+                    //TODO
+                }
 
-    VideoDetailViewModel(Context context, FragmentManager manager, TimelineModel timelineModel) {
+                /**
+                 * @param item truyền vào khi người dùng click vào layout header item
+                 * check điều kiện nếu userModel từ profile gừi sang trùng với user người tạo
+                 * post thì không điều hướng sang activity profile mới
+                 */
+                @Override
+                public void onItemUserNameClick(TimelineModel item) {
+                    if (mTimelineUser != null && mTimelineUser.getId()
+                            .equals(item.getCreatedUser().getId())) {
+                        return;
+                    }
+                    mContext.startActivity(
+                            ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
+                }
+            };
+
+    VideoDetailViewModel(Context context, FragmentManager manager, TimelineModel timelineModel,
+            UserModel userModel) {
         mContext = context;
         mTimelineModel = timelineModel;
         mNavigator = new Navigator((Activity) context);
         mManager = manager;
-        mFragment = CommentFragment.newInstance(timelineModel.getId());
+        mFragment = CommentFragment.newInstance(timelineModel.getId(), userModel);
+        mTimelineUser = userModel;
     }
 
     @Bindable
@@ -131,5 +159,15 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
 
     public void onClickComment() {
         mFragment.show(mManager, mFragment.getTag());
+    }
+
+    @Bindable
+    public OnTimelineItemTouchListener getTouchListener() {
+        return mTouchListener;
+    }
+
+    public void setTouchListener(OnTimelineItemTouchListener touchListener) {
+        mTouchListener = touchListener;
+        notifyPropertyChanged(BR.touchListener);
     }
 }

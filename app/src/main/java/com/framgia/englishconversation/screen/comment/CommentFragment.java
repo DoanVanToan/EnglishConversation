@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.framgia.englishconversation.R;
+import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.databinding.FragmentCommentBinding;
 
 import static com.framgia.englishconversation.utils.Constant.EXTRA_TIMELINE;
+import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 
 /**
  * Comment Screen.
@@ -25,10 +27,11 @@ public class CommentFragment extends BottomSheetDialogFragment {
 
     private CommentContract.ViewModel mViewModel;
 
-    public static CommentFragment newInstance(String timelineModelId) {
+    public static CommentFragment newInstance(String timelineModelId, UserModel timelineUser) {
         CommentFragment commentFragment = new CommentFragment();
         Bundle args = new Bundle();
         args.putString(EXTRA_TIMELINE, timelineModelId);
+        args.putParcelable(EXTRA_USER, timelineUser);
         commentFragment.setArguments(args);
         return commentFragment;
     }
@@ -37,8 +40,9 @@ public class CommentFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String timelineModelId = getArguments().getString(EXTRA_TIMELINE);
-        mViewModel =
-                new CommentViewModel(getActivity(), timelineModelId, getChildFragmentManager());
+        UserModel userModel = getArguments().getParcelable(EXTRA_USER);
+        mViewModel = new CommentViewModel(getActivity(), timelineModelId, getChildFragmentManager(),
+                userModel);
         CommentRepository repository =
                 new CommentRepository(new CommentRemoteDataSource(timelineModelId));
         CommentContract.Presenter presenter = new CommentPresenter(mViewModel, repository);
