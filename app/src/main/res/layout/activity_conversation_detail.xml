@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.text.TextUtils"/>
         <import type="android.view.View" />
 
         <variable
@@ -13,86 +13,95 @@
             type="com.framgia.englishconversation.screen.conversationdetail.ConversationDetailViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_detail"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="@dimen/dp_4">
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_8"
+            tools:context="com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity">
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/dp_8">
+            <include
+                android:id="@+id/layout_header"
+                layout="@layout/item_header_timeline"
+                app:touchListener="@{viewModel.touchListener}"
+                bind:timelineModel="@{viewModel.timelineModel}" />
 
-                <include
-                    android:id="@+id/layout_header"
-                    layout="@layout/item_header_timeline"
-                    bind:timelineModel="@{viewModel.timelineModel}"
-                    app:touchListener="@{viewModel.touchListener}"/>
+            <TextView
+                android:id="@+id/text_content"
+                textHtml="@{viewModel.timelineModel.content}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:padding="@dimen/dp_8"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_14"
+                android:visibility="@{TextUtils.isEmpty(viewModel.timelineModel.content)? View.GONE: View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_header" />
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_conversation"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_content"
+                android:layout_height="wrap_content">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_conversation"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_300"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:background="@color/color_grey_200"
                     android:padding="@dimen/dp_4"
                     app:layoutManager="LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layout_header"
                     bind:adapter="@{viewModel.adapter}"
                     bind:scrollPosition="@{viewModel.scrollPosition}" />
+            </android.support.v7.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/player"
-                    android:layout_width="@dimen/dp_32"
-                    android:layout_height="@dimen/dp_32"
-                    android:layout_marginTop="@dimen/dp_16"
-                    android:background="@{viewModel.playing == true ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
-                    android:contentDescription="@string/description_play_audio"
-                    android:onClick="@{() -> viewModel.onMediaEntryClick()}"
-                    android:visibility="@{viewModel.detailModels.size() == 0 ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="parent" />
+            <ImageView
+                android:id="@+id/player"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@{viewModel.playing == true ? @drawable/ic_pause_circle_outline_black : @drawable/ic_play_circle_outline_black}"
+                android:contentDescription="@string/description_play_audio"
+                android:onClick="@{() -> viewModel.onMediaEntryClick()}"
+                android:visibility="@{viewModel.detailModels.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/text_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:onClick="@{()->viewModel.onClickComment()}"
+                android:text="@string/title_comment"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/card_view_conversation" />
 
-        </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:contentDescription="@string/description_voted"
+                app:layout_constraintBottom_toBottomOf="@+id/text_comment"
+                app:layout_constraintEnd_toStartOf="@+id/text_comment"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_comment"
+                app:srcCompat="@drawable/ic_comment" />
 
-        <TextView
-            android:id="@+id/text_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_8"
-            android:onClick="@{()->viewModel.onClickComment()}"
-            android:text="@string/title_comment"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_detail"
-            />
-
-        <ImageView
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginTop="@dimen/dp_8"
-            android:contentDescription="@string/description_voted"
-            app:layout_constraintRight_toLeftOf="@+id/text_comment"
-            app:layout_constraintTop_toBottomOf="@id/card_detail"
-            app:srcCompat="@drawable/ic_comment"
-            />
-
-    </android.support.constraint.ConstraintLayout>
-
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </layout>

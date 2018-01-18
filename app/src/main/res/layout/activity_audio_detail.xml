@@ -1,93 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools"
-    >
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel"
-            />
+            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel" />
 
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_grey_200"
-        >
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_detail"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="@dimen/dp_4"
-            >
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <include
+                android:id="@+id/layout_header"
+                layout="@layout/item_header_timeline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:touchListener="@{viewModel.touchListener}"
+                bind:timelineModel="@{viewModel.timelineModel}" />
+
+            <TextView
+                android:id="@+id/text_content"
+                textHtml="@{viewModel.timelineModel.content}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:padding="@dimen/dp_8"
-                >
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_14"
+                android:visibility="@{TextUtils.isEmpty(viewModel.timelineModel.content)? View.GONE: View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_header" />
 
-                <include
-                    layout="@layout/item_header_timeline"
-                    android:id="@+id/layout_header"
-                    bind:timelineModel="@{viewModel.timelineModel}"
-                    app:touchListener="@{viewModel.touchListener}"
-                    />
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/audio_player"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_72"
+                android:layout_marginTop="8dp"
+                android:transitionName="@string/transition_audio"
+                app:controller_layout_id="@layout/custom_audio_playback_controller"
+                app:hide_on_touch="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/text_content"
+                app:layout_constraintTop_toBottomOf="@+id/text_content"
+                app:show_timeout="0"
+                bind:player="@{viewModel.exoPlayer}" />
 
-                <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                    android:id="@+id/audio_player"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_72"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:transitionName="@string/transition_audio"
-                    app:controller_layout_id="@layout/custom_audio_playback_controller"
-                    app:hide_on_touch="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layout_header"
-                    app:show_timeout="0"
-                    bind:player="@{viewModel.exoPlayer}"
-                    />
+            <TextView
+                android:id="@+id/text_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:onClick="@{()->viewModel.onClickComment()}"
+                android:text="@string/title_comment"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/image_comment"
+                app:layout_constraintTop_toBottomOf="@+id/audio_player" />
 
-            </android.support.constraint.ConstraintLayout>
+            <ImageView
+                android:id="@+id/image_comment"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/description_voted"
+                app:layout_constraintEnd_toStartOf="@+id/text_comment"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/audio_player"
+                app:srcCompat="@drawable/ic_comment" />
+        </android.support.constraint.ConstraintLayout>
 
-        </android.support.v7.widget.CardView>
-        <TextView
-            android:id="@+id/text_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_8"
-            android:onClick="@{()->viewModel.onClickComment()}"
-            android:text="@string/title_comment"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_detail"
-            />
-
-        <ImageView
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginTop="@dimen/dp_8"
-            android:contentDescription="@string/description_voted"
-            app:layout_constraintRight_toLeftOf="@+id/text_comment"
-            app:layout_constraintTop_toBottomOf="@id/card_detail"
-            app:srcCompat="@drawable/ic_comment"
-            />
-
-    </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </layout>

@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools"
-    >
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.text.TextUtils" />
 
-        <import type="com.framgia.englishconversation.utils.Constant.Timeline"/>
+        <import type="android.view.View" />
+
+        <import type="com.framgia.englishconversation.utils.Constant.Timeline" />
 
         <variable
             name="timelineModel"
-            type="com.framgia.englishconversation.data.model.TimelineModel"
-            />
+            type="com.framgia.englishconversation.data.model.TimelineModel" />
 
         <variable
             name="touchListener"
-            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
-            />
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
-            />
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -31,21 +29,36 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
         android:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
-        app:cardCornerRadius="@dimen/dp_4"
-        >
+        app:cardCornerRadius="@dimen/dp_4">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            >
+            android:background="@android:color/white">
 
             <include
-                layout="@layout/item_header_timeline"
                 android:id="@+id/layout_header"
+                layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}"
-                bind:touchListener="@{touchListener}"
-                />
+                bind:touchListener="@{touchListener}" />
+
+            <TextView
+                android:id="@+id/text_content"
+                textHtml="@{timelineModel.content}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
+                android:ellipsize="end"
+                android:maxLines="5"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_14"
+                android:visibility="@{TextUtils.isEmpty(timelineModel.content)? View.GONE: View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_header" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraint_conversation"
@@ -53,13 +66,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_timeline_conversation"
                 android:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
                 android:padding="@dimen/dp_4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_header"
-                >
+                app:layout_constraintTop_toBottomOf="@id/text_content">
 
                 <ImageView
                     android:id="@+id/image_first_audio"
@@ -68,10 +81,9 @@
                     android:background="@drawable/bg_menu_media_creating_conversation"
                     android:contentDescription="@string/description_recording_audio_convention"
                     android:padding="@dimen/dp_4"
-                    android:src="@drawable/ic_menu_media"
+                    app:srcCompat="@drawable/ic_menu_media"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/text_first_content"
@@ -86,8 +98,7 @@
                     android:textColor="@android:color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/image_first_audio"
-                    app:layout_constraintTop_toTopOf="@id/image_first_audio"
-                    />
+                    app:layout_constraintTop_toTopOf="@id/image_first_audio" />
 
                 <ImageView
                     android:id="@+id/image_second_audio"
@@ -97,11 +108,10 @@
                     android:background="@drawable/bg_menu_media_creating_conversation"
                     android:contentDescription="@string/description_recording_audio_convention"
                     android:padding="@dimen/dp_4"
-                    android:src="@drawable/ic_menu_media"
+                    app:srcCompat="@drawable/ic_menu_media"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_first_content"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/text_first_content" />
 
                 <TextView
                     android:id="@+id/text_second_content"
@@ -118,8 +128,7 @@
                     android:textColor="@android:color/black"
                     app:layout_constraintEnd_toStartOf="@+id/image_second_audio"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/image_second_audio"
-                    />
+                    app:layout_constraintTop_toTopOf="@id/image_second_audio" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -133,7 +142,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_second_content"
-                    />
+                    android:layout_marginLeft="@dimen/dp_4" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -145,8 +154,7 @@
                 android:layout_marginRight="@dimen/dp_8"
                 android:layout_marginTop="@dimen/dp_8"
                 android:background="@color/color_brown_50"
-                app:layout_constraintTop_toBottomOf="@id/constraint_conversation"
-                />
+                app:layout_constraintTop_toBottomOf="@id/constraint_conversation" />
 
             <include
                 layout="@layout/item_footer_timeline"
@@ -156,8 +164,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_separator_conversation_comment"
                 bind:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
-                bind:timelineModel="@{timelineModel}"
-                />
+                bind:timelineModel="@{timelineModel}" />
 
         </android.support.constraint.ConstraintLayout>
 
