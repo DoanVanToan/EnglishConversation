@@ -14,6 +14,7 @@ import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepo
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.framgia.englishconversation.databinding.ActivityCreatePostBinding;
+import com.framgia.englishconversation.utils.Blocker;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
 /**
@@ -22,6 +23,7 @@ import com.framgia.englishconversation.utils.navigator.Navigator;
 public class CreatePostActivity extends BaseActivity {
 
     private CreatePostContract.ViewModel mViewModel;
+    private Blocker mBlocker;
 
     public static Intent getInstance(Context context) {
         return new Intent(context, CreatePostActivity.class);
@@ -48,6 +50,7 @@ public class CreatePostActivity extends BaseActivity {
             getSupportActionBar().setSubtitle(R.string.subtitle_create_post);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        mBlocker = new Blocker();
     }
 
     @Override
@@ -87,7 +90,9 @@ public class CreatePostActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.menu_save:
-                mViewModel.onCreatePost();
+                if (!mBlocker.block()) {
+                    mViewModel.onCreatePost();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
