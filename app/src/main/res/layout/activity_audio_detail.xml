@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools"
+    >
 
     <data>
 
-        <import type="android.text.TextUtils" />
+        <import type="android.text.TextUtils"/>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel" />
+            type="com.framgia.englishconversation.screen.audiodetail.AudioDetailViewModel"
+            />
 
     </data>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            >
 
             <include
-                android:id="@+id/layout_header"
                 layout="@layout/item_header_timeline"
+                android:id="@+id/layout_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:touchListener="@{viewModel.touchListener}"
-                bind:timelineModel="@{viewModel.timelineModel}" />
+                bind:timelineModel="@{viewModel.timelineModel}"
+                />
 
             <TextView
                 android:id="@+id/text_content"
-                textHtml="@{viewModel.timelineModel.content}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -47,7 +51,9 @@
                 android:visibility="@{TextUtils.isEmpty(viewModel.timelineModel.content)? View.GONE: View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_header" />
+                app:layout_constraintTop_toBottomOf="@+id/layout_header"
+                textHtml="@{viewModel.timelineModel.content}"
+                />
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/audio_player"
@@ -58,10 +64,11 @@
                 app:controller_layout_id="@layout/custom_audio_playback_controller"
                 app:hide_on_touch="false"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/text_content"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_content"
                 app:show_timeout="0"
-                bind:player="@{viewModel.exoPlayer}" />
+                bind:player="@{viewModel.exoPlayer}"
+                />
 
             <TextView
                 android:id="@+id/text_comment"
@@ -78,7 +85,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/image_comment"
-                app:layout_constraintTop_toBottomOf="@+id/audio_player" />
+                app:layout_constraintTop_toBottomOf="@+id/audio_player"
+                />
 
             <ImageView
                 android:id="@+id/image_comment"
@@ -91,7 +99,8 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/audio_player"
-                app:srcCompat="@drawable/ic_comment" />
+                app:srcCompat="@drawable/ic_comment"
+                />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>

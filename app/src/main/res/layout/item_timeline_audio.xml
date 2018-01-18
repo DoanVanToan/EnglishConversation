@@ -1,58 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools"
+    >
 
     <data>
 
-        <import type="android.text.TextUtils" />
+        <import type="android.text.TextUtils"/>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
-        <import type="com.framgia.englishconversation.utils.Utils" />
+        <import type="com.framgia.englishconversation.utils.Utils"/>
 
-        <import type="com.framgia.englishconversation.utils.Constant.Timeline" />
+        <import type="com.framgia.englishconversation.utils.Constant.Timeline"/>
 
         <variable
             name="timelineModel"
-            type="com.framgia.englishconversation.data.model.TimelineModel" />
+            type="com.framgia.englishconversation.data.model.TimelineModel"
+            />
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
+            />
 
         <variable
             name="touchListener"
-            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
+            />
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
         android:layout_marginTop="@dimen/dp_8"
-        app:cardCornerRadius="@dimen/dp_4">
+        android:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
+        app:cardCornerRadius="@dimen/dp_4"
+        >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <include
-                android:id="@+id/layout_header"
                 layout="@layout/item_header_timeline"
+                android:id="@+id/layout_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 bind:timelineModel="@{timelineModel}"
-                bind:touchListener="@{touchListener}" />
+                bind:touchListener="@{touchListener}"
+                />
 
             <TextView
                 android:id="@+id/text_content"
-                textHtml="@{timelineModel.content}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_8"
@@ -67,7 +73,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_header" />
+                app:layout_constraintTop_toBottomOf="@+id/layout_header"
+                textHtml="@{timelineModel.content}"
+                />
 
             <View
                 android:id="@+id/view_separator_audio_comment"
@@ -79,7 +87,8 @@
                 android:background="@color/color_brown_50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/player" />
+                app:layout_constraintTop_toBottomOf="@id/player"
+                />
 
             <include
                 layout="@layout/item_footer_timeline"
@@ -91,7 +100,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_separator_audio_comment"
                 bind:onClick="@{() -> touchListener.onItemTimelineClick(timelineModel)}"
-                bind:timelineModel="@{timelineModel}" />
+                bind:timelineModel="@{timelineModel}"
+                />
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/player"
@@ -100,10 +110,13 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginStart="@dimen/dp_8"
                 android:layout_marginTop="@dimen/dp_8"
+                app:controller_layout_id="@layout/custom_audio_playback_controller"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_content" />
+                app:layout_constraintTop_toBottomOf="@+id/text_content"
+                app:hide_on_touch="false"
+                />
 
         </android.support.constraint.ConstraintLayout>
 
