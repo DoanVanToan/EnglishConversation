@@ -51,7 +51,8 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
 
     @Override
     public void createPost(TimelineModel timelineModel) {
-        if (TextUtils.isEmpty(timelineModel.getContent())
+        if ((timelineModel.getContent() == null || TextUtils.isEmpty(
+                timelineModel.getContent().trim()))
                 && (timelineModel.getMedias() == null
                 || timelineModel.getMedias().size() == 0)
                 && timelineModel.getConversations() == null) {

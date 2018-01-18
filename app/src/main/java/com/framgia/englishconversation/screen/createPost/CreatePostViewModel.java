@@ -13,7 +13,6 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
@@ -49,7 +48,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -57,7 +55,8 @@ import java.util.UUID;
 import static android.app.Activity.RESULT_OK;
 import static android.os.Build.VERSION.SDK_INT;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
+import static com.framgia.englishconversation.service.FirebaseUploadService
+        .ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
 import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
@@ -76,7 +75,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int REQUEST_RECORD_VIDEO = 3;
     private static final int RC_AUDIO_SELECTOR = 10;
     private static final int LIMIT_IMAGES = 10;
-    private static final String[] PERMISSION = new String[]{
+    private static final String[] PERMISSION = new String[] {
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
@@ -221,6 +220,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         }
         int uploadPercent = 0;
         for (ConversationModel conversationModel : mTimelineModel.getConversations()) {
+            if (conversationModel.getMediaModel() == null) {
+                break;
+            }
             MediaModel mediaTimeLine = conversationModel.getMediaModel();
             updateMediaModel(mediaTimeLine, model);
             uploadPercent += mediaTimeLine.getUploadPercent();
@@ -334,7 +336,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+            int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION && isEnablePermission(permissions, grantResults)) {
             switch (mCurrentTypeClicked) {
                 case MediaModel.MediaType.AUDIO:
@@ -374,8 +376,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     private MediaSource getMediaSource(Uri uri) {
-        return new ExtractorMediaSource(
-                uri,
+        return new ExtractorMediaSource(uri,
                 new DefaultDataSourceFactory(mActivity, Constant.USER_AGENT),
                 new DefaultExtractorsFactory(), null, null);
     }

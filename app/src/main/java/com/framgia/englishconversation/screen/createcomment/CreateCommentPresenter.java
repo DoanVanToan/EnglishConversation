@@ -1,5 +1,6 @@
 package com.framgia.englishconversation.screen.createcomment;
 
+import android.text.TextUtils;
 import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
@@ -101,7 +102,7 @@ final class CreateCommentPresenter
 
     @Override
     public void postLiteralComment(Comment comment) {
-        if ((comment.getContent() == null || comment.getContent().equals(""))
+        if ((comment.getContent() == null || TextUtils.isEmpty(comment.getContent().trim()))
                 && comment.getMediaModel() == null) {
             return;
         }
