@@ -306,4 +306,8 @@ public class ConversationDetailViewModel extends BaseObservable
         mTouchListener = touchListener;
         notifyPropertyChanged(BR.touchListener);
     }
+
+    public UserModel getTimelineUser() {
+        return mTimelineUser;
+    }
 }

@@ -13,6 +13,7 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
@@ -38,16 +39,23 @@ import com.framgia.videoselector.data.model.VideoModel;
 import com.framgia.videoselector.screen.VideoSelectorActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +83,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int REQUEST_RECORD_VIDEO = 3;
     private static final int RC_AUDIO_SELECTOR = 10;
     private static final int LIMIT_IMAGES = 10;
-    private static final String[] PERMISSION = new String[] {
+    private static final String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
@@ -95,6 +103,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private MediaAdapter mMediaAdapter;
     private ConversationAdapter mConversationAdapter;
     private SimpleExoPlayer mExoPlayer;
+    private ExoPlayerListener mPlayerListener;
 
     CreatePostViewModel(CreatePostActivity activity, Navigator navigator) {
         mActivity = activity;
@@ -105,6 +114,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         mMediaAdapter = new MediaAdapter(this);
         mConversationAdapter = new ConversationAdapter(mActivity, this);
+        mPlayerListener = new ExoPlayerListener();
     }
 
     @Override
@@ -144,13 +154,18 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onPause() {
+        if (SDK_INT <= Build.VERSION_CODES.M && mCurrentTypeClicked != MediaModel.MediaType.AUDIO
+                && mCurrentTypeClicked != MediaModel.MediaType.VIDEO) {
+            storeDataWhenReleasePlayer();
+        }
     }
 
     @Override
     public void onStop() {
         mPresenter.onStop();
         LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
-        if (SDK_INT > Build.VERSION_CODES.M) {
+        if (SDK_INT > Build.VERSION_CODES.M && mCurrentTypeClicked != MediaModel.MediaType.AUDIO
+                && mCurrentTypeClicked != MediaModel.MediaType.VIDEO) {
             storeDataWhenReleasePlayer();
         }
     }
@@ -336,7 +351,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            int[] grantResults) {
+                                           int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION && isEnablePermission(permissions, grantResults)) {
             switch (mCurrentTypeClicked) {
                 case MediaModel.MediaType.AUDIO:
@@ -372,6 +387,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 new DefaultTrackSelector(), new DefaultLoadControl());
         Uri uri = Uri.parse(audioFilePath);
         mExoPlayer.prepare(getMediaSource(uri), true, false);
+        mExoPlayer.addListener(mPlayerListener);
         notifyPropertyChanged(BR.exoPlayer);
     }
 
@@ -561,17 +577,15 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     public void onAudioClick(View view) {
         PopupMenu popupMenu = new PopupMenu(mActivity, view);
         popupMenu.inflate(R.menu.menu_create_audio_post);
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        PopupMenu.OnMenuItemClickListener listener = new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_record:
-                        mCurrentTypeClicked = MediaModel.MediaType.AUDIO;
                         if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
                             return false;
                         }
                         Utils.hideKeyBoard(mActivity);
-                        setAdapterType(AdapterType.MEDIA);
                         onAudioRecordingClick();
                         return true;
                     case R.id.action_choose_audio:
@@ -582,7 +596,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                         return false;
                 }
             }
-        });
+        };
+        popupMenu.setOnMenuItemClickListener(listener);
         popupMenu.show();
     }
 
@@ -730,5 +745,47 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mExoPlayer.prepare(getMediaSource(uri), true, false);
         mExoPlayer.setPlayWhenReady(true);
         setExoPlayer(mExoPlayer);
+    }
+
+    private class ExoPlayerListener implements ExoPlayer.EventListener {
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroups,
+                                    TrackSelectionArray trackSelections) {
+
+        }
+
+        @Override
+        public void onLoadingChanged(boolean isLoading) {
+
+        }
+
+        @Override
+        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if (playbackState == ExoPlayer.STATE_ENDED) {
+                mExoPlayer.seekToDefaultPosition();
+                mExoPlayer.setPlayWhenReady(false);
+            }
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+
+        }
+
+        @Override
+        public void onPositionDiscontinuity() {
+
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+        }
     }
 }

@@ -95,6 +95,16 @@ public class ConversationAdapter extends
         return mData;
     }
 
+    public boolean checkExistingConversations() {
+        for (ConversationModel conversationModel : mData) {
+            if (conversationModel.getContent() != null
+                    || conversationModel.getMediaModel() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<ConversationModel> getValidatedData() {
         List<ConversationModel> result = new ArrayList<>();
         for (ConversationModel model : mData) {

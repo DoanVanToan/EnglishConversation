@@ -57,30 +57,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_16"
             android:maxLines="1"
             android:text="@{viewModel.audio.name}"
             android:textColor="@android:color/black"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/checkbox_audio"
             app:layout_constraintStart_toEndOf="@id/image_audio"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/text_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:text="@{viewModel.duration}"
-            android:textColor="@android:color/holo_red_light"
-            android:textSize="@dimen/sp_12"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/checkbox_audio"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/image_audio" />
 
         <View
             android:layout_width="0dp"
