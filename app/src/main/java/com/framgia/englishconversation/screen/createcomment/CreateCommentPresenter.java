@@ -101,7 +101,8 @@ final class CreateCommentPresenter
 
     @Override
     public void postLiteralComment(Comment comment) {
-        if (comment.getContent() == null && comment.getMediaModel() == null) {
+        if ((comment.getContent() == null || comment.getContent().equals(""))
+                && comment.getMediaModel() == null) {
             return;
         }
         mDisposable.add(mCommentRepository.createNewComment(comment)

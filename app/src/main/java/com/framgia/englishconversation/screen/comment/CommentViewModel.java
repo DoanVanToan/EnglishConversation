@@ -39,6 +39,7 @@ public class CommentViewModel extends BaseObservable
     private FragmentManager mManager;
     private Fragment mFragment;
     private UserModel mTimelineUser;
+    private boolean mIsLoadingMore;
 
     public CommentViewModel(Context context, String timelineModelId, FragmentManager manager,
             UserModel userModel) {
@@ -53,6 +54,7 @@ public class CommentViewModel extends BaseObservable
         mManager = manager;
         mFragment = CreateCommentFragment.getInstance(timelineModelId);
         mTimelineUser = userModel;
+        mIsLoadingMore = false;
     }
 
     @Override
@@ -73,11 +75,13 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void onGetCommentsSuccess(List<Comment> comments) {
         mAdapter.updateData(comments);
+        setLoadingMore(false);
     }
 
     @Override
     public void onGetCommentsFailure(String message) {
         mOnEndScrollListener.setIsFetchingData(false);
+        setLoadingMore(false);
     }
 
     @Override
@@ -108,6 +112,7 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void setPresenter(CommentContract.Presenter presenter) {
         mPresenter = presenter;
+        setLoadingMore(true);
         mPresenter.fetchCommentData(null);
     }
 
@@ -124,6 +129,7 @@ public class CommentViewModel extends BaseObservable
 
     @Override
     public void onEndScrolled() {
+        setLoadingMore(true);
         mPresenter.fetchCommentData(mAdapter.getLastComment());
     }
 
@@ -185,5 +191,15 @@ public class CommentViewModel extends BaseObservable
             return;
         }
         mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreateUser()));
+    }
+
+    @Bindable
+    public boolean isLoadingMore() {
+        return mIsLoadingMore;
+    }
+
+    public void setLoadingMore(boolean loadingMore) {
+        mIsLoadingMore = loadingMore;
+        notifyPropertyChanged(com.android.databinding.library.baseAdapters.BR.loadingMore);
     }
 }

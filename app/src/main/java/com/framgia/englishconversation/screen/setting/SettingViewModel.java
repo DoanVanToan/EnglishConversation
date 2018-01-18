@@ -1,8 +1,8 @@
 package com.framgia.englishconversation.screen.setting;
 
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Setting;
@@ -59,7 +59,8 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
 
     @Override
     public void onSignOutSuccess() {
-        mNavigator.startActivity(LoginActivity.getInstance(mActivity));
+        mNavigator.startActivity(
+                LoginActivity.getInstance(mActivity).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     @Override

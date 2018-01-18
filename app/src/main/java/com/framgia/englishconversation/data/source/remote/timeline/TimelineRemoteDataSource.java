@@ -27,6 +27,7 @@ import java.util.List;
 
 public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements TimelineDataSource {
     private static final int NUM_OF_TIMELINE_PER_PAGE = 10;
+    private ChildEventListener mUpdataTimeline;
 
     public TimelineRemoteDataSource() {
         super(Constant.DatabaseTree.POST);
@@ -174,8 +175,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                         .startAt(userModel.getId(),
                                 lastTimeline != null ? lastTimeline.getId() : null)
                         .endAt(userModel.getId());
-
-                query.addChildEventListener(new ChildEventListener() {
+                mUpdataTimeline = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (lastTimeline != null && lastTimeline.getId()
@@ -204,9 +204,18 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                     public void onCancelled(DatabaseError databaseError) {
                         e.onError(databaseError.toException());
                     }
-                });
+                };
+                query.addChildEventListener(mUpdataTimeline);
             }
         });
+    }
+
+    @Override
+    public void removeListener() {
+        if (mUpdataTimeline == null) {
+            return;
+        }
+        mReference.removeEventListener(mUpdataTimeline);
     }
 
     public List<TimelineModel> getTimelineData(DataSnapshot dataSnapshot,

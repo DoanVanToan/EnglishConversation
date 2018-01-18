@@ -14,4 +14,6 @@ public interface CommentDataSource {
     Observable<List<Comment>> getComment(Comment lastComment);
 
     Observable<Comment> registerModifyTimelines(Comment lastComment);
+
+    void removeListener();
 }

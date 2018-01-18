@@ -45,6 +45,7 @@ final class CommentPresenter implements CommentContract.Presenter {
 
     @Override
     public void onDestroy() {
+        mRepository.removeListener();
         mDisposable.dispose();
     }
 

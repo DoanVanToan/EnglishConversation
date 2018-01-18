@@ -1,37 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel" />
+            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
+            />
 
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/dp_8">
+        android:padding="@dimen/dp_8"
+        >
 
         <include
-            android:id="@+id/layout_header"
             layout="@layout/timeline_header"
-            bind:viewModel="@{viewModel}" />
+            android:id="@+id/layout_header"
+            bind:viewModel="@{viewModel}"
+            />
 
         <im.ene.toro.widget.Container
-            isEnableAutoPlay="@{viewModel.setting.enableAutoPlay}"
+            android:id="@+id/recycler_timeline"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/progress_loading_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_header"
             bind:adapter="@{viewModel.adapter}"
             bind:layoutManager="LinearLayoutManager"
-            bind:scrollListener="@{viewModel.onEndScrollListener}" />
-
+            bind:scrollListener="@{viewModel.onEndScrollListener}"
+            isEnableAutoPlay="@{viewModel.setting.enableAutoPlay}"
+            />
+        <ProgressBar
+            android:id="@+id/progress_loading_bottom"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:indeterminate="true"
+            android:theme="@style/AppTheme.Custom"
+            android:visibility="@{viewModel.loadingMore ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_timeline"
+            />
     </android.support.constraint.ConstraintLayout>
 </layout>

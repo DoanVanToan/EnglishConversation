@@ -7,13 +7,11 @@ import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.google.firebase.auth.FirebaseUser;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
 import java.util.List;
 
 /**
@@ -30,9 +28,8 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     private SettingRepository mSettingRepository;
 
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
-                             AuthenicationRepository authenicationRepository,
-                             TimelineRepository timelineRepository,
-                             SettingRepository settingRepository) {
+            AuthenicationRepository authenicationRepository, TimelineRepository timelineRepository,
+            SettingRepository settingRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
@@ -96,6 +93,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
 
     @Override
     public void onDestroy() {
+        mTimelineRepository.removeListener();
         mDisposable.dispose();
     }
 

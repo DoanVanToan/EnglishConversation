@@ -37,4 +37,8 @@ public class TimelineRepository {
             UserModel userModel) {
         return mDataSource.updateTimeline(timelineModel, userModel);
     }
+
+    public void removeListener() {
+        mDataSource.removeListener();
+    }
 }
