@@ -17,6 +17,8 @@ import android.view.View;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
+import com.framgia.audioselector.data.model.Audio;
+import com.framgia.audioselector.screen.audioselector.AudioSelectorActivity;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.ConversationModel;
@@ -60,6 +62,8 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
 import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
 import static com.framgia.videoselector.screen.VideoSelectorActivity.EXTRA_DATA;
 
+// TODO: implement the audio module
+
 /**
  * Exposes the data to be used in the CreatePost screen.
  */
@@ -69,6 +73,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int SELECT_IMAGE_REQUEST = 2;
     private static final int REQUEST_RECORD_VIDEO = 3;
+    private static final int RC_AUDIO_SELECTOR = 10;
     private static final int LIMIT_IMAGES = 10;
     private static final String[] PERMISSION = new String[]{
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -146,7 +151,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mPresenter.onStop();
         LocalBroadcastManager.getInstance(mActivity).unregisterReceiver(mReceiver);
         if (SDK_INT > Build.VERSION_CODES.M) {
-            releaseExoAudioPlayer();
+            storeDataWhenReleasePlayer();
         }
     }
 
@@ -174,6 +179,18 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 break;
             case REQUEST_RECORD_VIDEO:
                 updateVideoMedia(data);
+                break;
+            case RC_AUDIO_SELECTOR:
+                ArrayList<Audio> audios =
+                        data.getParcelableArrayListExtra(AudioSelectorActivity.EXTRA_AUDIO);
+                Audio audio = audios.get(0);
+                storeDataWhenReleasePlayer();
+                MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
+                record.setId(UUID.randomUUID().toString());
+                record.setUrl(audio.getPath());
+                record.setName(audio.getName());
+                addPostAudioRecord(record);
+                initializeAudioPlayer(audio.getPath());
                 break;
             default:
                 break;
@@ -344,7 +361,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
 
     private void initializeAudioPlayer(String audioFilePath) {
         if (mExoPlayer != null) {
-            releaseExoAudioPlayer();
+            storeDataWhenReleasePlayer();
         }
         mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mActivity),
                 new DefaultTrackSelector(), new DefaultLoadControl());
@@ -360,7 +377,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 new DefaultExtractorsFactory(), null, null);
     }
 
-    private void releaseExoAudioPlayer() {
+    private void storeDataWhenReleasePlayer() {
         if (mExoPlayer == null) {
             return;
         }
@@ -473,7 +490,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onDeleteItemMediaClicked(MediaModel mediaModel) {
-        releaseExoAudioPlayer();
+        storeDataWhenReleasePlayer();
         mTimelineModel.getMedias().remove(mediaModel);
         mMediaAdapter.removeItem(mediaModel);
     }
@@ -520,7 +537,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 new RecordingAudioDialog.OnRecordingAudioListener() {
                     @Override
                     public void onRecordingAudioClick(String filePath, String fileName) {
-                        releaseExoAudioPlayer();
+                        storeDataWhenReleasePlayer();
                         MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
                         record.setId(UUID.randomUUID().toString());
                         record.setUrl(filePath);
@@ -537,14 +554,32 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mRecordingAudioDialog.setOnRecordingAudioClickListener(recordingAudioClickListener);
     }
 
-    public void onRecordAudioClick() {
-        mCurrentTypeClicked = MediaModel.MediaType.AUDIO;
-        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
-            return;
-        }
-        Utils.hideKeyBoard(mActivity);
-        setAdapterType(AdapterType.MEDIA);
-        onAudioRecordingClick();
+    public void onAudioClick(View view) {
+        PopupMenu popupMenu = new PopupMenu(mActivity, view);
+        popupMenu.inflate(R.menu.menu_create_audio_post);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_record:
+                        mCurrentTypeClicked = MediaModel.MediaType.AUDIO;
+                        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
+                            return false;
+                        }
+                        Utils.hideKeyBoard(mActivity);
+                        setAdapterType(AdapterType.MEDIA);
+                        onAudioRecordingClick();
+                        return true;
+                    case R.id.action_choose_audio:
+                        mNavigator.startActivityForResult(
+                                AudioSelectorActivity.getInstance(mActivity), RC_AUDIO_SELECTOR);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        popupMenu.show();
     }
 
     public void onVideoPickerClick() {
@@ -684,6 +719,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mExoPlayer.seekTo(0);
         Uri uri = Uri.parse(path);
         mExoPlayer.prepare(getMediaSource(uri), true, false);
+        mExoPlayer.setPlayWhenReady(true);
         setExoPlayer(mExoPlayer);
     }
 }

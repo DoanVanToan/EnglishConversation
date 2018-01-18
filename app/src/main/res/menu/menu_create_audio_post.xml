@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_record"
+        android:title="@string/title_recording_audio" />
+
+    <item
+        android:id="@+id/action_choose_audio"
+        android:title="@string/title_choose_audio_file" />
+</menu>

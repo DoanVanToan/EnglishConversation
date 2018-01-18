@@ -13,8 +13,8 @@ import com.framgia.englishconversation.BaseRecyclerViewAdapter;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.GravityType;
-import com.framgia.englishconversation.databinding.ItemLeftConversationBinding;
-import com.framgia.englishconversation.databinding.ItemRightConventionBinding;
+import com.framgia.englishconversation.databinding.ItemCreatingLeftConversationBinding;
+import com.framgia.englishconversation.databinding.ItemCreatingRightConventionBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +45,18 @@ public class ConversationAdapter extends
     public BaseConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case GravityType.LEFT:
-                ItemLeftConversationBinding leftBinding =
+                ItemCreatingLeftConversationBinding leftBinding =
                         DataBindingUtil.inflate(
                                 LayoutInflater.from(parent.getContext()),
-                                R.layout.item_left_conversation,
+                                R.layout.item_creating_left_conversation,
                                 parent,
                                 false);
                 return new LeftConversationViewHolder(leftBinding);
             case GravityType.RIGHT:
-                ItemRightConventionBinding rightBinding =
+                ItemCreatingRightConventionBinding rightBinding =
                         DataBindingUtil.inflate(
                                 LayoutInflater.from(parent.getContext()),
-                                R.layout.item_right_convention,
+                                R.layout.item_creating_right_convention,
                                 parent,
                                 false);
                 return new RightConversationViewHolder(rightBinding);
@@ -131,9 +131,9 @@ public class ConversationAdapter extends
      */
     public class LeftConversationViewHolder extends BaseConversationViewHolder {
 
-        private ItemLeftConversationBinding mLeftBinding;
+        private ItemCreatingLeftConversationBinding mLeftBinding;
 
-        LeftConversationViewHolder(ItemLeftConversationBinding binding) {
+        LeftConversationViewHolder(ItemCreatingLeftConversationBinding binding) {
             super(binding.getRoot());
             mLeftBinding = binding;
         }
@@ -152,9 +152,9 @@ public class ConversationAdapter extends
      */
     public class RightConversationViewHolder extends BaseConversationViewHolder {
 
-        private ItemRightConventionBinding mRightBinding;
+        private ItemCreatingRightConventionBinding mRightBinding;
 
-        RightConversationViewHolder(ItemRightConventionBinding binding) {
+        RightConversationViewHolder(ItemCreatingRightConventionBinding binding) {
             super(binding.getRoot());
             mRightBinding = binding;
         }

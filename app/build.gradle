@@ -84,7 +84,9 @@ dependencies {
     compile dependencies.firebaseDataBase
     compile dependencies.exoPlayer
     compile dependencies.toroExo
-    compile project(':multipleimageselect')
+    implementation project(':multipleimageselect')
+    implementation project(':videoselector')
+    implementation project(':audioselector')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile dependencies.junit
     testCompile dependencies.mockito
@@ -94,7 +96,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;
     }
-    implementation project(':videoselector')
 }
 apply plugin: 'com.google.gms.google-services'
 

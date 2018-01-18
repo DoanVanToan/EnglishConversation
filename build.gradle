@@ -8,7 +8,7 @@ buildscript {
       url 'https://maven.google.com/'
       name 'Google'
     }
-      google()
+    google()
   }
   dependencies {
     classpath 'com.google.gms:google-services:3.0.0'
@@ -24,7 +24,7 @@ buildscript {
 allprojects {
   repositories {
     jcenter()
-      google()
+    google()
   }
 }
 
