@@ -26,6 +26,7 @@ import java.util.List;
 
 public class CommentRemoteDataSource extends BaseFirebaseDataBase implements CommentDataSource {
     private static final int NUM_OF_COMMENT_PER_PAGE = 10;
+    private ChildEventListener mUpdateComment;
 
     public CommentRemoteDataSource(String timelineId) {
         super(Constant.DatabaseTree.COMMENT);
@@ -104,8 +105,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                         .endAt(lastComment != null ? -lastComment.getCreatedAt()
                                 : -Calendar.getInstance().getTimeInMillis());
-
-                query.addChildEventListener(new ChildEventListener() {
+                mUpdateComment = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (lastComment != null && lastComment.getId()
@@ -148,8 +148,17 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                     public void onCancelled(DatabaseError databaseError) {
                         e.onError(databaseError.toException());
                     }
-                });
+                };
+                query.addChildEventListener(mUpdateComment);
             }
         });
+    }
+
+    @Override
+    public void removeListener() {
+        if (mUpdateComment == null) {
+            return;
+        }
+        mReference.removeEventListener(mUpdateComment);
     }
 }

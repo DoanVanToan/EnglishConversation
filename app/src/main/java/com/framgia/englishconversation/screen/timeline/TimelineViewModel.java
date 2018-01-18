@@ -40,6 +40,7 @@ public class TimelineViewModel extends BaseObservable
     private UserModel mTimelineUser;
     private boolean mIsAllowCreatePost;
     private Setting mSetting;
+    private boolean mIsLoadingMore;
 
     public TimelineViewModel(Context context, Navigator navigator, UserModel userModel) {
         mContext = context;
@@ -48,6 +49,7 @@ public class TimelineViewModel extends BaseObservable
         mAdapter.setRecyclerViewItemClickListener(this);
         mOnEndScrollListener = new OnEndScrollListener(this);
         mTimelineUser = userModel;
+        mIsLoadingMore = false;
     }
 
     @Override
@@ -63,6 +65,7 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void setPresenter(TimelineContract.Presenter presenter) {
         mPresenter = presenter;
+        setLoadingMore(true);
         mPresenter.fetchTimelineData(null, mTimelineUser);
     }
 
@@ -102,11 +105,13 @@ public class TimelineViewModel extends BaseObservable
     public void onGetTimelinesSuccess(List<TimelineModel> timelines) {
         mOnEndScrollListener.setIsFetchingData(false);
         mAdapter.updateData(timelines);
+        setLoadingMore(false);
     }
 
     @Override
     public void onGetTimelinesFailure(String message) {
         mOnEndScrollListener.setIsFetchingData(false);
+        setLoadingMore(false);
     }
 
     @Override
@@ -170,6 +175,7 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onEndScrolled() {
+        setLoadingMore(true);
         mPresenter.fetchTimelineData(mAdapter.getLastItem(), mTimelineUser);
     }
 
@@ -201,5 +207,15 @@ public class TimelineViewModel extends BaseObservable
     public void setSetting(Setting setting) {
         mSetting = setting;
         notifyPropertyChanged(BR.setting);
+    }
+
+    @Bindable
+    public boolean isLoadingMore() {
+        return mIsLoadingMore;
+    }
+
+    public void setLoadingMore(boolean loadingMore) {
+        mIsLoadingMore = loadingMore;
+        notifyPropertyChanged(BR.loadingMore);
     }
 }

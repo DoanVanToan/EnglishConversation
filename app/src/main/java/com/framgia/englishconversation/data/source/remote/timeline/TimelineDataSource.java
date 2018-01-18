@@ -20,4 +20,6 @@ public interface TimelineDataSource {
     Observable<List<TimelineModel>> getTimeline(TimelineModel lastTimeline, UserModel userModel);
 
     Observable<TimelineModel> updateTimeline(TimelineModel lastTimeline, UserModel userModel);
+
+    void removeListener();
 }
