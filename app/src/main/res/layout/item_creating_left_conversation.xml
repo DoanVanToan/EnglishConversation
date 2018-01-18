@@ -34,10 +34,10 @@
             android:contentDescription="@string/description_recording_audio_convention"
             android:onClick="@{(v) -> viewModel.showMenu(v, position, conversations)}"
             android:padding="@dimen/dp_4"
-            android:src="@drawable/ic_menu_media"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_more_vert" />
 
         <EditText
             android:id="@+id/edit_conversation"

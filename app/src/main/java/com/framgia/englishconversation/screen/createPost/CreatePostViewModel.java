@@ -27,6 +27,7 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
+import com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.Utils;
@@ -286,7 +287,9 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 }
                 break;
             case MediaModel.MediaType.ONLY_TEXT:
-                mPresenter.createPost(mTimelineModel);
+                if (mTimelineModel.getContent() != null) {
+                    mPresenter.createPost(mTimelineModel);
+                }
                 break;
             default:
                 uploadFiles(mTimelineModel.getMedias());
@@ -338,7 +341,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                     onAudioRecordingClick();
                     break;
                 case MediaModel.MediaType.CONVERSATION:
-                    onCreateConventionClick();
+                    onCreateConversationClick();
                     break;
                 case MediaModel.MediaType.VIDEO:
                     onVideoPickerClick();
@@ -593,7 +596,12 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
     }
 
-    public void onCreateConventionClick() {
+    private void previewConversation() {
+        mNavigator.startActivity(
+                ConversationDetailActivity.getInstance(mActivity, mTimelineModel, mUser));
+    }
+
+    public void onCreateConversationClick() {
         mCurrentTypeClicked = MediaModel.MediaType.CONVERSATION;
         if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
             return;
