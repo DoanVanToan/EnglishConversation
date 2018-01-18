@@ -13,7 +13,6 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import im.ene.toro.ToroPlayer;
 import im.ene.toro.ToroUtil;
-import im.ene.toro.exoplayer.SimpleExoPlayerViewHelper;
 import im.ene.toro.media.PlaybackInfo;
 import im.ene.toro.widget.Container;
 
@@ -25,7 +24,7 @@ public abstract class BaseMediaViewHolder<T> extends BaseViewHolder<T>
         implements ToroPlayer {
     private static final float VISIBLE_ARE_TIMELINE_ADAPTER = 0.85f;
 
-    protected SimpleExoPlayerViewHelper mHelper;
+    protected CustomSimpleExoPlayerHelper mHelper;
     protected Uri mUri;
 
     protected abstract SimpleExoPlayerView getMediaPlayerView();
@@ -55,7 +54,7 @@ public abstract class BaseMediaViewHolder<T> extends BaseViewHolder<T>
     @Override
     public void initialize(@NonNull Container container, @Nullable PlaybackInfo playbackInfo) {
         if (mHelper == null) {
-            mHelper = new SimpleExoPlayerViewHelper(container, this, mUri);
+            mHelper = new CustomSimpleExoPlayerHelper(container, this, mUri);
         }
         mHelper.initialize(playbackInfo);
     }
