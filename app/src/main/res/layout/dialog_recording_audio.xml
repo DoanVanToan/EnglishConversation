@@ -24,7 +24,7 @@
             android:id="@+id/image_mic"
             android:layout_width="@dimen/dp_56"
             android:layout_height="@dimen/dp_56"
-            android:background="@drawable/bg_recording_audio"
+            android:background="@drawable/bg_recording"
             android:contentDescription="@string/description_recording_audio_button"
             android:onClick="@{() -> viewModel.onRecordingAudioButtonClick()}"
             android:padding="@dimen/dp_16"

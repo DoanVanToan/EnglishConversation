@@ -16,7 +16,6 @@ public class RecordingPresenter implements RecordingContract.Presenter {
 
     @Override
     public void onStart() {
-
     }
 
     @Override

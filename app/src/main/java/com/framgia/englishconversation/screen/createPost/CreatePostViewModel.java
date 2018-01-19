@@ -63,8 +63,7 @@ import java.util.UUID;
 import static android.app.Activity.RESULT_OK;
 import static android.os.Build.VERSION.SDK_INT;
 import static com.framgia.englishconversation.service.BaseStorageService.POST_FOLDER;
-import static com.framgia.englishconversation.service.FirebaseUploadService
-        .ACTION_UPLOAD_MULTI_FILE;
+import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
 import static com.framgia.englishconversation.utils.Constant.RequestCode.REQUEST_PERMISSION;
@@ -201,7 +200,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
                 Audio audio = audios.get(0);
                 storeDataWhenReleasePlayer();
                 MediaModel record = new MediaModel(MediaModel.MediaType.AUDIO);
-                record.setId(UUID.randomUUID().toString());
+                record.setId(audio.getId());
                 record.setUrl(audio.getPath());
                 record.setName(audio.getName());
                 addPostAudioRecord(record);
@@ -388,7 +387,7 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
         Uri uri = Uri.parse(audioFilePath);
         mExoPlayer.prepare(getMediaSource(uri), true, false);
         mExoPlayer.addListener(mPlayerListener);
-        notifyPropertyChanged(BR.exoPlayer);
+        setExoPlayer(mExoPlayer);
     }
 
     private MediaSource getMediaSource(Uri uri) {
@@ -575,30 +574,8 @@ public class CreatePostViewModel extends BaseObservable implements CreatePostCon
     }
 
     public void onAudioClick(View view) {
-        PopupMenu popupMenu = new PopupMenu(mActivity, view);
-        popupMenu.inflate(R.menu.menu_create_audio_post);
-        PopupMenu.OnMenuItemClickListener listener = new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_record:
-                        if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
-                            return false;
-                        }
-                        Utils.hideKeyBoard(mActivity);
-                        onAudioRecordingClick();
-                        return true;
-                    case R.id.action_choose_audio:
-                        mNavigator.startActivityForResult(
-                                AudioSelectorActivity.getInstance(mActivity), RC_AUDIO_SELECTOR);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        };
-        popupMenu.setOnMenuItemClickListener(listener);
-        popupMenu.show();
+        mNavigator.startActivityForResult(
+                AudioSelectorActivity.getInstance(mActivity), RC_AUDIO_SELECTOR);
     }
 
     public void onVideoPickerClick() {
