@@ -1,6 +1,7 @@
 package com.framgia.audioselector.widget.dialog.recording;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,16 +21,38 @@ import com.framgia.audioselector.widget.dialog.BaseDialog;
 
 public class RecordingDialog extends BaseDialog {
 
-    private RecordingContract.ViewModel mViewModel;
+    public static final String EXTRA_FILE_PATH =
+            "com.framgia.audioselector.bundle.extra.EXTRA_FILE_PATH";
+    public static final String EXTRA_FILE_NAME =
+            "com.framgia.audioselector.bundle.extra.EXTRA_FILE_NAME";
+    private String mFileName;
+    private String mFilePath;
 
-    public static RecordingDialog getInstance() {
-        return new RecordingDialog();
+    private RecordingContract.ViewModel mViewModel;
+    private OnDismissRecordingClickListener mListener;
+
+    public static RecordingDialog getInstance(String filePath, String fileName) {
+        RecordingDialog dialog = new RecordingDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_FILE_PATH, filePath);
+        bundle.putString(EXTRA_FILE_NAME, fileName);
+        dialog.setArguments(bundle);
+        return dialog;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new RecordingViewModel();
+        Bundle bundle = getArguments();
+        mViewModel = new RecordingViewModel(this);
+        mFilePath = bundle.getString(EXTRA_FILE_PATH);
+        mFileName = bundle.getString(EXTRA_FILE_NAME);
+        if (mFilePath != null) {
+            mViewModel.initRecord(mFilePath);
+        }
+        if (mFileName != null) {
+            // TODO: Handle when fileName != null
+        }
         RecordingContract.Presenter presenter = new RecordingPresenter(mViewModel);
         mViewModel.setPresenter(presenter);
     }
@@ -48,6 +71,7 @@ public class RecordingDialog extends BaseDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         AlertDialog dialog = builder.create();
         dialog.setView(binding.getRoot());
+        dialog.setCanceledOnTouchOutside(false);
         if (dialog.getWindow() == null) {
             return dialog;
         }
@@ -58,5 +82,25 @@ public class RecordingDialog extends BaseDialog {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mViewModel.isCancelClick()) {
+            mListener.onCancel();
+        } else {
+            mListener.onStore(mFileName, mFilePath);
+        }
+    }
+
+    public void setListener(OnDismissRecordingClickListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnDismissRecordingClickListener {
+        void onStore(String fileName, String filePath);
+
+        void onCancel();
     }
 }

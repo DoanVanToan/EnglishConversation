@@ -23,5 +23,8 @@ public interface RecordingContract {
      */
     interface ViewModel extends BaseViewModel<Presenter> {
 
+        boolean isCancelClick();
+
+        void initRecord(String filePath);
     }
 }

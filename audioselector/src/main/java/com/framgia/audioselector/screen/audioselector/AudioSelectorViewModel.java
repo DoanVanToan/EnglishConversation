@@ -14,10 +14,14 @@ import com.framgia.audioselector.data.source.AudioDataSource;
 import com.framgia.audioselector.data.source.AudioRepository;
 import com.framgia.audioselector.data.source.callback.OnGetDataCallback;
 import com.framgia.audioselector.data.source.local.AudioLocalDataSource;
+import com.framgia.audioselector.util.Constant;
 import com.framgia.audioselector.util.loader.PlayerLoader;
+import com.framgia.audioselector.widget.dialog.recording.RecordingDialog;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by fs-sournary.
@@ -30,6 +34,7 @@ public class AudioSelectorViewModel implements AudioSelectorContract.ViewModel,
         BaseRecyclerViewAdapter.OnItemClickListener<Audio>, ItemAudioViewModel.OnItemCheckChange {
 
     private static final int LIMIT_CHOOSE_ITEM = 1;
+    private static final String PREFIX_RECORDING = "RecordingAudio_";
 
     private int mSelectedCount;
     private AudioSelectorActivity mActivity;
@@ -130,5 +135,38 @@ public class AudioSelectorViewModel implements AudioSelectorContract.ViewModel,
                 mAdapter.getSelectedAudios());
         mActivity.setResult(Activity.RESULT_OK, intent);
         mActivity.finish();
+    }
+
+    public void onCreateRecordingClick() {
+        if (mActivity.getExternalCacheDir() == null) {
+            return;
+        }
+        String fileName =
+                PREFIX_RECORDING + System.currentTimeMillis() + Constant.RECORDING_FILE_FORMAT;
+        String filePath = mActivity.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
+        RecordingDialog recordingDialog = RecordingDialog.getInstance(filePath, fileName);
+        RecordingDialog.OnDismissRecordingClickListener listener =
+                new RecordingDialog.OnDismissRecordingClickListener() {
+                    @Override
+                    public void onStore(String fileName, String filePath) {
+                        String id = UUID.randomUUID().toString();
+                        Audio audio = new Audio(id, fileName, filePath, true);
+                        ArrayList<Audio> result = new ArrayList<>();
+                        result.add(audio);
+                        Intent intent = new Intent();
+                        intent.putParcelableArrayListExtra(AudioSelectorActivity.EXTRA_AUDIO,
+                                result);
+                        mActivity.setResult(Activity.RESULT_OK, intent);
+                        mActivity.finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // No ops
+                    }
+                };
+        recordingDialog.setListener(listener);
+        recordingDialog.show(
+                mActivity.getSupportFragmentManager(), RecordingDialog.class.getSimpleName());
     }
 }
