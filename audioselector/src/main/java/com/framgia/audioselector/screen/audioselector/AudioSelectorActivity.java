@@ -19,7 +19,7 @@ import android.view.View;
 
 import com.framgia.audioselector.R;
 import com.framgia.audioselector.databinding.ActivityAudioSelectorBinding;
-import com.framgia.audioselector.screen.BaseActivity;
+import com.framgia.audioselector.BaseActivity;
 
 public class AudioSelectorActivity extends BaseActivity implements ActionMode.Callback {
 
@@ -30,7 +30,6 @@ public class AudioSelectorActivity extends BaseActivity implements ActionMode.Ca
     private static final int RC_READ_EXTERNAL_STORAGE = 1;
     private AudioSelectorViewModel mViewModel;
     private ActivityAudioSelectorBinding mBinding;
-    private ActionBar mActionBar;
     private ActionMode mActionMode;
 
     public static Intent getInstance(Context context) {
@@ -44,25 +43,17 @@ public class AudioSelectorActivity extends BaseActivity implements ActionMode.Ca
         if (getSupportActionBar() == null) {
             return;
         }
-        mActionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        getSupportActionBar().setTitle(R.string.title_audio_selector);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        actionBar.setTitle(R.string.title_audio_selector);
         checkPermission();
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_action, menu);
-//        return true;
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
-        } else if (item.getItemId() == R.id.action_add) {
-            mViewModel.finishActivity();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,6 +122,9 @@ public class AudioSelectorActivity extends BaseActivity implements ActionMode.Ca
 
     private void onPermissionGranted() {
         mViewModel = new AudioSelectorViewModel(this);
+        AudioSelectorContract.Presenter presenter =
+                new AudioSelectorPresenter(mViewModel);
+        mViewModel.setPresenter(presenter);
         mBinding.setViewModel(mViewModel);
     }
 

@@ -4,7 +4,7 @@ import android.databinding.BaseObservable;
 import android.view.View;
 
 import com.framgia.audioselector.data.model.Audio;
-import com.framgia.audioselector.screen.BaseRecyclerViewAdapter;
+import com.framgia.audioselector.BaseRecyclerViewAdapter;
 
 /**
  * Created by fs-sournary.

@@ -8,4 +8,7 @@
     <string name="title_action">Grant permission</string>
     <string name="title_select">Selected</string>
     <string name="limit_audio">Can select a maximum of %d audio</string>
+    <string name="description_recording_audio_button">Cancel recording without saving audio file</string>
+    <string name="title_cancel">Cancel</string>
+    <string name="title_for_recording_duration">Recording Audio</string>
 </resources>

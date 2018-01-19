@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.framgia.audioselector.R;
 import com.framgia.audioselector.data.model.Audio;
 import com.framgia.audioselector.databinding.ItemAudioSelectorBinding;
-import com.framgia.audioselector.screen.BaseRecyclerViewAdapter;
+import com.framgia.audioselector.BaseRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
