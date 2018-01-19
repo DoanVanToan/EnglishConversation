@@ -20,7 +20,7 @@ public class SettingLocalDataSource implements SettingDataSource {
     public Setting getSetting() {
         Setting setting = new Setting();
         boolean isEnableAutoPlayed =
-                mPrefsApi.get(SharedPrefsKey.PREF_SETTING_AUTO_PLAY, true);
+                mPrefsApi.get(SharedPrefsKey.PREF_SETTING_AUTO_PLAY, false);
         setting.setEnableAutoPlay(isEnableAutoPlayed);
         return setting;
     }
