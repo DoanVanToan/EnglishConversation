@@ -1,12 +1,12 @@
-package com.framgia.audioselector.screen;
+package com.framgia.audioselector;
 
 /**
  * Created by fs-sournary.
- * Date on 1/16/18.
+ * Data: 1/19/18.
  * Description:
  */
 
-public interface BaseViewModel {
+public interface BasePresenter {
 
     void onStart();
 

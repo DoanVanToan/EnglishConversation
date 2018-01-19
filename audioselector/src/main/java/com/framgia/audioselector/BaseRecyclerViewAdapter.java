@@ -1,4 +1,4 @@
-package com.framgia.audioselector.screen;
+package com.framgia.audioselector;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

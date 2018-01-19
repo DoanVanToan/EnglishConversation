@@ -6,4 +6,9 @@
     <dimen name="dp_16">16dp</dimen>
     <dimen name="dp_2">2dp</dimen>
     <dimen name="sp_12">12sp</dimen>
+    <dimen name="dp_56">56dp</dimen>
+    <dimen name="dp_360">360dp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="sp_24">24sp</dimen>
 </resources>

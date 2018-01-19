@@ -7,14 +7,13 @@ import android.os.Build;
 import android.view.View;
 import android.widget.Toast;
 
+import com.framgia.audioselector.BaseRecyclerViewAdapter;
 import com.framgia.audioselector.R;
 import com.framgia.audioselector.data.model.Audio;
 import com.framgia.audioselector.data.source.AudioDataSource;
 import com.framgia.audioselector.data.source.AudioRepository;
 import com.framgia.audioselector.data.source.callback.OnGetDataCallback;
 import com.framgia.audioselector.data.source.local.AudioLocalDataSource;
-import com.framgia.audioselector.screen.BaseRecyclerViewAdapter;
-import com.framgia.audioselector.screen.BaseViewModel;
 import com.framgia.audioselector.util.loader.PlayerLoader;
 import com.google.android.exoplayer2.util.Util;
 
@@ -26,7 +25,7 @@ import java.util.List;
  * Description:
  */
 
-public class AudioSelectorViewModel implements BaseViewModel,
+public class AudioSelectorViewModel implements AudioSelectorContract.ViewModel,
         OnGetDataCallback<List<Audio>>,
         BaseRecyclerViewAdapter.OnItemClickListener<Audio>, ItemAudioViewModel.OnItemCheckChange {
 
@@ -36,6 +35,7 @@ public class AudioSelectorViewModel implements BaseViewModel,
     private AudioSelectorActivity mActivity;
     private AudioSelectorAdapter mAdapter;
     private PlayerLoader mPlayerLoader;
+    private AudioSelectorContract.Presenter mPresenter;
 
     public AudioSelectorViewModel(AudioSelectorActivity activity) {
         mActivity = activity;
@@ -83,6 +83,11 @@ public class AudioSelectorViewModel implements BaseViewModel,
         if (Util.SDK_INT > Build.VERSION_CODES.M) {
             mPlayerLoader.releasePlayer();
         }
+    }
+
+    @Override
+    public void setPresenter(AudioSelectorContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     public AudioSelectorAdapter getAdapter() {
