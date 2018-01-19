@@ -7,4 +7,5 @@
     <string name="msg_permission_denied">Please grant the required permission to enable this feature !</string>
     <string name="title_action">Grant permission</string>
     <string name="title_select">Selected</string>
+    <string name="limit_audio">Can select a maximum of %d audio</string>
 </resources>

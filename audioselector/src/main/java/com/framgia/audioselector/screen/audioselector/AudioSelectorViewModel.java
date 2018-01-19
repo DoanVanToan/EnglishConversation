@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.View;
+import android.widget.Toast;
 
+import com.framgia.audioselector.R;
 import com.framgia.audioselector.data.model.Audio;
 import com.framgia.audioselector.data.source.AudioDataSource;
 import com.framgia.audioselector.data.source.AudioRepository;
@@ -95,6 +97,9 @@ public class AudioSelectorViewModel implements BaseViewModel,
     @Override
     public void onCheckChange(Audio audio) {
         if (mSelectedCount >= LIMIT_CHOOSE_ITEM && !audio.isSelected()) {
+            Toast.makeText(mActivity,
+                    String.format(mActivity.getString(R.string.limit_audio), LIMIT_CHOOSE_ITEM),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
         audio.setSelected(!audio.isSelected());
@@ -116,7 +121,8 @@ public class AudioSelectorViewModel implements BaseViewModel,
             return;
         }
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(AudioSelectorActivity.EXTRA_AUDIO, mAdapter.getSelectedAudios());
+        intent.putParcelableArrayListExtra(AudioSelectorActivity.EXTRA_AUDIO,
+                mAdapter.getSelectedAudios());
         mActivity.setResult(Activity.RESULT_OK, intent);
         mActivity.finish();
     }

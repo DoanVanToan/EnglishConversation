@@ -90,8 +90,7 @@ public class AudioSelectorAdapter extends
         }
 
         void bindView(Audio audio) {
-            mBinding.setViewModel(new ItemAudioViewModel(
-                    mContext, audio, mListener, mCheckChange));
+            mBinding.setViewModel(new ItemAudioViewModel(audio, mListener, mCheckChange));
             mBinding.setPosition(getAdapterPosition());
             mBinding.setAudio(audio);
             mBinding.executePendingBindings();
