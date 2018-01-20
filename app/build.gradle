@@ -11,6 +11,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply from: '../checkci.gradle'
+apply from: '../autodimension.gradle'
 
 def APP_ID = "com.framgia.englishconversation";
 
@@ -61,39 +62,39 @@ repositories {
 
 dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     Map<String, String> dependencies = rootProject.ext.dependencies
-    compile dependencies.supportDesign
-    compile dependencies.constraintLayout
-    compile dependencies.cardView
-    compile dependencies.vector
-    compile dependencies.rxJava
-    compile dependencies.rxAndroid
-    compile dependencies.retrofit2
-    compile dependencies.retrofit2Adapter
-    compile dependencies.retrofitGson
-    compile dependencies.loggingInterceptor
-    compile dependencies.circleImage
-    compile dependencies.omRecorder
-    compile dependencies.audiovisualization
-    compile dependencies.googleAuth
-    compile dependencies.googlePlace
-    compile dependencies.facebookAuth
-    compile dependencies.firebaseAuth
-    compile dependencies.firebaseStorage
-    compile dependencies.firebaseDataBase
-    compile dependencies.exoPlayer
-    compile dependencies.toroExo
+    implementation dependencies.supportDesign
+    implementation dependencies.constraintLayout
+    implementation dependencies.cardView
+    implementation dependencies.vector
+    implementation dependencies.rxJava
+    implementation dependencies.rxAndroid
+    implementation dependencies.retrofit2
+    implementation dependencies.retrofit2Adapter
+    implementation dependencies.retrofitGson
+    implementation dependencies.loggingInterceptor
+    implementation dependencies.circleImage
+    implementation dependencies.omRecorder
+    implementation dependencies.audiovisualization
+    implementation dependencies.googleAuth
+    implementation dependencies.googlePlace
+    implementation dependencies.facebookAuth
+    implementation dependencies.firebaseAuth
+    implementation dependencies.firebaseStorage
+    implementation dependencies.firebaseDataBase
+    implementation dependencies.exoPlayer
+    implementation dependencies.toroExo
     implementation project(':multipleimageselect')
     implementation project(':videoselector')
     implementation project(':audioselector')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile dependencies.junit
-    testCompile dependencies.mockito
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation dependencies.junit
+    testImplementation dependencies.mockito
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;
     }
 }
