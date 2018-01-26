@@ -16,10 +16,10 @@ import com.framgia.englishconversation.screen.timeline.TimelineFragment;
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
     public static final int NEW = 0;
-    public static final int TOP_VOTE = 1;
-    public static final int YOUR_POST = 2;
-    public static final int SETTING = 3;
-    private static final int TAB_COUNT = 4;
+    public static final int YOUR_POST = 1;
+    public static final int SETTING = 2;
+
+    private static final int TAB_COUNT = 3;
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -30,8 +30,6 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case NEW:
                 return TimelineFragment.newInstance(null);
-            case TOP_VOTE:
-                return NextComingFragment.newInstance();
             case YOUR_POST:
                 return ProfileFragment.newInstance(null);
             case SETTING:

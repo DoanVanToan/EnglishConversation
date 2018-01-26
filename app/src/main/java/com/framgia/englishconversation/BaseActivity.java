@@ -27,7 +27,8 @@ public class BaseActivity extends AppCompatActivity
 
     void initGoogleSDK() {
         GoogleSignInOptions gso =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .build();
 

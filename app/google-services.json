@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "209723759764-9rje1e0sl892j9o24pdlf3jucnq6p7nk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.englishconversation",
+            "certificate_hash": "f67359cdc100c571fc5c79959bf472249e2a5729"
+          }
+        },
+        {
+          "client_id": "209723759764-0380u1fkdstpp8b69l67hduv2dfdfbi4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.englishconversation",
+            "certificate_hash": "cf7c94a8f7a8c7b93a1b046367efd31cc5d78844"
+          }
+        },
+        {
+          "client_id": "209723759764-qhv1gdqqalgc6uf5q9dt4cjrd9oiqfll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.englishconversation",
+            "certificate_hash": "a257503f083d4fd8d8a3498cb4e8c93c8a24e1e7"
+          }
+        },
+        {
+          "client_id": "209723759764-ri9if1k4d22k8o0c5b6a23dl6ri3211n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.englishconversation",
+            "certificate_hash": "dcf31e01d6dce222f51b3ddc4073d21734fbb16d"
+          }
+        },
+        {
           "client_id": "209723759764-mmejem7eucnjo37ku9lempfbkqtmp5u1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -94,7 +94,6 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     @Override
     public void onDestroy() {
         mTimelineRepository.removeListener();
-        mDisposable.dispose();
     }
 
     public void registerModifyTimelines(TimelineModel timelineModel, UserModel userModel) {

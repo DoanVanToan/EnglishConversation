@@ -61,6 +61,7 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
     public void onSignOutSuccess() {
         mNavigator.startActivity(
                 LoginActivity.getInstance(mActivity).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        mNavigator.finishActivity();
     }
 
     @Override

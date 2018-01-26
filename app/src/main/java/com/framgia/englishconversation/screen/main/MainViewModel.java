@@ -115,9 +115,6 @@ public class MainViewModel extends BaseObservable implements MainContract.ViewMo
                     case MainActivity.NEW_POSITION:
                         mActivity.positionComponents(MainPagerAdapter.NEW);
                         break;
-                    case MainActivity.TOP_VOTED_POSITION:
-                        mActivity.positionComponents(MainPagerAdapter.TOP_VOTE);
-                        break;
                     case MainActivity.YOUR_POST_POSITION:
                         mActivity.positionComponents(MainPagerAdapter.YOUR_POST);
                         break;
