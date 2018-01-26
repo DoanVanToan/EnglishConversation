@@ -49,4 +49,5 @@ public class Constant {
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
     public static final int INDEX_FIRST_ITEM = 0;
+    public static final String PARCEL_TIMELINE = "PARCEL_TIMELINE";
 }

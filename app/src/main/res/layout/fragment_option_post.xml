@@ -1,0 +1,70 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.dialog.OptionPostViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_view_delete_post"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            android:contentDescription="@string/title_delete_post"
+            android:onClick="@{viewModel::onClickDeletePost}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_delete_gray_24dp" />
+
+        <TextView
+            android:id="@+id/text_view_delete_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_5"
+            android:text="@string/title_delete_post"
+            android:textSize="@dimen/sp_18"
+            app:layout_constraintLeft_toRightOf="@id/image_view_delete_post"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_edit_post"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:contentDescription="@string/title_edit_post"
+            android:onClick="@{viewModel::onClickEditPost}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_delete_post"
+            app:srcCompat="@drawable/ic_edit_gray_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:text="@string/title_edit_post"
+            android:textSize="@dimen/sp_18"
+            android:layout_marginBottom="@dimen/dp_30"
+            app:layout_constraintLeft_toRightOf="@id/image_edit_post"
+            app:layout_constraintTop_toBottomOf="@id/text_view_delete_post" />
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
