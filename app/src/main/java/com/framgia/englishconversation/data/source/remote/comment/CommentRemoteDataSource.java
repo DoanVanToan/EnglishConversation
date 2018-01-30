@@ -82,7 +82,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         List<Comment> comments = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Comment comment = snapshot.getValue(Comment.class);
-                            if (comment.getStatusModel().getStatus() != Status.NORMAl) {
+                            if (comment.getStatusModel().getStatus() != Status.NORMAL) {
                                 continue;
                             }
                             comment.setCreatedAt(

@@ -126,4 +126,7 @@
     <string name="title_choose_audio_file">Choose audio file</string>
     <string name="title_del_comment">Delete</string>
     <string name="title_edit_comment">Edit</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="msg_delete_comment">Delete Comment </string>
+    <string name="title_confirm_delete_comment">Are you sure to delete this comment ?</string>
 </resources>
