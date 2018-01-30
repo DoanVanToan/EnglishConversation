@@ -29,6 +29,10 @@ public class CommentRepository implements CommentDataSource {
         return mDataSource.registerModifyTimelines(lastComment);
     }
 
+    public Observable<Comment> updateComment(Comment comment) {
+        return mDataSource.updateComment(comment);
+    }
+
     @Override
     public void removeListener() {
         mDataSource.removeListener();

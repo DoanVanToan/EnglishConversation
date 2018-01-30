@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.andoidsrc.popupmenu.MainActivity">
+
+    <item
+        android:id="@+id/del_commnet"
+        android:title="@string/title_del_comment"
+        android:visible="true"/>
+    <item
+        android:id="@+id/edit_comment"
+        android:title="@string/title_edit_comment"
+        android:visible="true"/>
+
+</menu>

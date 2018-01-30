@@ -2,9 +2,10 @@ package com.framgia.englishconversation.data.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import com.android.databinding.library.baseAdapters.BR;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.android.databinding.library.baseAdapters.BR;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -26,6 +27,8 @@ public class Comment extends BaseObservable implements Parcelable {
     private UserModel mCreateUser;
     @SerializedName("media")
     private MediaModel mMediaModel;
+    @SerializedName("status")
+    private StatusModel mStatusModel;
 
     public Comment() {
     }
@@ -63,7 +66,7 @@ public class Comment extends BaseObservable implements Parcelable {
     public void setCreatedAt(long createdAt) {
         mCreatedAt = createdAt;
         notifyPropertyChanged(BR.createdAt);
-        
+
     }
 
     @Bindable
@@ -104,6 +107,16 @@ public class Comment extends BaseObservable implements Parcelable {
         return MediaModel.MediaType.ONLY_TEXT;
     }
 
+    @Bindable
+    public StatusModel getStatusModel() {
+        return mStatusModel;
+    }
+
+    public void setStatusModel(StatusModel status) {
+        mStatusModel = status;
+        notifyPropertyChanged(BR.statusModel);
+    }
+
     protected Comment(Parcel in) {
         mId = in.readString();
         mPostId = in.readString();
@@ -112,6 +125,8 @@ public class Comment extends BaseObservable implements Parcelable {
         mModifiedAt = in.readLong();
         mCreateUser = (UserModel) in.readValue(UserModel.class.getClassLoader());
         mMediaModel = (MediaModel) in.readValue(MediaModel.class.getClassLoader());
+        mStatusModel = (StatusModel) in.readValue(
+                StatusModel.class.getClassLoader());
     }
 
     @Override
@@ -128,6 +143,7 @@ public class Comment extends BaseObservable implements Parcelable {
         dest.writeLong(mModifiedAt);
         dest.writeValue(mCreateUser);
         dest.writeValue(mMediaModel);
+        dest.writeValue(mStatusModel);
     }
 
     @SuppressWarnings("unused")
@@ -142,4 +158,23 @@ public class Comment extends BaseObservable implements Parcelable {
             return new Comment[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Comment comment = (Comment) o;
+
+        return mId != null ? mId.equals(comment.mId) : comment.mId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return mId != null ? mId.hashCode() : 0;
+    }
 }

@@ -124,4 +124,6 @@
     <string name="setting_title">Settings</string>
     <string name="msg_change_setting_enable_success">Setting was changed successfuly, please reopen app to apply change!</string>
     <string name="title_choose_audio_file">Choose audio file</string>
+    <string name="title_del_comment">Delete</string>
+    <string name="title_edit_comment">Edit</string>
 </resources>

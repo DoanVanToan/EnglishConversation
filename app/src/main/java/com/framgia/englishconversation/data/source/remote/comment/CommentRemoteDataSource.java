@@ -1,7 +1,9 @@
 package com.framgia.englishconversation.data.source.remote.comment;
 
 import android.support.annotation.NonNull;
+
 import com.framgia.englishconversation.data.model.Comment;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.Utils;
@@ -13,12 +15,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by VinhTL on 20/12/2017.
@@ -78,6 +82,9 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         List<Comment> comments = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Comment comment = snapshot.getValue(Comment.class);
+                            if (comment.getStatusModel().getStatus() != Status.NORMAl) {
+                                continue;
+                            }
                             comment.setCreatedAt(
                                     Utils.generateOppositeNumber(comment.getCreatedAt()));
                             comment.setId(snapshot.getKey());
@@ -152,6 +159,29 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                 query.addChildEventListener(mUpdateComment);
             }
         });
+    }
+
+    @Override
+    public Observable<Comment> updateComment(final Comment comment) {
+        return Observable.create(new ObservableOnSubscribe<Comment>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Comment> emitter) throws Exception {
+                mReference.child(comment.getId()).setValue(comment)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                emitter.onNext(comment);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                emitter.onError(e);
+                            }
+                        });
+            }
+        });
+
     }
 
     @Override
