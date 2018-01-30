@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -80,6 +81,13 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
                     mActivity.startActivity(
                             ProfileUserActivity.getInstance(mActivity, item.getCreatedUser()));
                 }
+
+                @Override
+                public boolean onItemLongClick(View viewGroup, TimelineModel item) {
+                    return false;
+                }
+
+
             };
 
     public AudioDetailViewModel(AudioDetailActivity activity, TimelineModel timelineModel,
@@ -129,7 +137,7 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
     }
 
     private void setUpExoPlayer() {
-        Log.d(TAG, "setUpExoPlayer: "+mPathAudio);
+        Log.d(TAG, "setUpExoPlayer: " + mPathAudio);
         if (mExoPlayer != null) {
             return;
         }

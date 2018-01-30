@@ -1,13 +1,22 @@
 package com.framgia.englishconversation.screen.comment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+
 import com.framgia.englishconversation.BR;
+import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
@@ -15,6 +24,7 @@ import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageD
 import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +50,11 @@ public class CommentViewModel extends BaseObservable
     private Fragment mFragment;
     private UserModel mTimelineUser;
     private boolean mIsLoadingMore;
+    private View mViewGroupComment;
+    private ProgressDialog mProgressDialog;
 
     public CommentViewModel(Context context, String timelineModelId, FragmentManager manager,
-            UserModel userModel) {
+                            UserModel userModel) {
         mAdapter = new CommentAdapter(new ArrayList<Comment>(), this);
         mContext = context;
         mOnEndScrollListener = new OnEndScrollListener(this);
@@ -86,7 +98,71 @@ public class CommentViewModel extends BaseObservable
 
     @Override
     public void onGetCommentSuccess(Comment comment) {
-        mAdapter.updateDataForward(comment);
+        if (comment == null) {
+            return;
+        }
+        if (!mAdapter.isExitComment(comment)) {
+            mAdapter.addComment(comment);
+            return;
+        }
+        if (comment.getStatusModel() == null
+                || comment.getStatusModel().getStatus() == Status.NORMAL) {
+            mAdapter.updateComment(comment);
+            return;
+        }
+        if (comment.getStatusModel().getStatus() == Status.DELETE) {
+            mAdapter.deleteComment(comment);
+        }
+    }
+
+    @Override
+    public void showPopupMenuComment(final Comment comment) {
+        PopupMenu popupMenu;
+        popupMenu = new PopupMenu(mContext, mViewGroupComment);
+        popupMenu.inflate(R.menu.menu_item_comment);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.del_commnet:
+                        showConfirmDeleteDialog(comment);
+                        return true;
+                    case R.id.edit_comment:
+                        // TODO: 26/1/2018
+                        return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
+    @Override
+    public void deleComentSuccess(Comment comment) {
+        mProgressDialog.cancel();
+    }
+
+    private void showConfirmDeleteDialog(final Comment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.title_confirm_delete_comment);
+        builder.setCancelable(true);
+        builder.setNegativeButton(R.string.title_cancel, null);
+        builder.setPositiveButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.deleteComment(comment);
+                    }
+                });
+        builder.show();
+    }
+
+    @Override
+    public void showDialogComment() {
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setTitle(R.string.msg_delete_comment);
+        mProgressDialog.show();
     }
 
     @Bindable
@@ -191,6 +267,13 @@ public class CommentViewModel extends BaseObservable
             return;
         }
         mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreateUser()));
+    }
+
+    @Override
+    public boolean onItemLongClick(View viewGroup, final Comment comment) {
+        mViewGroupComment = viewGroup;
+        mPresenter.initDialogItem(comment);
+        return true;
     }
 
     @Bindable

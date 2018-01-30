@@ -82,7 +82,8 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         List<Comment> comments = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Comment comment = snapshot.getValue(Comment.class);
-                            if (comment.getStatusModel().getStatus() != Status.NORMAL) {
+                            if (comment.getStatusModel() != null
+                                    && comment.getStatusModel().getStatus() != Status.NORMAL) {
                                 continue;
                             }
                             comment.setCreatedAt(
@@ -92,6 +93,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                                     .equals(snapshot.getKey())) {
                                 comments.add(comment);
                             }
+
                         }
                         e.onNext(comments);
                     }
@@ -120,9 +122,13 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                             return;
                         }
                         Comment comment = dataSnapshot.getValue(Comment.class);
-                        comment.setCreatedAt(Utils.generateOppositeNumber(comment.getCreatedAt()));
-                        comment.setId(dataSnapshot.getKey());
-                        e.onNext(comment);
+                        if (comment.getStatusModel() == null
+                                || comment.getStatusModel().getStatus() == Status.NORMAL) {
+                            comment.setCreatedAt(
+                                    Utils.generateOppositeNumber(comment.getCreatedAt()));
+                            comment.setId(dataSnapshot.getKey());
+                            e.onNext(comment);
+                        }
                     }
 
                     @Override
@@ -156,7 +162,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         e.onError(databaseError.toException());
                     }
                 };
-                query.addChildEventListener(mUpdateComment);
+                mReference.addChildEventListener(mUpdateComment);
             }
         });
     }
