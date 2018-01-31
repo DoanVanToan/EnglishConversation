@@ -16,6 +16,10 @@
         <variable
             name="touchListener"
             type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
+
+        <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.ItemTimelineViewModel"/>
     </data>
 
     <android.support.v7.widget.CardView
@@ -34,6 +38,7 @@
             <include
                 layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}"
+                bind:viewModel="@{viewModel}"
                 bind:touchListener="@{touchListener}" />
 
             <TextView

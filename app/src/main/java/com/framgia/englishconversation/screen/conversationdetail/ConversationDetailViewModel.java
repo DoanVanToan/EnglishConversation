@@ -89,6 +89,11 @@ public class ConversationDetailViewModel extends BaseObservable
                     return false;
                 }
 
+                @Override
+                public void onItemOptionClick(TimelineModel item) {
+
+                }
+
             };
 
     public ConversationDetailViewModel(ConversationDetailActivity detailActivity,

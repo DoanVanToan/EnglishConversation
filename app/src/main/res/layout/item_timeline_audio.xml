@@ -21,7 +21,7 @@
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.timeline.TimelineViewModel"
+            type="com.framgia.englishconversation.screen.timeline.ItemTimelineViewModel"
             />
 
         <variable
@@ -55,6 +55,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 bind:timelineModel="@{timelineModel}"
                 bind:touchListener="@{touchListener}"
+                bind:viewModel="@{viewModel}"
                 />
 
             <TextView
