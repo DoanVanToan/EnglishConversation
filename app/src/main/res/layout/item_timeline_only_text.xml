@@ -16,6 +16,10 @@
             type="com.framgia.englishconversation.data.model.TimelineModel" />
 
         <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.ItemTimelineViewModel"/>
+
+        <variable
             name="touchListener"
             type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
     </data>
@@ -36,6 +40,7 @@
                 android:id="@+id/layout_header"
                 layout="@layout/item_header_timeline"
                 bind:timelineModel="@{timelineModel}"
+                bind:viewModel="@{viewModel}"
                 bind:touchListener="@{touchListener}" />
 
             <TextView

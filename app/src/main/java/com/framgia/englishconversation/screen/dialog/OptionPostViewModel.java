@@ -9,7 +9,8 @@ import com.framgia.englishconversation.data.model.TimelineModel;
  * Created by Sony on 1/24/2018.
  */
 
-public class OptionPostViewModel extends BaseObservable implements OptionPostContract.ViewModel {
+public class OptionPostViewModel extends BaseObservable implements OptionPostContract.ViewModel,
+        OnOptionItemClickListener{
 
     private OptionPostPresenter mPresenter;
     private TimelineModel mTimelineModel;

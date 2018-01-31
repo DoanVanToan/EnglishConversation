@@ -12,4 +12,7 @@ public interface OnTimelineItemTouchListener<T> {
     void onItemUserNameClick(T item);
 
     boolean onItemLongClick(View view, T item);
+
+    void onItemOptionClick(T item);
+
 }

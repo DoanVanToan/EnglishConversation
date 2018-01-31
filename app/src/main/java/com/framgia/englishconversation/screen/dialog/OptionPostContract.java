@@ -25,11 +25,7 @@ public interface OptionPostContract {
      */
     interface ViewModel extends BaseViewModel<OptionPostContract.Presenter> {
 
-        void onClickEditPost();
-
         void showConfirmDeleteDialog();
-
-        void onClickDeletePost();
 
     }
 }

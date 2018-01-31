@@ -87,6 +87,11 @@ public class AudioDetailViewModel extends BaseObservable implements AudioDetailC
                     return false;
                 }
 
+                @Override
+                public void onItemOptionClick(TimelineModel item) {
+
+                }
+
 
             };
 
