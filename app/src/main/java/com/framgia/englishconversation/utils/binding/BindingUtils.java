@@ -26,6 +26,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.framgia.englishconversation.R;
+
 import com.framgia.englishconversation.utils.Blocker;
 import com.framgia.englishconversation.utils.Constant;
 import com.google.android.exoplayer2.SimpleExoPlayer;

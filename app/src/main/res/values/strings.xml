@@ -129,4 +129,8 @@
     <string name="action_cancel">Cancel</string>
     <string name="msg_delete_comment">Delete Comment </string>
     <string name="title_confirm_delete_comment">Are you sure to delete this comment ?</string>
+
+    <string name="title_option_post">OptionPost</string>
+    <string name="title_delete_post">Delete my post</string>
+    <string name="title_edit_post">Edit my post</string>
 </resources>
