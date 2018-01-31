@@ -1,6 +1,7 @@
 package com.framgia.englishconversation.screen.createcomment;
 
 import android.text.TextUtils;
+
 import com.darsh.multipleimageselect.models.Image;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
@@ -13,6 +14,7 @@ import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteD
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.firebase.auth.FirebaseUser;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -35,7 +37,8 @@ final class CreateCommentPresenter
     private AuthenicationRepository mAuthenicationRepository;
 
     CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, String timelineModelId,
-            SharedPrefsApi sharedPrefsApi, AuthenicationRepository authenicationRepository) {
+                           SharedPrefsApi sharedPrefsApi,
+                           AuthenicationRepository authenicationRepository) {
         mViewModel = viewModel;
         mSharedPrefsApi = sharedPrefsApi;
         mTimelineModelId = timelineModelId;

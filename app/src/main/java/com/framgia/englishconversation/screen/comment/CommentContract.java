@@ -3,6 +3,7 @@ package com.framgia.englishconversation.screen.comment;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.Comment;
+
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ interface CommentContract {
      * View.
      */
     interface ViewModel extends BaseViewModel<Presenter> {
+        void showDialogComment();
+
         void onPause();
 
         void onResume();
@@ -24,6 +27,10 @@ interface CommentContract {
         void onGetCommentsFailure(String message);
 
         void onGetCommentSuccess(Comment comment);
+
+        void showPopupMenuComment(Comment comment);
+
+        void deleComentSuccess(Comment comment);
     }
 
     /**
@@ -37,5 +44,9 @@ interface CommentContract {
         void onDestroy();
 
         void fetchCommentData(Comment lastComments);
+
+        void deleteComment(Comment comment);
+
+        void initDialogItem(Comment comment);
     }
 }

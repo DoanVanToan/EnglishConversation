@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.databinding.ItemCommentAudioBinding;
@@ -14,6 +15,7 @@ import com.framgia.englishconversation.screen.BaseMediaViewHolder;
 import com.framgia.englishconversation.screen.BaseViewHolder;
 import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private OnTimelineItemTouchListener<Comment> mTouchListener;
 
     public CommentAdapter(List<Comment> comments,
-            OnTimelineItemTouchListener<Comment> touchListener) {
+                          OnTimelineItemTouchListener<Comment> touchListener) {
         mComments = comments;
         mTouchListener = touchListener;
     }
@@ -38,17 +40,51 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void updateData(Comment comment) {
+    public List<Comment> getComments() {
+        return mComments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        mComments = comments;
+    }
+
+    /**
+     * Add a comment at the top of list data and notify adapter
+     *
+     * @param comment
+     */
+    public void addComment(Comment comment) {
         mComments.add(0, comment);
         notifyItemInserted(0);
     }
 
-    public void updateDataForward(Comment comment) {
-        if (comment == null) {
+    /**
+     * Delete comment in list data and notify adapter
+     *
+     * @param comment
+     */
+    public void deleteComment(Comment comment) {
+        int index = mComments.indexOf(comment);
+        if (index == -1) {
             return;
         }
-        mComments.add(0, comment);
-        notifyDataSetChanged();
+        mComments.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    /**
+     * if list data containt comment, replace old comment by new comment and notify data
+     *
+     * @param comment
+     */
+    public boolean updateComment(Comment comment) {
+        int index = mComments.indexOf(comment);
+        if (index == -1) {
+            return false;
+        }
+        mComments.set(index, comment);
+        notifyItemChanged(index);
+        return true;
     }
 
     @Override
@@ -101,6 +137,16 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     /**
+     * return true if input comment exit in list data
+     *
+     * @param comment
+     * @return
+     */
+    public boolean isExitComment(Comment comment) {
+        return mComments.indexOf(comment) != -1;
+    }
+
+    /**
      * Display comment model with only text (without media)
      */
     public class OnlyTextViewHolder extends BaseViewHolder<Comment> {
@@ -108,7 +154,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener<Comment> mTouchListener;
 
         public OnlyTextViewHolder(ItemCommentOnlyTextBinding itemView,
-                OnTimelineItemTouchListener<Comment> touchListener) {
+                                  OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;
@@ -130,7 +176,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener<Comment> mTouchListener;
 
         public AudioViewHolder(ItemCommentAudioBinding itemView,
-                OnTimelineItemTouchListener<Comment> touchListener) {
+                               OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;
@@ -158,7 +204,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener<Comment> mTouchListener;
 
         public ImageViewHolder(ItemCommentImageBinding itemView,
-                OnTimelineItemTouchListener<Comment> touchListener) {
+                               OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;
@@ -180,7 +226,7 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         private OnTimelineItemTouchListener<Comment> mTouchListener;
 
         VideoViewHolder(ItemCommentVideoBinding itemView,
-                OnTimelineItemTouchListener<Comment> touchListener) {
+                        OnTimelineItemTouchListener<Comment> touchListener) {
             super(itemView.getRoot());
             mBinding = itemView;
             mTouchListener = touchListener;

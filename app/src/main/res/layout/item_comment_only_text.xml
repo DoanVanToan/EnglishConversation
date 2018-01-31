@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools"
-    >
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="commentViewModel"
-            type="com.framgia.englishconversation.data.model.Comment"
-            />
+            type="com.framgia.englishconversation.data.model.Comment" />
+
         <variable
             name="listener"
-            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener"
-            />
+            type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
     </data>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:onLongClick="@{()-> listener.onItemLongClick( imageAvatar, commentViewModel)}">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_avatar"
             android:layout_width="@dimen/dp_40"
@@ -26,12 +27,11 @@
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
+            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:imageError="@{@drawable/ic_person_black_24dp}"
-            bind:imageUrl="@{commentViewModel.createUser.photoUrl}"
-            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
-            />
+            bind:imageUrl="@{commentViewModel.createUser.photoUrl}" />
 
         <TextView
             android:id="@+id/text_username"
@@ -40,14 +40,14 @@
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:lines="1"
+            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
             android:text="@{commentViewModel.createUser.userName}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/sp_16"
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> listener.onItemUserNameClick(commentViewModel)}"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/text_time"
             android:layout_width="wrap_content"
@@ -59,8 +59,8 @@
             android:textSize="@dimen/sp_12"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintTop_toBottomOf="@+id/text_username"
-            bind:milisecond="@{commentViewModel.createdAt}"
-            />
+            bind:milisecond="@{commentViewModel.createdAt}" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -73,7 +73,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/image_avatar"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_time"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/text_time" />
     </android.support.constraint.ConstraintLayout>
 </layout>

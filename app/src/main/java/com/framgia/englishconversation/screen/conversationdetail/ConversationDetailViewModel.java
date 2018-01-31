@@ -5,6 +5,8 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -30,6 +32,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,10 +83,17 @@ public class ConversationDetailViewModel extends BaseObservable
                     mDetailActivity.startActivity(ProfileUserActivity.getInstance(mDetailActivity,
                             item.getCreatedUser()));
                 }
+
+                @Override
+                public boolean onItemLongClick(View viewGroup, TimelineModel item) {
+                    return false;
+                }
+
             };
 
     public ConversationDetailViewModel(ConversationDetailActivity detailActivity,
-            FragmentManager manager, TimelineModel timelineModel, UserModel userModel) {
+                                       FragmentManager manager,
+                                       TimelineModel timelineModel, UserModel userModel) {
         mDetailActivity = detailActivity;
         mTimelineModel = timelineModel;
         mAdapter = new ConversationDetailAdapter(mDetailActivity, timelineModel.getConversations(),
@@ -257,7 +267,7 @@ public class ConversationDetailViewModel extends BaseObservable
 
         @Override
         public void onTracksChanged(TrackGroupArray trackGroupArray,
-                TrackSelectionArray trackSelectionArray) {
+                                    TrackSelectionArray trackSelectionArray) {
             // No ops
         }
 

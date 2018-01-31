@@ -7,6 +7,8 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
@@ -56,13 +58,20 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
                             .equals(item.getCreatedUser().getId())) {
                         return;
                     }
-                    mContext.startActivity(
-                            ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
+                    mContext.startActivity(ProfileUserActivity.getInstance(
+                            mContext,
+                            item.getCreatedUser()));
                 }
+
+                @Override
+                public boolean onItemLongClick(View viewGroup, TimelineModel item) {
+                    return false;
+                }
+
             };
 
     VideoDetailViewModel(Context context, FragmentManager manager, TimelineModel timelineModel,
-            UserModel userModel) {
+                         UserModel userModel) {
         mContext = context;
         mTimelineModel = timelineModel;
         mNavigator = new Navigator((Activity) context);
@@ -144,7 +153,8 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
         DefaultHttpDataSourceFactory dataSourceFactory =
                 new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
         ExtractorMediaSource videoSource =
-                new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+                new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory,
+                        null, null);
 
         player.prepare(videoSource, true, false);
     }

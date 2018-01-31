@@ -11,6 +11,7 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
@@ -52,9 +53,10 @@ public class CommentFragment extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         FragmentCommentBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_comment, container, false);
+                DataBindingUtil.inflate(inflater, R.layout.fragment_comment,
+                        container, false);
         binding.setViewModel((CommentViewModel) mViewModel);
         return binding.getRoot();
     }

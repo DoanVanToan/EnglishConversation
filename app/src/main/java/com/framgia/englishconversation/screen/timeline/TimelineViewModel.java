@@ -4,6 +4,8 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Bundle;
+import android.view.View;
+
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.Setting;
@@ -18,6 +20,7 @@ import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.navigator.Navigator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,6 +175,13 @@ public class TimelineViewModel extends BaseObservable
         }
         mNavigator.startActivity(ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
     }
+
+    @Override
+    public boolean onItemLongClick(View viewGroup, TimelineModel item) {
+
+        return true;
+    }
+
 
     @Override
     public void onEndScrolled() {

@@ -23,6 +23,8 @@ import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
+import com.framgia.englishconversation.data.model.Status;
+import com.framgia.englishconversation.data.model.StatusModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.screen.createPost.UploadBroadcastReceiver;
@@ -169,6 +171,12 @@ public class CreateCommentViewModel extends BaseObservable
             comment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
             comment.setContent(mInputtedComment);
             comment.setCreateUser(mUserModel);
+            StatusModel statusCommentModel = new StatusModel();
+            statusCommentModel.setCreatedAt(
+                    Utils.generateOppositeNumber(System.currentTimeMillis()));
+            statusCommentModel.setUserUpdate(mUserModel);
+            statusCommentModel.setStatus(Status.NORMAL);
+            comment.setStatusModel(statusCommentModel);
             mPresenter.postLiteralComment(comment);
         }
     }
@@ -296,7 +304,8 @@ public class CreateCommentViewModel extends BaseObservable
         DefaultDataSourceFactory dataSourceFactory =
                 new DefaultDataSourceFactory(mContext, Constant.USER_AGENT);
         ExtractorMediaSource mediaSource =
-                new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+                new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory,
+                        null, null);
         player.prepare(mediaSource, true, false);
     }
 
@@ -351,6 +360,12 @@ public class CreateCommentViewModel extends BaseObservable
         comment.setMediaModel(model);
         comment.setContent(mInputtedComment);
         comment.setCreateUser(mUserModel);
+        StatusModel statusCommentModel = new StatusModel();
+        statusCommentModel.setCreatedAt(
+                Utils.generateOppositeNumber(System.currentTimeMillis()));
+        statusCommentModel.setUserUpdate(mUserModel);
+        statusCommentModel.setStatus(Status.NORMAL);
+        comment.setStatusModel(statusCommentModel);
         mPresenter.postLiteralComment(comment);
     }
 

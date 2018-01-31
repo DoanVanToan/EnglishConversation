@@ -4,6 +4,8 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
@@ -12,6 +14,7 @@ import com.framgia.englishconversation.screen.comment.CommentFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
 import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
+
 import java.util.List;
 
 /**
@@ -51,14 +54,21 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
                             .equals(item.getCreatedUser().getId())) {
                         return;
                     }
-                    mContext.startActivity(
-                            ProfileUserActivity.getInstance(mContext, item.getCreatedUser()));
+                    mContext.startActivity(ProfileUserActivity.getInstance(
+                            mContext,
+                            item.getCreatedUser()));
                 }
+
+                @Override
+                public boolean onItemLongClick(View viewGroup, TimelineModel item) {
+                    return false;
+                }
+
             };
     private UserModel mTimelineUser;
 
     public ImageDetailViewModel(Context context, TimelineModel timelineModel,
-            FragmentManager manager, UserModel userModel) {
+                                FragmentManager manager, UserModel userModel) {
         mContext = context;
         mTimelineModel = timelineModel;
         mManager = manager;
