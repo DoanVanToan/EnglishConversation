@@ -64,6 +64,11 @@ public class ImageDetailViewModel extends BaseObservable implements ImageDetailC
                     return false;
                 }
 
+                @Override
+                public void onItemOptionClick(TimelineModel item) {
+
+                }
+
             };
     private UserModel mTimelineUser;
 

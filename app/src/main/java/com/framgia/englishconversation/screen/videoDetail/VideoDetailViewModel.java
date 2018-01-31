@@ -68,6 +68,11 @@ public class VideoDetailViewModel extends BaseObservable implements VideoDetailC
                     return false;
                 }
 
+                @Override
+                public void onItemOptionClick(TimelineModel item) {
+
+                }
+
             };
 
     VideoDetailViewModel(Context context, FragmentManager manager, TimelineModel timelineModel,

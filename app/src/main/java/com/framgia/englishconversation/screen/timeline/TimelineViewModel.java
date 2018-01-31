@@ -4,16 +4,19 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.Setting;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.audiodetail.AudioDetailActivity;
 import com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity;
 import com.framgia.englishconversation.screen.createPost.CreatePostActivity;
+import com.framgia.englishconversation.screen.dialog.OptionPostFragment;
 import com.framgia.englishconversation.screen.imagedetail.ImageDetailActivity;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.videoDetail.VideoDetailActivity;
@@ -119,7 +122,21 @@ public class TimelineViewModel extends BaseObservable
 
     @Override
     public void onGetTimelineSuccess(TimelineModel timelineModel) {
-        mAdapter.updateDataForward(timelineModel);
+        if (timelineModel == null) {
+            return;
+        }
+        if (!mAdapter.isExitTimeline(timelineModel)) {
+            mAdapter.addTimeline(timelineModel);
+            return;
+        }
+        if (timelineModel.getStatusModel() == null
+                || timelineModel.getStatusModel().getStatus() == Status.NORMAL) {
+            mAdapter.updateTimeline(timelineModel);
+            return;
+        }
+        if (timelineModel.getStatusModel().getStatus() == Status.DELETE) {
+            mAdapter.deleteTimeline(timelineModel);
+        }
     }
 
     @Override
@@ -180,6 +197,12 @@ public class TimelineViewModel extends BaseObservable
     public boolean onItemLongClick(View viewGroup, TimelineModel item) {
 
         return true;
+    }
+
+    @Override
+    public void onItemOptionClick(TimelineModel item) {
+        OptionPostFragment.newInstance(item)
+                .show(((AppCompatActivity) mContext).getSupportFragmentManager(), null);
     }
 
 

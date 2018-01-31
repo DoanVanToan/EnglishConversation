@@ -2,7 +2,9 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+
 import io.reactivex.Observable;
+
 import java.util.List;
 
 /**
@@ -15,11 +17,14 @@ public interface TimelineDataSource {
 
     Observable<List<TimelineModel>> getTimeline(TimelineModel lastTimeline);
 
-    Observable<TimelineModel> updateTimeline(TimelineModel lastTimeline);
+    Observable<TimelineModel> registerModifyTimeline(TimelineModel lastTimeline);
 
     Observable<List<TimelineModel>> getTimeline(TimelineModel lastTimeline, UserModel userModel);
 
-    Observable<TimelineModel> updateTimeline(TimelineModel lastTimeline, UserModel userModel);
+    Observable<TimelineModel> registerModifyTimeline(TimelineModel lastTimeline,
+                                                     UserModel userModel);
+
+    Observable<TimelineModel> updateTimeline(TimelineModel timelineModel);
 
     void removeListener();
 }

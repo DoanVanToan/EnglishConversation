@@ -1,6 +1,8 @@
 package com.framgia.englishconversation.data.source.remote.timeline;
 
 import android.support.annotation.NonNull;
+
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
@@ -14,9 +16,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -90,7 +94,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     }
 
     @Override
-    public Observable<TimelineModel> updateTimeline(final TimelineModel lastTimeline) {
+    public Observable<TimelineModel> registerModifyTimeline(final TimelineModel lastTimeline) {
         return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
             @Override
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
@@ -105,7 +109,11 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                                 .equals(dataSnapshot.getKey())) {
                             return;
                         }
-                        e.onNext(getTimelineData(dataSnapshot));
+                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
+                        if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
+                                .getStatus() == Status.NORMAL) {
+                            e.onNext(getTimelineData(dataSnapshot));
+                        }
                     }
 
                     @Override
@@ -134,7 +142,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
 
     @Override
     public Observable<List<TimelineModel>> getTimeline(final TimelineModel lastTimeline,
-            final UserModel userModel) {
+                                                       final UserModel userModel) {
         return Observable.create(new ObservableOnSubscribe<List<TimelineModel>>() {
             @Override
             public void subscribe(final ObservableEmitter<List<TimelineModel>> e) throws Exception {
@@ -166,8 +174,8 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     }
 
     @Override
-    public Observable<TimelineModel> updateTimeline(final TimelineModel lastTimeline,
-            final UserModel userModel) {
+    public Observable<TimelineModel> registerModifyTimeline(final TimelineModel lastTimeline,
+                                                            final UserModel userModel) {
         return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
             @Override
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
@@ -182,7 +190,11 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                                 .equals(dataSnapshot.getKey())) {
                             return;
                         }
-                        e.onNext(getTimelineData(dataSnapshot));
+                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
+                        if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
+                                .getStatus() == Status.NORMAL) {
+                            e.onNext(getTimelineData(dataSnapshot));
+                        }
                     }
 
                     @Override
@@ -211,6 +223,28 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     }
 
     @Override
+    public Observable<TimelineModel> updateTimeline(final TimelineModel timelineModel) {
+        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
+            @Override
+            public void subscribe(final ObservableEmitter<TimelineModel> emitter) throws Exception {
+                mReference.child(timelineModel.getId()).setValue(timelineModel)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                emitter.onNext(timelineModel);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                emitter.onError(e);
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
     public void removeListener() {
         if (mUpdataTimeline == null) {
             return;
@@ -219,10 +253,14 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     }
 
     public List<TimelineModel> getTimelineData(DataSnapshot dataSnapshot,
-            TimelineModel lastTimeline, UserModel userModel) {
+                                               TimelineModel lastTimeline, UserModel userModel) {
         List<TimelineModel> timelineModels = new ArrayList<>();
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             TimelineModel timelineModel = snapshot.getValue(TimelineModel.class);
+            if (timelineModel.getStatusModel() != null
+                    && timelineModel.getStatusModel().getStatus() == Status.DELETE) {
+                continue;
+            }
             timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
             timelineModel.setId(snapshot.getKey());
             if (lastTimeline == null || !lastTimeline.getId().equals(snapshot.getKey())) {

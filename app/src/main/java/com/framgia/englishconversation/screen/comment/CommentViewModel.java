@@ -276,6 +276,11 @@ public class CommentViewModel extends BaseObservable
         return true;
     }
 
+    @Override
+    public void onItemOptionClick(Comment item) {
+
+    }
+
     @Bindable
     public boolean isLoadingMore() {
         return mIsLoadingMore;

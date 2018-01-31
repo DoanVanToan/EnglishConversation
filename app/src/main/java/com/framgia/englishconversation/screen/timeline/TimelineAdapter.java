@@ -49,9 +49,49 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         notifyDataSetChanged();
     }
 
+    /*
+    check timelinemodel contain in mData
+     */
+    public boolean isExitTimeline(TimelineModel timelineModel) {
+        return mData.indexOf(timelineModel) != -1;
+    }
+
     public void updateData(TimelineModel timeline) {
         mData.add(timeline);
         notifyItemInserted(mData.size() - 1);
+    }
+
+    /*
+    add timelinemodel contain in mData and notify adapter
+     */
+    public void addTimeline(TimelineModel timelineModel) {
+        mData.add(0, timelineModel);
+        notifyDataSetChanged();
+    }
+
+    /*
+    remove timelinemodel in mData when delete post sucess and notify
+     */
+    public void deleteTimeline(TimelineModel timelineModel) {
+        int index = mData.indexOf(timelineModel);
+        if (index == -1) {
+            return;
+        }
+        mData.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    /*
+    update timelinemodel in mData when edit post sucess and notify
+     */
+    public boolean updateTimeline(TimelineModel timelineModel) {
+        int index = mData.indexOf(timelineModel);
+        if (index == -1) {
+            return false;
+        }
+        mData.set(index, timelineModel);
+        notifyItemChanged(index);
+        return true;
     }
 
     @Override
@@ -128,6 +168,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
+            mBinding.setViewModel(new ItemTimelineViewModel(model));
         }
     }
 
@@ -152,7 +193,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             mUri = Uri.parse(model.getMedias().get(0).getUrl());
             mBinding.setTimelineModel(model);
-            mBinding.setViewModel(mViewModel);
+            mBinding.setViewModel(new ItemTimelineViewModel(model));
             mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
         }
@@ -182,6 +223,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
+            mBinding.setViewModel(new ItemTimelineViewModel(model));
         }
     }
 
@@ -208,6 +250,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mOnTouchListener);
             mBinding.executePendingBindings();
+            mBinding.setViewModel(new ItemTimelineViewModel(model));
         }
 
         @Override
@@ -234,7 +277,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void bindData(TimelineModel model) {
             mBinding.setTimelineModel(model);
             mBinding.setTouchListener(mTouchListener);
-            mBinding.setViewModel(mViewModel);
+            mBinding.setViewModel(new ItemTimelineViewModel(model));
             mBinding.executePendingBindings();
         }
     }

@@ -16,6 +16,10 @@
             type="com.framgia.englishconversation.data.model.TimelineModel" />
 
         <variable
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.timeline.ItemTimelineViewModel"/>
+
+        <variable
             name="touchListener"
             type="com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener" />
     </data>
@@ -38,6 +42,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 bind:timelineModel="@{timelineModel}"
+                bind:viewModel="@{viewModel}"
                 bind:touchListener="@{touchListener}" />
 
             <TextView
