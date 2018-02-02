@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
@@ -24,7 +25,7 @@ import static com.framgia.englishconversation.utils.Constant.EXTRA_USER;
 /**
  * Comment Screen.
  */
-public class CommentFragment extends BottomSheetDialogFragment {
+public class CommentFragment extends BottomSheetDialogFragment implements CallBack {
 
     private CommentContract.ViewModel mViewModel;
 
@@ -97,5 +98,10 @@ public class CommentFragment extends BottomSheetDialogFragment {
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
+    }
+
+    @Override
+    public void replaceFragment(BaseFragment baseFragment) {
+        mViewModel.replaceFragment(baseFragment);
     }
 }

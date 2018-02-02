@@ -31,6 +31,7 @@ public class Constant {
         public static final String COMMENT = "comment";
         public static final String CREATED_AT = "createdAt";
         public static final String ID = "createdUser/id";
+        public static final String COMMENT_REVISION = "commentRevision";
     }
 
     public class RequestCode {

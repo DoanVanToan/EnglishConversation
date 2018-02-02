@@ -27,7 +27,9 @@ import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.StatusModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
+import com.framgia.englishconversation.screen.comment.CallBack;
 import com.framgia.englishconversation.screen.createPost.UploadBroadcastReceiver;
+import com.framgia.englishconversation.screen.editcomment.EditCommentFragment;
 import com.framgia.englishconversation.service.BaseStorageService;
 import com.framgia.englishconversation.service.FirebaseUploadService;
 import com.framgia.englishconversation.utils.Constant;
@@ -62,7 +64,9 @@ import static com.framgia.englishconversation.service.FirebaseUploadService.EXTR
 
 public class CreateCommentViewModel extends BaseObservable
         implements CreateCommentContract.ViewModel, PopupMenu.OnMenuItemClickListener {
-
+    private final static int EDIT_COMMENT = 1;
+    private final static int CREATE_COMMENT = 0;
+    private static final String LINK_REMOTE = "https";
     private CreateCommentContract.Presenter mPresenter;
     private String mInputtedComment;
     private Context mContext;
@@ -80,7 +84,12 @@ public class CreateCommentViewModel extends BaseObservable
     private UploadProgressDialog mProgressDialog;
     private PopupMenu mPopupMenu;
     private CreateCommentFragment mCommentFragment;
+    private EditCommentFragment mEditCommentFragment;
     private UserModel mUserModel;
+    private Comment mComment;
+    private Comment mCommentOld;
+    private CallBack mCallBack;
+    private int mAction;
 
     public CreateCommentViewModel(CreateCommentFragment commentFragment, String timelineModelId) {
         mCommentFragment = commentFragment;
@@ -90,6 +99,35 @@ public class CreateCommentViewModel extends BaseObservable
         mNavigator = new Navigator((Activity) mContext);
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
         mMultimediaAdapter = new MultimediaAdapter(this);
+        mAction = CREATE_COMMENT;
+    }
+
+    public CreateCommentViewModel(EditCommentFragment editCommentFragment, Comment comment) {
+        mEditCommentFragment = editCommentFragment;
+        mContext = editCommentFragment.getActivity();
+        mTimelineModelId = comment.getPostId();
+        mProgressDialog = new UploadProgressDialog(mContext);
+        mNavigator = new Navigator((Activity) mContext);
+        mRecordingAudioDialog = RecordingAudioDialog.newInstance();
+        mComment = comment;
+        mMultimediaAdapter = new MultimediaAdapter(this);
+        innitComment(comment);
+        mAction = CREATE_COMMENT;
+    }
+
+    private void innitComment(Comment comment) {
+        setInputtedComment(mComment.getContent());
+        if (comment.getMediaModel() != null) {
+            mCurrentMultimediaFileUrl = comment.getMediaModel().getUrl();
+            initializePlayer();
+            mMultimediaAdapter.setData(Arrays.asList(comment.getMediaModel()));
+        }
+        try {
+            mCommentOld = mComment.clone();
+        } catch (CloneNotSupportedException e) {
+            mCommentOld = mComment;
+        }
+
     }
 
     @Override
@@ -161,9 +199,7 @@ public class CreateCommentViewModel extends BaseObservable
 
     public void onSubmitComment(View view) {
         Comment comment = new Comment();
-        InputMethodManager imm =
-                (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        hideSoftKeyBoast(view);
         if (mMultimediaAdapter.getMediaModel() != null) {
             uploadFiles(mMultimediaAdapter.getMediaModel());
         } else {
@@ -171,14 +207,46 @@ public class CreateCommentViewModel extends BaseObservable
             comment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
             comment.setContent(mInputtedComment);
             comment.setCreateUser(mUserModel);
-            StatusModel statusCommentModel = new StatusModel();
-            statusCommentModel.setCreatedAt(
-                    Utils.generateOppositeNumber(System.currentTimeMillis()));
-            statusCommentModel.setUserUpdate(mUserModel);
-            statusCommentModel.setStatus(Status.NORMAL);
-            comment.setStatusModel(statusCommentModel);
+            comment.setStatusModel(initStatusComent());
             mPresenter.postLiteralComment(comment);
         }
+    }
+
+    public void onSaveEditComment(View view) {
+        hideSoftKeyBoast(view);
+        mComment.setMediaModel(mMultimediaAdapter.getMediaModel());
+        mComment.setCreatedAt(Utils.generateOppositeNumber(mComment.getCreatedAt()));
+        mComment.setModifiedAt(System.currentTimeMillis());
+        mComment.setContent(mInputtedComment);
+        mComment.setStatusModel(initStatusComent());
+        MediaModel mediaModel = mComment.getMediaModel();
+        if (mediaModel == null || (mediaModel.getUrl()).toLowerCase().startsWith(LINK_REMOTE)) {
+            mPresenter.updateLiteralComment(mComment, mCommentOld);
+            return;
+        } else {
+            uploadFiles(mMultimediaAdapter.getMediaModel());
+            return;
+        }
+
+    }
+
+    private StatusModel initStatusComent() {
+        StatusModel statusCommentModel = new StatusModel();
+        statusCommentModel.setCreatedAt(
+                Utils.generateOppositeNumber(System.currentTimeMillis()));
+        statusCommentModel.setUserUpdate(mUserModel);
+        statusCommentModel.setStatus(Status.NORMAL);
+        return statusCommentModel;
+    }
+
+    private void hideSoftKeyBoast(View view) {
+        InputMethodManager imm =
+                (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void onCancelEditComment() {
+        mCallBack.replaceFragment(CreateCommentFragment.getInstance(mComment.getPostId()));
     }
 
     public void onMultimediaIconTouch() {
@@ -329,13 +397,23 @@ public class CreateCommentViewModel extends BaseObservable
 
     public void showVideoRecordScreen() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        mCommentFragment.startActivityForResult(intent, Constant.RequestCode.RECORD_VIDEO);
+        if (mAction == CREATE_COMMENT) {
+            mCommentFragment.startActivityForResult(intent, Constant.RequestCode.RECORD_VIDEO);
+        }
+        if (mAction == EDIT_COMMENT) {
+            mEditCommentFragment.startActivityForResult(intent, Constant.RequestCode.RECORD_VIDEO);
+        }
     }
 
     public void showAlbumPicker() {
         Intent intent = new Intent(mContext, AlbumSelectActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, Constant.Timeline.ONE_IMAGE);
-        mCommentFragment.startActivityForResult(intent, Constant.RequestCode.SELECT_IMAGE);
+        if (mAction == CREATE_COMMENT) {
+            mCommentFragment.startActivityForResult(intent, Constant.RequestCode.SELECT_IMAGE);
+        }
+        if (mAction == EDIT_COMMENT) {
+            mEditCommentFragment.startActivityForResult(intent, Constant.RequestCode.SELECT_IMAGE);
+        }
     }
 
     public void uploadFiles(MediaModel mediaModel) {
@@ -384,7 +462,14 @@ public class CreateCommentViewModel extends BaseObservable
             @Override
             public void onUploadFinnish(MediaModel mediaModel) {
                 mProgressDialog.dismiss();
-                postLiteralComment(mediaModel);
+                if (mAction == CREATE_COMMENT) {
+                    mComment.setMediaModel(mediaModel);
+                    mPresenter.updateLiteralComment(mComment, mCommentOld);
+                    return;
+                }
+                if (mAction == EDIT_COMMENT) {
+                    postLiteralComment(mediaModel);
+                }
                 mIsUploading = false;
             }
 
@@ -417,6 +502,16 @@ public class CreateCommentViewModel extends BaseObservable
     @Override
     public void onGetCurrentUserFailed(String msg) {
 
+    }
+
+    @Override
+    public void setListener(CallBack callBack) {
+        mCallBack = callBack;
+    }
+
+    @Override
+    public void replaceFragment() {
+        mCallBack.replaceFragment(CreateCommentFragment.getInstance(mComment.getPostId()));
     }
 
     @Bindable

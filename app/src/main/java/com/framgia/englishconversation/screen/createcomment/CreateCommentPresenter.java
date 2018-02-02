@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  * updates
  * the UI as required.
  */
-final class CreateCommentPresenter
+public final class CreateCommentPresenter
         implements CreateCommentContract.Presenter, RecordingAudioDialog.OnRecordingAudioListener {
 
     private final CreateCommentContract.ViewModel mViewModel;
@@ -35,16 +35,27 @@ final class CreateCommentPresenter
     private CommentRepository mCommentRepository;
     private CompositeDisposable mDisposable;
     private AuthenicationRepository mAuthenicationRepository;
+    private Comment mComment;
 
-    CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, String timelineModelId,
-                           SharedPrefsApi sharedPrefsApi,
-                           AuthenicationRepository authenicationRepository) {
+    public CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, String timelineModelId,
+                                  SharedPrefsApi sharedPrefsApi,
+                                  AuthenicationRepository authenicationRepository) {
         mViewModel = viewModel;
         mSharedPrefsApi = sharedPrefsApi;
         mTimelineModelId = timelineModelId;
         mCommentRepository = new CommentRepository(new CommentRemoteDataSource(mTimelineModelId));
         mDisposable = new CompositeDisposable();
         mAuthenicationRepository = authenicationRepository;
+    }
+
+    public CreateCommentPresenter(CreateCommentContract.ViewModel viewModel, Comment comment,
+                                  AuthenicationRepository authenicationRepository) {
+        mViewModel = viewModel;
+        mComment = comment;
+        mAuthenicationRepository = authenicationRepository;
+        mCommentRepository
+                = new CommentRepository(new CommentRemoteDataSource(comment.getPostId()));
+        mDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -116,6 +127,34 @@ final class CreateCommentPresenter
                     @Override
                     public void onNext(Comment comment) {
                         mViewModel.onPostLiteralCommentSuccess(comment);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mViewModel.onPostLiteralCommentFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void updateLiteralComment(Comment commentNew, Comment commentOld) {
+        if ((commentNew.getContent() == null || TextUtils.isEmpty(commentNew.getContent().trim()))
+                && commentNew.getMediaModel() == null) {
+            return;
+        }
+        mCommentRepository.saveRevisionComment(commentOld);
+        mDisposable.add(mCommentRepository.updateComment(commentNew)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<Comment>() {
+                    @Override
+                    public void onNext(Comment comment) {
+                        mViewModel.replaceFragment();
                     }
 
                     @Override

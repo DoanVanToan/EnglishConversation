@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by framgia on 16/05/2017.
  */
 
-public class Comment extends BaseObservable implements Parcelable {
+public class Comment extends BaseObservable implements Parcelable, Cloneable {
     @SerializedName("id")
     private String mId;
     @SerializedName("post_id")
@@ -176,5 +176,10 @@ public class Comment extends BaseObservable implements Parcelable {
     @Override
     public int hashCode() {
         return mId != null ? mId.hashCode() : 0;
+    }
+
+    @Override
+    public Comment clone() throws CloneNotSupportedException {
+        return (Comment) super.clone();
     }
 }
