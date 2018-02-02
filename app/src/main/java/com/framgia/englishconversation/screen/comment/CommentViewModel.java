@@ -14,11 +14,13 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import com.framgia.englishconversation.BR;
+import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
+import com.framgia.englishconversation.screen.editcomment.EditCommentFragment;
 import com.framgia.englishconversation.screen.profileuser.ProfileUserActivity;
 import com.framgia.englishconversation.screen.selectedimagedetail.SelectedImageDetailActivity;
 import com.framgia.englishconversation.screen.timeline.OnTimelineItemTouchListener;
@@ -128,7 +130,7 @@ public class CommentViewModel extends BaseObservable
                         showConfirmDeleteDialog(comment);
                         return true;
                     case R.id.edit_comment:
-                        // TODO: 26/1/2018
+                        setFragment(EditCommentFragment.getInstance(comment));
                         return true;
                 }
                 return false;
@@ -253,6 +255,7 @@ public class CommentViewModel extends BaseObservable
 
     public void setFragment(Fragment fragment) {
         mFragment = fragment;
+        notifyPropertyChanged(BR.fragment);
     }
 
     @Override
@@ -289,5 +292,10 @@ public class CommentViewModel extends BaseObservable
     public void setLoadingMore(boolean loadingMore) {
         mIsLoadingMore = loadingMore;
         notifyPropertyChanged(com.android.databinding.library.baseAdapters.BR.loadingMore);
+    }
+
+    @Override
+    public void replaceFragment(BaseFragment baseFragment) {
+        setFragment(baseFragment);
     }
 }

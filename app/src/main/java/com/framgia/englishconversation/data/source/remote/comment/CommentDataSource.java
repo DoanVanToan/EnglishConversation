@@ -20,4 +20,7 @@ public interface CommentDataSource {
     Observable<Comment> updateComment(Comment comment);
 
     void removeListener();
+
+    void saveRevisionComment(Comment comment);
+
 }

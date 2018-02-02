@@ -39,4 +39,9 @@ public class CommentRepository implements CommentDataSource {
     public void removeListener() {
         mDataSource.removeListener();
     }
+
+    @Override
+    public void saveRevisionComment(Comment comment) {
+        mDataSource.saveRevisionComment(comment);
+    }
 }

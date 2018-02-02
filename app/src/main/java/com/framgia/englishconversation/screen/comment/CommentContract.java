@@ -1,5 +1,6 @@
 package com.framgia.englishconversation.screen.comment;
 
+import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
 import com.framgia.englishconversation.data.model.Comment;
@@ -31,6 +32,8 @@ interface CommentContract {
         void showPopupMenuComment(Comment comment);
 
         void deleComentSuccess(Comment comment);
+
+        void replaceFragment(BaseFragment baseFragment);
     }
 
     /**
