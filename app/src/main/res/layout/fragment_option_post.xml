@@ -2,10 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        
-        <variable
-            name="listener"
-            type="com.framgia.englishconversation.screen.dialog.OnOptionItemClickListener"/>
 
         <variable
             name="viewModel"
@@ -14,8 +10,8 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:paddingTop="@dimen/dp_8"
-        android:paddingBottom="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -26,7 +22,7 @@
             android:layout_marginLeft="@dimen/dp_16"
             android:layout_marginStart="@dimen/dp_16"
             android:contentDescription="@string/title_edit_post"
-            android:onClick="@{() -> listener.onClickEditPost()}"
+            android:onClick="@{() -> viewModel.onClickEditPost()}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +36,8 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_5"
             android:text="@string/title_edit_post"
-            android:textSize="@dimen/sp_18"
+            android:onClick="@{() -> viewModel.onClickEditPost()}"
+            android:textSize="@dimen/sp_16"
             app:layout_constraintLeft_toRightOf="@id/image_view_edit_post"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,9 +47,9 @@
             android:layout_height="@dimen/dp_30"
             android:layout_marginLeft="@dimen/dp_16"
             android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
             android:contentDescription="@string/title_edit_post"
-            android:onClick="@{() -> listener.onClickDeletePost()}"
+            android:onClick="@{() -> viewModel.onClickDeletePost()}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_view_edit_post"
@@ -65,7 +62,8 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_26"
             android:text="@string/title_delete_post"
-            android:textSize="@dimen/sp_18"
+            android:onClick="@{() -> viewModel.onClickDeletePost()}"
+            android:textSize="@dimen/sp_16"
             android:layout_marginBottom="@dimen/dp_30"
             app:layout_constraintLeft_toRightOf="@id/image_delete_post"
             app:layout_constraintTop_toBottomOf="@id/text_view_edit_post" />

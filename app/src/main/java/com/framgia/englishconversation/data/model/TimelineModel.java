@@ -52,7 +52,8 @@ public class TimelineModel extends BaseObservable implements Parcelable {
     private List<UserModel> mReportUser;
     @SerializedName("conversations")
     private List<ConversationModel> mConversations;
-
+    @SerializedName("status")
+    private StatusModel mStatusModel;
 
     public TimelineModel() {
     }
@@ -99,6 +100,16 @@ public class TimelineModel extends BaseObservable implements Parcelable {
     public void setId(String id) {
         mId = id;
         notifyPropertyChanged(BR.id);
+    }
+
+    @Bindable
+    public StatusModel getStatusModel() {
+        return mStatusModel;
+    }
+
+    public void setStatusModel(StatusModel statusModel) {
+        mStatusModel = statusModel;
+        notifyPropertyChanged(BR.statusModel);
     }
 
     @Bindable
@@ -225,6 +236,24 @@ public class TimelineModel extends BaseObservable implements Parcelable {
     @Bindable
     public int getViewType() {
         return getMedias() != null ? getMedias().size() : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof TimelineModel) {
+            TimelineModel other = (TimelineModel) obj;
+            return other.getId().equals(getId());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override

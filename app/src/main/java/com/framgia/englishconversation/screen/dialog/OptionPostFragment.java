@@ -41,8 +41,19 @@ public class OptionPostFragment extends BottomSheetDialogFragment {
 
         TimelineRepository timelineRepository = new TimelineRepository(
                 new TimelineRemoteDataSource());
-        mViewModel = new OptionPostViewModel((TimelineModel) getArguments()
-                .getParcelable(Constant.PARCEL_TIMELINE));
+        mViewModel = new OptionPostViewModel(getContext(),
+                (TimelineModel) getArguments().getParcelable(Constant.PARCEL_TIMELINE),
+                new DialogListener() {
+                    @Override
+                    public void onClickEditPost() {
+                        onDismiss(getDialog());
+                    }
+
+                    @Override
+                    public void onClickDeletePost() {
+                        onDismiss(getDialog());
+                    }
+                });
         OptionPostPresenter optionPostPresenter = new OptionPostPresenter(mViewModel,
                 timelineRepository);
         mViewModel.setPresenter(optionPostPresenter);

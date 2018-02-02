@@ -24,6 +24,12 @@ public class StatusModel extends BaseObservable implements Parcelable {
     public StatusModel() {
     }
 
+    public StatusModel(UserModel userUpdate, long createdAt, int status) {
+        mUserUpdate = userUpdate;
+        mCreatedAt = createdAt;
+        mStatus = status;
+    }
+
     @Bindable
     public UserModel getUserUpdate() {
         return mUserUpdate;

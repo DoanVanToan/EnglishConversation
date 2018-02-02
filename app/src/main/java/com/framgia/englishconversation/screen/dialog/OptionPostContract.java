@@ -15,7 +15,7 @@ public interface OptionPostContract {
      * base presenter for ConversationDetailPresenter
      */
     interface Presenter extends BasePresenter {
-        void updateViewTypePost(TimelineModel timelineModel);
+        void deletePost(TimelineModel timelineModel);
 
         void editPost(TimelineModel timelineModel);
     }
@@ -24,6 +24,10 @@ public interface OptionPostContract {
      * base presenter for ConversationDetailViewModel
      */
     interface ViewModel extends BaseViewModel<OptionPostContract.Presenter> {
+
+        void onClickDeletePost();
+
+        void onClickEditPost();
 
         void showConfirmDeleteDialog();
 

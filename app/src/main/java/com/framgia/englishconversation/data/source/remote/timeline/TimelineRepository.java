@@ -2,7 +2,9 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
+
 import io.reactivex.Observable;
+
 import java.util.List;
 
 /**
@@ -25,17 +27,21 @@ public class TimelineRepository {
     }
 
     public Observable<TimelineModel> registerModifyTimelines(TimelineModel timelineModel) {
-        return mDataSource.updateTimeline(timelineModel);
+        return mDataSource.registerModifyTimeline(timelineModel);
     }
 
     public Observable<List<TimelineModel>> getTimeline(TimelineModel timelineModel,
-            UserModel userModel) {
+                                                       UserModel userModel) {
         return mDataSource.getTimeline(timelineModel, userModel);
     }
 
     public Observable<TimelineModel> registerModifyTimelines(TimelineModel timelineModel,
-            UserModel userModel) {
-        return mDataSource.updateTimeline(timelineModel, userModel);
+                                                             UserModel userModel) {
+        return mDataSource.registerModifyTimeline(timelineModel, userModel);
+    }
+
+    public Observable<TimelineModel> updateTimeline(TimelineModel timelineModel) {
+        return mDataSource.updateTimeline(timelineModel);
     }
 
     public void removeListener() {
