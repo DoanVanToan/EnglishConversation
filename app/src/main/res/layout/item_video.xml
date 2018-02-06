@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.createPost.CreatePostViewModel"/>
+            type="com.framgia.englishconversation.screen.basePost.BasePostViewModel"/>
         <variable
             name="mediaModel"
             type="com.framgia.englishconversation.data.model.MediaModel"

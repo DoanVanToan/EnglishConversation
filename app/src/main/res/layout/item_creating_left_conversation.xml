@@ -17,7 +17,7 @@
 
         <variable
             name="viewModel"
-            type="com.framgia.englishconversation.screen.createPost.CreatePostViewModel" />
+            type="com.framgia.englishconversation.screen.basePost.BasePostViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

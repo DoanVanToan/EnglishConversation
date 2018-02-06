@@ -7,6 +7,7 @@ import android.databinding.BaseObservable;
 
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.TimelineModel;
+import com.framgia.englishconversation.screen.editPost.EditPostActivity;
 
 /**
  * Created by Sony on 1/24/2018.
@@ -44,6 +45,7 @@ public class OptionPostViewModel extends BaseObservable implements OptionPostCon
     @Override
     public void onClickEditPost() {
         mDialogListener.onClickEditPost();
+        mContext.startActivity(EditPostActivity.getInstance(mContext, mTimelineModel));
     }
 
     @Override

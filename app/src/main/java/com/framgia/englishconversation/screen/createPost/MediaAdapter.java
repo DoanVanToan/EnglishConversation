@@ -11,6 +11,7 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.databinding.ItemAudioBinding;
 import com.framgia.englishconversation.databinding.ItemImageBinding;
 import com.framgia.englishconversation.databinding.ItemVideoBinding;
+import com.framgia.englishconversation.screen.basePost.BasePostViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,14 @@ import java.util.List;
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHolder> {
 
     private List<MediaModel> mMediaModels;
-    private CreatePostViewModel mViewModel;
+    private BasePostViewModel mViewModel;
 
-    MediaAdapter(CreatePostViewModel viewModel) {
+    public MediaAdapter(BasePostViewModel viewModel) {
         mViewModel = viewModel;
         mMediaModels = new ArrayList<>();
     }
 
-    public void setViewModel(CreatePostViewModel viewModel) {
+    public void setViewModel(BasePostViewModel viewModel) {
         mViewModel = viewModel;
     }
 
@@ -46,7 +47,11 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.BaseViewHold
         updateData(mediaModels);
     }
 
-    void removeItem(MediaModel mediaModel) {
+    public List<MediaModel> getData() {
+        return mMediaModels;
+    }
+
+    public void removeItem(MediaModel mediaModel) {
         mMediaModels.remove(mediaModel);
         notifyDataSetChanged();
     }
