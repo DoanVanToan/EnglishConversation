@@ -281,4 +281,30 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         timelineModel.setId(dataSnapshot.getKey());
         return timelineModel;
     }
+
+    public Observable<TimelineModel> addRevisionTimeline(final TimelineModel timelineModel) {
+        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
+            @Override
+            public void subscribe(final ObservableEmitter<TimelineModel> observableEmitter)
+                    throws Exception {
+                mDatabase.getReference(Constant.DatabaseTree.POST_REVISION).child(
+                        timelineModel.getId()).push()
+                        .setValue(timelineModel)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    observableEmitter.onNext(timelineModel);
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                observableEmitter.onError(e);
+                            }
+                        });
+            }
+        });
+    }
 }

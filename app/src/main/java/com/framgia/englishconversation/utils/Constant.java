@@ -16,6 +16,7 @@ public class Constant {
     public static final int MINIMUM_CHARACTERS_PASSWORD = 6;
     public static final int MIN_CHARACTERS = 1;
     public static final String EMAIL_FORMAT = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    public static final String HTTPS = "https";
 
     public class Timeline {
         public static final int NO_IMAGE = 0;
@@ -32,6 +33,7 @@ public class Constant {
         public static final String CREATED_AT = "createdAt";
         public static final String ID = "createdUser/id";
         public static final String COMMENT_REVISION = "commentRevision";
+        public static final String POST_REVISION = "post_revision";
     }
 
     public class RequestCode {

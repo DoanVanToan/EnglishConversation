@@ -47,4 +47,8 @@ public class TimelineRepository {
     public void removeListener() {
         mDataSource.removeListener();
     }
+
+    public Observable<TimelineModel> addRevisionTimeline(TimelineModel timelineModel) {
+        return mDataSource.addRevisionTimeline(timelineModel);
+    }
 }
