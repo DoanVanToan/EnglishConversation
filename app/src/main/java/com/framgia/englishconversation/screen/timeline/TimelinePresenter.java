@@ -26,6 +26,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
     private TimelineModel mLastTimelineModel;
     private CompositeDisposable mDisposable;
     private SettingRepository mSettingRepository;
+    private UserModel mUserModel;
 
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
             AuthenicationRepository authenicationRepository, TimelineRepository timelineRepository,
@@ -43,7 +44,9 @@ final class TimelinePresenter implements TimelineContract.Presenter {
         mAuthenicationRepository.getCurrentUser(new DataCallback<FirebaseUser>() {
             @Override
             public void onGetDataSuccess(FirebaseUser data) {
+                mUserModel = new UserModel(data);
                 mViewModel.onGetUserSuccess(new UserModel(data));
+                registerModifyTimelines(mLastTimelineModel, mUserModel);
             }
 
             @Override
@@ -59,6 +62,7 @@ final class TimelinePresenter implements TimelineContract.Presenter {
 
     @Override
     public void onStop() {
+        registerModifyTimelines(mLastTimelineModel, mUserModel);
     }
 
     @Override

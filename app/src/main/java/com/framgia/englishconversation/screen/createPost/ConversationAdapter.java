@@ -15,6 +15,7 @@ import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.GravityType;
 import com.framgia.englishconversation.databinding.ItemCreatingLeftConversationBinding;
 import com.framgia.englishconversation.databinding.ItemCreatingRightConventionBinding;
+import com.framgia.englishconversation.screen.basePost.BasePostViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +33,12 @@ public class ConversationAdapter extends
     private static final int INITIAL_ITEM_COUNT = 3;
 
     private List<ConversationModel> mData;
-    private CreatePostViewModel mCreatePostViewModel;
+    private BasePostViewModel mBasePostViewModel;
 
-    ConversationAdapter(@NonNull Context context,
-                        CreatePostViewModel createPostViewModel) {
+    public ConversationAdapter(@NonNull Context context,
+                               BasePostViewModel basePostViewModel) {
         super(context);
-        mCreatePostViewModel = createPostViewModel;
+        mBasePostViewModel = basePostViewModel;
         initDefaultData();
     }
 
@@ -89,6 +90,12 @@ public class ConversationAdapter extends
             int gravity = (i % GRAVITY_AMOUNT == 0) ? GravityType.LEFT : GravityType.RIGHT;
             mData.add(new ConversationModel(gravity));
         }
+    }
+
+    public void setData(List<ConversationModel> conversationModels) {
+        mData.clear();
+        mData.addAll(conversationModels);
+        notifyDataSetChanged();
     }
 
     public List<ConversationModel> getData() {
@@ -150,7 +157,7 @@ public class ConversationAdapter extends
 
         @Override
         public void bindView(ConversationModel conversationModel) {
-            mLeftBinding.setViewModel(mCreatePostViewModel);
+            mLeftBinding.setViewModel(mBasePostViewModel);
             mLeftBinding.setConversations(conversationModel);
             mLeftBinding.setPosition(getAdapterPosition());
             mLeftBinding.executePendingBindings();
@@ -171,7 +178,7 @@ public class ConversationAdapter extends
 
         @Override
         public void bindView(ConversationModel conversationModel) {
-            mRightBinding.setViewModel(mCreatePostViewModel);
+            mRightBinding.setViewModel(mBasePostViewModel);
             mRightBinding.setPosition(getAdapterPosition());
             mRightBinding.setConversations(conversationModel);
             mRightBinding.executePendingBindings();

@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import com.framgia.englishconversation.BasePresenter;
 import com.framgia.englishconversation.BaseViewModel;
-import com.framgia.englishconversation.data.model.ConversationModel;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;

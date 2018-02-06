@@ -2,7 +2,6 @@ package com.framgia.englishconversation.screen.basePost;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
@@ -116,8 +115,8 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         mProgressDialog = new UploadProgressDialog(mActivity);
         mAdapterType = AdapterType.MEDIA;
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
-//        mMediaAdapter = new MediaAdapter(this);
-//        mConversationAdapter = new ConversationAdapter(mActivity, this);
+        mMediaAdapter = new MediaAdapter(this);
+        mConversationAdapter = new ConversationAdapter(mActivity, this);
         mPlayerListener = new ExoPlayerListener();
     }
 
@@ -128,8 +127,8 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         mProgressDialog = new UploadProgressDialog(mActivity);
         mAdapterType = AdapterType.MEDIA;
         mRecordingAudioDialog = RecordingAudioDialog.newInstance();
-//        mMediaAdapter = new MediaAdapter(this);
-//        mConversationAdapter = new ConversationAdapter(mActivity, this);
+        mMediaAdapter = new MediaAdapter(this);
+        mConversationAdapter = new ConversationAdapter(mActivity, this);
         mPlayerListener = new ExoPlayerListener();
         initView(timelineModel);
         try {
@@ -147,7 +146,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         }
         if (timelineModel.getConversations() != null) {
             mAdapterType = AdapterType.CONVERSATION;
-//            mConversationAdapter.setData(timelineModel.getConversations());
+            mConversationAdapter.setData(timelineModel.getConversations());
         }
 
     }
@@ -346,7 +345,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
                 }
                 break;
             default:
-//                mTimelineModel.setMedias(mMediaAdapter.getData());
+                mTimelineModel.setMedias(mMediaAdapter.getData());
                 if (getListMediaUpload(mTimelineModel).size() != 0) {
                     uploadFiles(getListMediaUpload(mTimelineModel));
                 } else {
@@ -574,7 +573,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
     public void onDeleteItemMediaClicked(MediaModel mediaModel) {
         storeDataWhenReleasePlayer();
         mTimelineModel.getMedias().remove(mediaModel);
-//        mMediaAdapter.removeItem(mediaModel);
+        mMediaAdapter.removeItem(mediaModel);
     }
 
     private void showAudioDialog() {

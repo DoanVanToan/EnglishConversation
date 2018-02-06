@@ -1,12 +1,14 @@
 package com.framgia.englishconversation.screen.createPost;
 
 import android.text.TextUtils;
+
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.google.firebase.auth.FirebaseUser;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,9 +26,9 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
     private TimelineRepository mTimelineRepository;
     private CompositeDisposable mDisposable;
 
-    CreatePostPresenter(CreatePostContract.ViewModel viewModel,
-            AuthenicationRepository authenicationRepository,
-            TimelineRepository timelineRepository) {
+    public CreatePostPresenter(CreatePostContract.ViewModel viewModel,
+                        AuthenicationRepository authenicationRepository,
+                        TimelineRepository timelineRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
@@ -50,7 +52,7 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
     }
 
     @Override
-    public void createPost(TimelineModel timelineModel) {
+    public void submitPost(TimelineModel timelineModel) {
         if ((timelineModel.getContent() == null || TextUtils.isEmpty(
                 timelineModel.getContent().trim()))
                 && (timelineModel.getMedias() == null
@@ -64,18 +66,19 @@ final class CreatePostPresenter implements CreatePostContract.Presenter {
                 .subscribeWith(new DisposableObserver<TimelineModel>() {
                     @Override
                     public void onNext(@NonNull TimelineModel timelineModel) {
-                        mViewModel.onCreatePostSuccess();
+                        mViewModel.onSubmitPostSuccess();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        mViewModel.onCreatePostFailed(e.getMessage());
+                        mViewModel.onSubmitPostFailed(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
                     }
                 }));
+
     }
 
     @Override

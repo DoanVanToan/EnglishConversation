@@ -91,7 +91,7 @@ public class CreatePostActivity extends BaseActivity {
                 break;
             case R.id.menu_save:
                 if (!mBlocker.block()) {
-                    mViewModel.onCreatePost();
+                    mViewModel.onSubmitPost();
                 }
                 break;
         }
