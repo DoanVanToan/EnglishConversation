@@ -26,5 +26,7 @@ public interface TimelineDataSource {
 
     Observable<TimelineModel> updateTimeline(TimelineModel timelineModel);
 
+    Observable<TimelineModel> addRevisionTimeline(TimelineModel timelineModel);
+
     void removeListener();
 }

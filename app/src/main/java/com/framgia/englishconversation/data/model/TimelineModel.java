@@ -15,7 +15,7 @@ import java.util.List;
  * Created by framgia on 16/05/2017.
  */
 
-public class TimelineModel extends BaseObservable implements Parcelable {
+public class TimelineModel extends BaseObservable implements Parcelable, Cloneable {
 
     public static final Creator<TimelineModel> CREATOR = new Creator<TimelineModel>() {
         @Override
@@ -254,6 +254,11 @@ public class TimelineModel extends BaseObservable implements Parcelable {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Override
