@@ -3,7 +3,6 @@ package com.framgia.englishconversation.data.source.remote.comment;
 import android.support.annotation.NonNull;
 
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
 import com.framgia.englishconversation.utils.Constant;
 import com.framgia.englishconversation.utils.Utils;
@@ -20,18 +19,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
+import static com.framgia.englishconversation.data.model.Status.ADD;
+import static com.framgia.englishconversation.data.model.Status.DELETE;
+import static com.framgia.englishconversation.data.model.Status.EDIT;
+
 /**
  * Created by VinhTL on 20/12/2017.
  */
 
 public class CommentRemoteDataSource extends BaseFirebaseDataBase implements CommentDataSource {
-    private static final int NUM_OF_COMMENT_PER_PAGE = 10;
+    private static final int NUM_OF_COMMENT_PER_PAGE = 15;
     private ChildEventListener mUpdateComment;
 
     public CommentRemoteDataSource(String timelineId) {
@@ -43,8 +47,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
     public Observable<Comment> createNewComment(final Comment comment) {
         return Observable.create(new ObservableOnSubscribe<Comment>() {
             @Override
-            public void subscribe(
-                    @io.reactivex.annotations.NonNull final ObservableEmitter<Comment> emitter)
+            public void subscribe(@NonNull final ObservableEmitter<Comment> emitter)
                     throws Exception {
                 mReference.push()
                         .setValue(comment)
@@ -84,10 +87,6 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         List<Comment> comments = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Comment comment = snapshot.getValue(Comment.class);
-                            if (comment.getStatusModel() != null
-                                    && comment.getStatusModel().getStatus() != Status.NORMAL) {
-                                continue;
-                            }
                             comment.setCreatedAt(
                                     Utils.generateOppositeNumber(comment.getCreatedAt()));
                             comment.setId(snapshot.getKey());
@@ -95,7 +94,6 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                                     .equals(snapshot.getKey())) {
                                 comments.add(comment);
                             }
-
                         }
                         e.onNext(comments);
                     }
@@ -109,28 +107,25 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
         });
     }
 
-    public Observable<Comment> registerModifyTimelines(final Comment lastComment) {
-        return Observable.create(new ObservableOnSubscribe<Comment>() {
+    public Observable<HashMap<Integer, Comment>> registerModifyTimelines(
+            final Comment lastComment) {
+        return Observable.create(new ObservableOnSubscribe<HashMap<Integer, Comment>>() {
             @Override
-            public void subscribe(final ObservableEmitter<Comment> e) throws Exception {
+            public void subscribe(final ObservableEmitter<HashMap<Integer, Comment>> e)
+                    throws Exception {
                 final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                         .endAt(lastComment != null ? -lastComment.getCreatedAt()
                                 : -Calendar.getInstance().getTimeInMillis());
                 mUpdateComment = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (lastComment != null && lastComment.getId()
-                                .equals(dataSnapshot.getKey())) {
-                            return;
-                        }
                         Comment comment = dataSnapshot.getValue(Comment.class);
-                        if (comment.getStatusModel() == null
-                                || comment.getStatusModel().getStatus() == Status.NORMAL) {
-                            comment.setCreatedAt(
-                                    Utils.generateOppositeNumber(comment.getCreatedAt()));
-                            comment.setId(dataSnapshot.getKey());
-                            e.onNext(comment);
-                        }
+                        comment.setCreatedAt(
+                                Utils.generateOppositeNumber(comment.getCreatedAt()));
+                        comment.setId(dataSnapshot.getKey());
+                        HashMap<Integer, Comment> commentHashMap = new HashMap<>();
+                        commentHashMap.put(ADD, comment);
+                        e.onNext(commentHashMap);
                     }
 
                     @Override
@@ -140,7 +135,9 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         comment.setModifiedAt(
                                 Utils.generateOppositeNumber(comment.getModifiedAt()));
                         comment.setId(dataSnapshot.getKey());
-                        e.onNext(comment);
+                        HashMap<Integer, Comment> commentHashMap = new HashMap<>();
+                        commentHashMap.put(EDIT, comment);
+                        e.onNext(commentHashMap);
                     }
 
                     @Override
@@ -148,15 +145,14 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         Comment comment = dataSnapshot.getValue(Comment.class);
                         comment.setCreatedAt(Utils.generateOppositeNumber(comment.getCreatedAt()));
                         comment.setId(dataSnapshot.getKey());
-                        e.onNext(comment);
+                        HashMap<Integer, Comment> commentHashMap = new HashMap<>();
+                        commentHashMap.put(DELETE, comment);
+                        e.onNext(commentHashMap);
                     }
 
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        Comment comment = dataSnapshot.getValue(Comment.class);
-                        comment.setCreatedAt(Utils.generateOppositeNumber(comment.getCreatedAt()));
-                        comment.setId(dataSnapshot.getKey());
-                        e.onNext(comment);
+
                     }
 
                     @Override
@@ -164,7 +160,7 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                         e.onError(databaseError.toException());
                     }
                 };
-                mReference.addChildEventListener(mUpdateComment);
+                query.addChildEventListener(mUpdateComment);
             }
         });
     }
@@ -193,13 +189,55 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
     }
 
     @Override
-    public void saveRevisionComment(final Comment comment) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference(Constant.DatabaseTree.COMMENT_REVISION)
-                .child(comment.getId());
-        databaseReference.push()
-                .setValue(comment);
+    public Observable<Comment> saveRevisionComment(final Comment comment) {
+        return Observable.create(new ObservableOnSubscribe<Comment>() {
+            @Override
+            public void subscribe(ObservableEmitter<Comment> e) throws Exception {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                        .getReference(Constant.DatabaseTree.COMMENT_REVISION)
+                        .child(comment.getId());
+                databaseReference.push()
+                        .setValue(comment);
+            }
+        });
+    }
 
+    @Override
+    public Observable<Comment> deleteComment(final Comment comment) {
+        return Observable.create(new ObservableOnSubscribe<Comment>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Comment> emitter)
+                    throws Exception {
+                mReference.child(comment.getId())
+                        .removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                emitter.onNext(comment);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                emitter.onError(e);
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
+    public Observable<Comment> saveCommentDelete(final Comment comment) {
+        return Observable.create(new ObservableOnSubscribe<Comment>() {
+            @Override
+            public void subscribe(ObservableEmitter<Comment> e) throws Exception {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                        .getReference(Constant.DatabaseTree.COMMENT_DELETE)
+                        .child(comment.getPostId());
+                databaseReference.push()
+                        .setValue(comment);
+            }
+        });
     }
 
     @Override

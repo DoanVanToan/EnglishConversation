@@ -54,6 +54,9 @@ public class CommentAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @param comment
      */
     public void addComment(Comment comment) {
+        if (mComments.contains(comment)) {
+            return;
+        }
         mComments.add(0, comment);
         notifyItemInserted(0);
     }

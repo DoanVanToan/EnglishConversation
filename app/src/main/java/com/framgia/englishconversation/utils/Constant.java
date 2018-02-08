@@ -32,8 +32,9 @@ public class Constant {
         public static final String COMMENT = "comment";
         public static final String CREATED_AT = "createdAt";
         public static final String ID = "createdUser/id";
-        public static final String COMMENT_REVISION = "commentRevision";
+        public static final String COMMENT_REVISION = "comment_revision";
         public static final String POST_REVISION = "post_revision";
+        public static final String COMMENT_DELETE = "deleted_comment";
     }
 
     public class RequestCode {

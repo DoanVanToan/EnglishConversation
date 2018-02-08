@@ -1,8 +1,6 @@
 package com.framgia.englishconversation.screen.comment;
 
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.model.Status;
-import com.framgia.englishconversation.data.model.StatusModel;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
@@ -10,12 +8,17 @@ import com.framgia.englishconversation.data.source.remote.comment.CommentReposit
 import com.framgia.englishconversation.utils.Utils;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.framgia.englishconversation.data.model.Status.ADD;
+import static com.framgia.englishconversation.data.model.Status.DELETE;
+import static com.framgia.englishconversation.data.model.Status.EDIT;
 
 /**
  * Listens to user actions from the UI ({@link CommentFragment}), retrieves the data and updates
@@ -36,7 +39,6 @@ final class CommentPresenter implements CommentContract.Presenter {
 
     @Override
     public void onStart() {
-        registerModifyComment(mLastComment);
     }
 
     @Override
@@ -60,17 +62,19 @@ final class CommentPresenter implements CommentContract.Presenter {
     }
 
     @Override
-    public void fetchCommentData(Comment comment) {
-        mDisposable.add(mRepository.getComment(comment)
+    public void fetchCommentData(final Comment lastComment) {
+        mDisposable.add(mRepository.getComment(lastComment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<List<Comment>>() {
                     @Override
                     public void onNext(List<Comment> comments) {
                         mViewModel.onGetCommentsSuccess(comments);
-                        if (mLastComment == null) {
-                            mLastComment = comments.isEmpty() ? null : comments.get(0);
-                        }
+                        mLastComment = comments.isEmpty() ? mLastComment
+                                : comments.get(comments.size() - 1);
+                        // remove listener old
+                        mRepository.removeListener();
+                        registerModifyComment(mLastComment);
                     }
 
                     @Override
@@ -85,27 +89,27 @@ final class CommentPresenter implements CommentContract.Presenter {
                 }));
     }
 
+    public void saveCommentDelete(Comment comment) {
+        mRepository.saveCommentDelete(comment)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
+
     @Override
     public void deleteComment(Comment comment) {
         //// TODO: 1/2/2018  handle save history update comment
-        // show dialog handle delete comment
         mViewModel.showDialogComment();
-        // check commentStatus null with database old
-        if (comment.getStatusModel() == null) {
-            comment.setStatusModel(new StatusModel());
-        }
         comment.setCreatedAt(Utils.generateOppositeNumber(comment.getCreatedAt()));
-        comment.getStatusModel().setStatus(Status.DELETE);
-        comment.getStatusModel().setCreatedAt(Utils.generateOppositeNumber(
+        comment.setModifiedAt(Utils.generateOppositeNumber(
                 System.currentTimeMillis()));
-        comment.getStatusModel().setUserUpdate(comment.getCreateUser());
-        mDisposable.add(mRepository.updateComment(comment)
+        mDisposable.add(mRepository.deleteComment(comment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<Comment>() {
                     @Override
                     public void onNext(Comment comment) {
                         mViewModel.deleComentSuccess(comment);
+                        saveCommentDelete(comment);
                     }
 
                     @Override
@@ -143,12 +147,17 @@ final class CommentPresenter implements CommentContract.Presenter {
         mDisposable.add(mRepository.registerModifyTimelines(lastComment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribeWith(new DisposableObserver<Comment>() {
+                .subscribeWith(new DisposableObserver<HashMap<Integer, Comment>>() {
                     @Override
-                    public void onNext(Comment comment) {
-                        mViewModel.onGetCommentSuccess(comment);
-                        if (mLastComment == null) {
-                            mLastComment = comment;
+                    public void onNext(HashMap<Integer, Comment> commentHashMap) {
+                        if (commentHashMap.containsKey(EDIT)) {
+                            mViewModel.onUpdateComment(commentHashMap.get(EDIT));
+                        }
+                        if (commentHashMap.containsKey(ADD)) {
+                            mViewModel.onAddComment(commentHashMap.get(ADD));
+                        }
+                        if (commentHashMap.containsKey(DELETE)) {
+                            mViewModel.onDeleteComment(commentHashMap.get(DELETE));
                         }
                     }
 

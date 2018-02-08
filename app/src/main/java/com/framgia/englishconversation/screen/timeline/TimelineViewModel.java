@@ -130,7 +130,7 @@ public class TimelineViewModel extends BaseObservable
             return;
         }
         if (timelineModel.getStatusModel() == null
-                || timelineModel.getStatusModel().getStatus() == Status.NORMAL) {
+                || timelineModel.getStatusModel().getStatus() == Status.ADD) {
             mAdapter.updateTimeline(timelineModel);
             return;
         }

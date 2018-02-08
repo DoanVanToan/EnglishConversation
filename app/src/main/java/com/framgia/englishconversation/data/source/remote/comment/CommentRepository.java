@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.source.remote.comment;
 
 import com.framgia.englishconversation.data.model.Comment;
 
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -27,7 +28,7 @@ public class CommentRepository implements CommentDataSource {
         return mDataSource.getComment(comment);
     }
 
-    public Observable<Comment> registerModifyTimelines(Comment lastComment) {
+    public Observable<HashMap<Integer, Comment>> registerModifyTimelines(Comment lastComment) {
         return mDataSource.registerModifyTimelines(lastComment);
     }
 
@@ -41,7 +42,17 @@ public class CommentRepository implements CommentDataSource {
     }
 
     @Override
-    public void saveRevisionComment(Comment comment) {
-        mDataSource.saveRevisionComment(comment);
+    public Observable<Comment> saveRevisionComment(Comment comment) {
+       return mDataSource.saveRevisionComment(comment);
+    }
+
+    @Override
+    public Observable<Comment> deleteComment(Comment comment) {
+        return mDataSource.deleteComment(comment);
+    }
+
+    @Override
+    public Observable<Comment> saveCommentDelete(Comment comment) {
+      return   mDataSource.saveCommentDelete(comment);
     }
 }

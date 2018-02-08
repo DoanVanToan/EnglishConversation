@@ -29,11 +29,19 @@ interface CommentContract {
 
         void onGetCommentSuccess(Comment comment);
 
+        void onAddComment(Comment comment);
+
+        void onDeleteComment(Comment comment);
+
+        void onUpdateComment(Comment comment);
+
         void showPopupMenuComment(Comment comment);
 
         void deleComentSuccess(Comment comment);
 
         void replaceFragment(BaseFragment baseFragment);
+
+        void onCommmentSuccess();
     }
 
     /**

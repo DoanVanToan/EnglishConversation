@@ -8,4 +8,7 @@ import com.framgia.englishconversation.BaseFragment;
 
 public interface CallBack {
     void replaceFragment(BaseFragment baseFragment);
+
+    //  notifi parent fragment PostCommentSuccess
+    void onPostCommentSuccess();
 }

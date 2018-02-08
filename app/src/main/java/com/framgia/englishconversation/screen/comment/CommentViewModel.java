@@ -17,7 +17,6 @@ import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
-import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.screen.createcomment.CreateCommentFragment;
 import com.framgia.englishconversation.screen.editcomment.EditCommentFragment;
@@ -54,6 +53,8 @@ public class CommentViewModel extends BaseObservable
     private boolean mIsLoadingMore;
     private View mViewGroupComment;
     private ProgressDialog mProgressDialog;
+    private int mScrollPosition;
+
 
     public CommentViewModel(Context context, String timelineModelId, FragmentManager manager,
                             UserModel userModel) {
@@ -86,8 +87,19 @@ public class CommentViewModel extends BaseObservable
         mPresenter.onDestroy();
     }
 
+    @Bindable
+    public int getScrollPosition() {
+        return mScrollPosition;
+    }
+
+    public void setScrollPosition(int scrollPosition) {
+        mScrollPosition = scrollPosition;
+        notifyPropertyChanged(BR.scrollPosition);
+    }
+
     @Override
     public void onGetCommentsSuccess(List<Comment> comments) {
+        mOnEndScrollListener.setIsFetchingData(false);
         mAdapter.updateData(comments);
         setLoadingMore(false);
     }
@@ -100,21 +112,31 @@ public class CommentViewModel extends BaseObservable
 
     @Override
     public void onGetCommentSuccess(Comment comment) {
+
+    }
+
+    @Override
+    public void onAddComment(Comment comment) {
         if (comment == null) {
             return;
         }
-        if (!mAdapter.isExitComment(comment)) {
-            mAdapter.addComment(comment);
+        mAdapter.addComment(comment);
+    }
+
+    @Override
+    public void onDeleteComment(Comment comment) {
+        if (comment == null) {
             return;
         }
-        if (comment.getStatusModel() == null
-                || comment.getStatusModel().getStatus() == Status.NORMAL) {
-            mAdapter.updateComment(comment);
+        mAdapter.deleteComment(comment);
+    }
+
+    @Override
+    public void onUpdateComment(Comment comment) {
+        if (comment == null) {
             return;
         }
-        if (comment.getStatusModel().getStatus() == Status.DELETE) {
-            mAdapter.deleteComment(comment);
-        }
+        mAdapter.updateComment(comment);
     }
 
     @Override
@@ -142,6 +164,7 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void deleComentSuccess(Comment comment) {
         mProgressDialog.cancel();
+        onDeleteComment(comment);
     }
 
     private void showConfirmDeleteDialog(final Comment comment) {
@@ -297,5 +320,11 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void replaceFragment(BaseFragment baseFragment) {
         setFragment(baseFragment);
+    }
+
+    @Override
+    public void onCommmentSuccess() {
+        // move position to first
+        setScrollPosition(0);
     }
 }
