@@ -147,7 +147,7 @@ public final class CreateCommentPresenter
                 && commentNew.getMediaModel() == null) {
             return;
         }
-        mCommentRepository.saveRevisionComment(commentOld);
+        mCommentRepository.saveRevisionComment(commentOld).subscribeOn(Schedulers.io()).subscribe();
         mDisposable.add(mCommentRepository.updateComment(commentNew)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

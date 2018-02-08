@@ -27,8 +27,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
     private UserModel mCreateUser;
     @SerializedName("media")
     private MediaModel mMediaModel;
-    @SerializedName("status")
-    private StatusModel mStatusModel;
 
     public Comment() {
     }
@@ -50,7 +48,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
         mContent = content;
     }
 
-    @Bindable
     public long getCreatedAt() {
         return mCreatedAt;
     }
@@ -65,8 +62,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
 
     public void setCreatedAt(long createdAt) {
         mCreatedAt = createdAt;
-        notifyPropertyChanged(BR.createdAt);
-
     }
 
     @Bindable
@@ -107,16 +102,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
         return MediaModel.MediaType.ONLY_TEXT;
     }
 
-    @Bindable
-    public StatusModel getStatusModel() {
-        return mStatusModel;
-    }
-
-    public void setStatusModel(StatusModel status) {
-        mStatusModel = status;
-        notifyPropertyChanged(BR.statusModel);
-    }
-
     protected Comment(Parcel in) {
         mId = in.readString();
         mPostId = in.readString();
@@ -125,8 +110,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
         mModifiedAt = in.readLong();
         mCreateUser = (UserModel) in.readValue(UserModel.class.getClassLoader());
         mMediaModel = (MediaModel) in.readValue(MediaModel.class.getClassLoader());
-        mStatusModel = (StatusModel) in.readValue(
-                StatusModel.class.getClassLoader());
     }
 
     @Override
@@ -143,7 +126,6 @@ public class Comment extends BaseObservable implements Parcelable, Cloneable {
         dest.writeLong(mModifiedAt);
         dest.writeValue(mCreateUser);
         dest.writeValue(mMediaModel);
-        dest.writeValue(mStatusModel);
     }
 
     @SuppressWarnings("unused")
