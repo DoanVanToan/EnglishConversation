@@ -23,8 +23,6 @@ import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
-import com.framgia.englishconversation.data.model.Status;
-import com.framgia.englishconversation.data.model.StatusModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.screen.comment.CallBack;
@@ -56,6 +54,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.ACTION_UPLOAD_MULTI_FILE;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FILES;
 import static com.framgia.englishconversation.service.FirebaseUploadService.EXTRA_FOLDER;
+import static com.framgia.englishconversation.utils.Constant.HTTPS;
 
 
 /**
@@ -66,7 +65,6 @@ public class CreateCommentViewModel extends BaseObservable
         implements CreateCommentContract.ViewModel, PopupMenu.OnMenuItemClickListener {
     private final static int EDIT_COMMENT = 1;
     private final static int CREATE_COMMENT = 0;
-    private static final String LINK_REMOTE = "https";
     private CreateCommentContract.Presenter mPresenter;
     private String mInputtedComment;
     private Context mContext;
@@ -218,7 +216,7 @@ public class CreateCommentViewModel extends BaseObservable
         mComment.setModifiedAt(System.currentTimeMillis());
         mComment.setContent(mInputtedComment);
         MediaModel mediaModel = mComment.getMediaModel();
-        if (mediaModel == null || (mediaModel.getUrl()).toLowerCase().startsWith(LINK_REMOTE)) {
+        if (mediaModel == null || (mediaModel.getUrl()).toLowerCase().startsWith(HTTPS)) {
             mPresenter.updateLiteralComment(mComment, mCommentOld);
             return;
         } else {
@@ -428,12 +426,6 @@ public class CreateCommentViewModel extends BaseObservable
         comment.setMediaModel(model);
         comment.setContent(mInputtedComment);
         comment.setCreateUser(mUserModel);
-        StatusModel statusCommentModel = new StatusModel();
-        statusCommentModel.setCreatedAt(
-                Utils.generateOppositeNumber(System.currentTimeMillis()));
-        statusCommentModel.setUserUpdate(mUserModel);
-        statusCommentModel.setStatus(Status.ADD);
-        comment.setStatusModel(statusCommentModel);
         mPresenter.postLiteralComment(comment);
     }
 

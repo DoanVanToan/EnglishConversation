@@ -39,9 +39,7 @@
             android:layout_height="@dimen/dp_40"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
             android:background="@drawable/bg_corner_edit_text"
             android:hint="@string/description_write_a_comment"
             android:inputType="text"
@@ -51,9 +49,10 @@
             android:paddingRight="@dimen/dp_5"
             android:paddingStart="@dimen/dp_5"
             android:text="@={viewModel.inputtedComment}"
-            app:layout_constraintBottom_toTopOf="@id/btn_cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_multimedia">
+            app:layout_constraintLeft_toRightOf="@id/iv_multimedia"
+            app:layout_constraintTop_toBottomOf="@id/btn_save_comment">
 
         </EditText>
 
@@ -64,44 +63,36 @@
             android:orientation="vertical"
             app:adapter="@{viewModel.multimediaAdapter}"
             app:layoutManager="LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/et_input_comment"
+            app:layout_constraintBottom_toTopOf="@+id/btn_save_comment"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_save_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            android:text="@string/aar_save"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/btn_cancel"
-            app:layout_constraintTop_toBottomOf="@id/et_input_comment"
+            android:background="@drawable/aar_ic_check"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@id/et_input_comment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_media"
             app:onClickSafely="@{(v)-> viewModel.onSaveEditComment(etInputComment)}" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_marginRight="@dimen/dp_8"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            android:text="@string/action_cancel"
-            android:textSize="12sp"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:background="@drawable/aar_ic_clear"
+            android:backgroundTint="@color/color_red_500"
             android:windowSoftInputMode="adjustPan"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_input_comment"
+            app:layout_constraintBottom_toTopOf="@id/et_input_comment"
+            app:layout_constraintRight_toLeftOf="@id/btn_save_comment"
+            app:layout_constraintTop_toBottomOf="@id/recycler_media"
             app:onClickSafely="@{(v)-> viewModel.onCancelEditComment()}" />
     </android.support.constraint.ConstraintLayout>
 </layout>
