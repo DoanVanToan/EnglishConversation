@@ -104,4 +104,9 @@ public class CommentFragment extends BottomSheetDialogFragment implements CallBa
     public void replaceFragment(BaseFragment baseFragment) {
         mViewModel.replaceFragment(baseFragment);
     }
+
+    @Override
+    public void onPostCommentSuccess() {
+        mViewModel.onCommmentSuccess();
+    }
 }

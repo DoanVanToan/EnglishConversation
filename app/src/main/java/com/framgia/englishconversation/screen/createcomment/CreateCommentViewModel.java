@@ -112,7 +112,7 @@ public class CreateCommentViewModel extends BaseObservable
         mComment = comment;
         mMultimediaAdapter = new MultimediaAdapter(this);
         innitComment(comment);
-        mAction = CREATE_COMMENT;
+        mAction = EDIT_COMMENT;
     }
 
     private void innitComment(Comment comment) {
@@ -207,7 +207,6 @@ public class CreateCommentViewModel extends BaseObservable
             comment.setCreatedAt(Utils.generateOppositeNumber(System.currentTimeMillis()));
             comment.setContent(mInputtedComment);
             comment.setCreateUser(mUserModel);
-            comment.setStatusModel(initStatusComent());
             mPresenter.postLiteralComment(comment);
         }
     }
@@ -218,7 +217,6 @@ public class CreateCommentViewModel extends BaseObservable
         mComment.setCreatedAt(Utils.generateOppositeNumber(mComment.getCreatedAt()));
         mComment.setModifiedAt(System.currentTimeMillis());
         mComment.setContent(mInputtedComment);
-        mComment.setStatusModel(initStatusComent());
         MediaModel mediaModel = mComment.getMediaModel();
         if (mediaModel == null || (mediaModel.getUrl()).toLowerCase().startsWith(LINK_REMOTE)) {
             mPresenter.updateLiteralComment(mComment, mCommentOld);
@@ -228,15 +226,6 @@ public class CreateCommentViewModel extends BaseObservable
             return;
         }
 
-    }
-
-    private StatusModel initStatusComent() {
-        StatusModel statusCommentModel = new StatusModel();
-        statusCommentModel.setCreatedAt(
-                Utils.generateOppositeNumber(System.currentTimeMillis()));
-        statusCommentModel.setUserUpdate(mUserModel);
-        statusCommentModel.setStatus(Status.NORMAL);
-        return statusCommentModel;
     }
 
     private void hideSoftKeyBoast(View view) {
@@ -331,6 +320,7 @@ public class CreateCommentViewModel extends BaseObservable
     public void onPostLiteralCommentSuccess(Comment comment) {
         mMultimediaAdapter.setData(new ArrayList<MediaModel>());
         setInputtedComment(null);
+        mCallBack.onPostCommentSuccess();
     }
 
     @Override
@@ -442,7 +432,7 @@ public class CreateCommentViewModel extends BaseObservable
         statusCommentModel.setCreatedAt(
                 Utils.generateOppositeNumber(System.currentTimeMillis()));
         statusCommentModel.setUserUpdate(mUserModel);
-        statusCommentModel.setStatus(Status.NORMAL);
+        statusCommentModel.setStatus(Status.ADD);
         comment.setStatusModel(statusCommentModel);
         mPresenter.postLiteralComment(comment);
     }
@@ -462,12 +452,12 @@ public class CreateCommentViewModel extends BaseObservable
             @Override
             public void onUploadFinnish(MediaModel mediaModel) {
                 mProgressDialog.dismiss();
-                if (mAction == CREATE_COMMENT) {
+                if (mAction == EDIT_COMMENT) {
                     mComment.setMediaModel(mediaModel);
                     mPresenter.updateLiteralComment(mComment, mCommentOld);
                     return;
                 }
-                if (mAction == EDIT_COMMENT) {
+                if (mAction == CREATE_COMMENT) {
                     postLiteralComment(mediaModel);
                 }
                 mIsUploading = false;

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+
 import com.framgia.englishconversation.BaseFragment;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.MediaModel;
@@ -16,6 +17,7 @@ import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsIm
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.databinding.FragmentCreateCommentBinding;
+import com.framgia.englishconversation.screen.comment.CallBack;
 import com.framgia.englishconversation.utils.Constant;
 
 import static android.app.Activity.RESULT_OK;
@@ -39,7 +41,7 @@ public class CreateCommentFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         FragmentCreateCommentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_create_comment, container,
                         false);
@@ -62,6 +64,7 @@ public class CreateCommentFragment extends BaseFragment {
                 new CreateCommentPresenter(mViewModel, timelineModelId,
                         new SharedPrefsImpl(getActivity()), authenicationRepository);
         mViewModel.setPresenter(presenter);
+        mViewModel.setListener((CallBack) getParentFragment());
     }
 
     @Override

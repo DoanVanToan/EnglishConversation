@@ -111,7 +111,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                         }
                         TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
                         if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
-                                .getStatus() == Status.NORMAL) {
+                                .getStatus() == Status.ADD) {
                             e.onNext(getTimelineData(dataSnapshot));
                         }
                     }
@@ -192,7 +192,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                         }
                         TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
                         if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
-                                .getStatus() == Status.NORMAL) {
+                                .getStatus() == Status.ADD) {
                             e.onNext(getTimelineData(dataSnapshot));
                         }
                     }
