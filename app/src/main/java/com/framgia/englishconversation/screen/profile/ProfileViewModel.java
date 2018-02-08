@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.screen.timeline.TimelineFragment;
+import com.framgia.englishconversation.screen.timeline.usertimeline.UserTimelineFragment;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 
 /**
@@ -49,7 +49,7 @@ public class ProfileViewModel extends BaseObservable implements ProfileContract.
         if (mUserModel == null) {
             setUserModel(data);
         }
-        mFragment = TimelineFragment.newInstance(mUserModel);
+        mFragment = UserTimelineFragment.newInstance(mUserModel);
     }
 
     @Override

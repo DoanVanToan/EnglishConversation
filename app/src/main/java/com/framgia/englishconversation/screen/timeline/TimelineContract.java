@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * This specifies the contract between the view and the presenter.
  */
-interface TimelineContract {
+public interface TimelineContract {
     /**
      * View.
      */
@@ -28,14 +28,16 @@ interface TimelineContract {
         void onDestroy();
 
         void onGetSettingSuccess(Setting setting);
+
+        void setTimelineUser(UserModel timelineUser);
     }
 
     /**
      * Presenter.
      */
     interface Presenter extends BasePresenter {
-        void fetchTimelineData(TimelineModel timelineModel, UserModel userModel);
-
         void onDestroy();
+
+        void getTimelineData(TimelineModel lastTimelineModel);
     }
 }

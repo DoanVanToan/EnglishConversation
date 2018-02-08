@@ -43,18 +43,17 @@ public class TimelineViewModel extends BaseObservable
     private UserModel mUserModel;
     private TimelineAdapter mAdapter;
     private OnEndScrollListener mOnEndScrollListener;
-    private UserModel mTimelineUser;
     private boolean mIsAllowCreatePost;
     private Setting mSetting;
     private boolean mIsLoadingMore;
+    private UserModel mTimelineUser;
 
-    public TimelineViewModel(Context context, Navigator navigator, UserModel userModel) {
+    public TimelineViewModel(Context context, Navigator navigator) {
         mContext = context;
         mNavigator = navigator;
         mAdapter = new TimelineAdapter(new ArrayList<TimelineModel>(), this);
         mAdapter.setRecyclerViewItemClickListener(this);
         mOnEndScrollListener = new OnEndScrollListener(this);
-        mTimelineUser = userModel;
         mIsLoadingMore = false;
     }
 
@@ -72,7 +71,7 @@ public class TimelineViewModel extends BaseObservable
     public void setPresenter(TimelineContract.Presenter presenter) {
         mPresenter = presenter;
         setLoadingMore(true);
-        mPresenter.fetchTimelineData(null, mTimelineUser);
+        mPresenter.getTimelineData(null);
     }
 
     @Override
@@ -149,6 +148,11 @@ public class TimelineViewModel extends BaseObservable
         setSetting(setting);
     }
 
+    @Override
+    public void setTimelineUser(UserModel timelineUser) {
+        mTimelineUser = timelineUser;
+    }
+
     public TimelineAdapter getAdapter() {
         return mAdapter;
     }
@@ -209,7 +213,7 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void onEndScrolled() {
         setLoadingMore(true);
-        mPresenter.fetchTimelineData(mAdapter.getLastItem(), mTimelineUser);
+        mPresenter.getTimelineData(mAdapter.getLastItem());
     }
 
     public void setUserModel(UserModel userModel) {
