@@ -137,5 +137,11 @@
     <string name="title_confirm_delete_timeline">Are you sure to delete this post ?</string>
 
     <string name="action_edit">Edit</string>
+    <string name="action_change_password">Change Password</string>
+    <string name="title_current_password">Current Password</string>
+    <string name="title_new_password">New Password</string>
+    <string name="title_confirm_password">Confirm Password</string>
+    <string name="title_change_password">Change Password</string>
+    <string name="title_ok">OK</string>
 
 </resources>
