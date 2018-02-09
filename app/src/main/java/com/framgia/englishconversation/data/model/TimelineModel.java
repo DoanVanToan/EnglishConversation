@@ -1,13 +1,10 @@
 package com.framgia.englishconversation.data.model;
 
-import android.content.res.Resources;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.framgia.englishconversation.AppApplication;
 import com.framgia.englishconversation.BR;
@@ -61,8 +58,6 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
     private List<UserModel> mReportUser;
     @SerializedName("conversations")
     private List<ConversationModel> mConversations;
-    @SerializedName("status")
-    private StatusModel mStatusModel;
     @SerializedName("flag")
     @Flag
     private int mFlag;
@@ -114,16 +109,6 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
     public void setId(String id) {
         mId = id;
         notifyPropertyChanged(BR.id);
-    }
-
-    @Bindable
-    public StatusModel getStatusModel() {
-        return mStatusModel;
-    }
-
-    public void setStatusModel(StatusModel statusModel) {
-        mStatusModel = statusModel;
-        notifyPropertyChanged(BR.statusModel);
     }
 
     @Bindable

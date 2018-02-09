@@ -1,6 +1,5 @@
 package com.framgia.englishconversation.screen.setting;
 
-
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

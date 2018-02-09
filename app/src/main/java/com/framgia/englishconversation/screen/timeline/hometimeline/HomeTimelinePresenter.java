@@ -1,5 +1,7 @@
 package com.framgia.englishconversation.screen.timeline.hometimeline;
 
+import com.framgia.englishconversation.data.model.GenericsModel;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.SettingRepository;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
@@ -39,6 +41,11 @@ public class HomeTimelinePresenter extends TimelinePresenter {
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void getTimelineData(TimelineModel lastTimelineModel) {
         Observable<List<TimelineModel>> observable =
                 mTimelineRepository.getTimeline(lastTimelineModel);
@@ -49,11 +56,12 @@ public class HomeTimelinePresenter extends TimelinePresenter {
                     @Override
                     public void onNext(List<TimelineModel> timelineModels) {
                         mViewModel.onGetTimelinesSuccess(timelineModels);
-                        if (mLastTimelineModel == null) {
-                            mLastTimelineModel =
-                                    timelineModels.isEmpty() ? null : timelineModels.get(0);
-                            registerModifyTimelines(mLastTimelineModel);
-                        }
+
+                        mLastTimelineModel = timelineModels.isEmpty() ? null
+                                        : timelineModels.get(timelineModels.size() - 1);
+                        mTimelineRepository.removeListener();
+                        registerModifyTimelines(mLastTimelineModel);
+
                     }
 
                     @Override
@@ -68,17 +76,25 @@ public class HomeTimelinePresenter extends TimelinePresenter {
     }
 
     public void registerModifyTimelines(TimelineModel timelineModel) {
-        Observable<TimelineModel> observable = mTimelineRepository
+        Observable<GenericsModel<Integer, TimelineModel>> observable = mTimelineRepository
                 .registerModifyTimelines(timelineModel);
 
         Disposable disposable = observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribeWith(new DisposableObserver<TimelineModel>() {
+                .subscribeWith(new DisposableObserver<GenericsModel<Integer, TimelineModel>>() {
                     @Override
-                    public void onNext(TimelineModel timelineModel) {
-                        mViewModel.onGetTimelineSuccess(timelineModel);
+                    public void onNext(GenericsModel<Integer, TimelineModel> genericsModel) {
                         if (mLastTimelineModel == null) {
-                            mLastTimelineModel = timelineModel;
+                            mLastTimelineModel = genericsModel.getValue();
+                        }
+                        if (genericsModel.getKey() == Status.ADD) {
+                            mViewModel.onAddTimeline(genericsModel.getValue());
+                        }
+                        if (genericsModel.getKey() == Status.EDIT) {
+                            mViewModel.onEditTimeline(genericsModel.getValue());
+                        }
+                        if (genericsModel.getKey() == Status.DELETE) {
+                            mViewModel.onDeleteTimeline(genericsModel.getValue());
                         }
                     }
 

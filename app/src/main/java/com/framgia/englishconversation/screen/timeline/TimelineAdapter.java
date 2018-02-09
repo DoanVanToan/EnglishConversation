@@ -65,6 +65,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     add timelinemodel contain in mData and notify adapter
      */
     public void addTimeline(TimelineModel timelineModel) {
+        if (mData.contains(timelineModel)) {
+            return;
+        }
         mData.add(0, timelineModel);
         notifyDataSetChanged();
     }

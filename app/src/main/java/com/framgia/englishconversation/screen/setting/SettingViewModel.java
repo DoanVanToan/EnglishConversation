@@ -3,10 +3,12 @@ package com.framgia.englishconversation.screen.setting;
 import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Setting;
 import com.framgia.englishconversation.data.model.UserModel;
+import com.framgia.englishconversation.screen.changepassword.ChangePasswordFragment;
 import com.framgia.englishconversation.screen.login.LoginActivity;
 import com.framgia.englishconversation.screen.main.MainActivity;
 import com.framgia.englishconversation.utils.navigator.Navigator;
@@ -22,10 +24,21 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
     private Navigator mNavigator;
     private MainActivity mActivity;
     private Setting mSetting;
+    private boolean mAllowChangePassword;
 
     public SettingViewModel(MainActivity activity) {
         mNavigator = new Navigator(activity);
         mActivity = activity;
+    }
+
+    @Bindable
+    public boolean isAllowChangePassword() {
+        return mAllowChangePassword;
+    }
+
+    public void setAllowChangePassword(boolean allowChangePassword) {
+        mAllowChangePassword = allowChangePassword;
+        notifyPropertyChanged(BR.allowChangePassword);
     }
 
     @Override
@@ -45,6 +58,11 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
 
     public void onLogoutClick() {
         mPresenter.signOut();
+    }
+
+    public void onChangePasswordClick() {
+        ChangePasswordFragment.newInstance()
+                .show((mActivity).getSupportFragmentManager(), null);
     }
 
     @Bindable
@@ -103,4 +121,5 @@ public class SettingViewModel extends BaseObservable implements SettingContract.
         mPresenter.saveSetting(mSetting);
         mNavigator.showToast(R.string.msg_change_setting_enable_success);
     }
+
 }

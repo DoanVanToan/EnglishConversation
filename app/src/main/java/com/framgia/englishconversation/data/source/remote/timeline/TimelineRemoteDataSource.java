@@ -2,6 +2,7 @@ package com.framgia.englishconversation.data.source.remote.timeline;
 
 import android.support.annotation.NonNull;
 
+import com.framgia.englishconversation.data.model.GenericsModel;
 import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
@@ -95,50 +96,50 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
     }
 
     @Override
-    public Observable<TimelineModel> registerModifyTimeline(final TimelineModel lastTimeline) {
-        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
-            @Override
-            public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
-                Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
-                        .endAt(lastTimeline != null ? -lastTimeline.getCreatedAt()
-                                : -Calendar.getInstance().getTimeInMillis());
-
-                query.addChildEventListener(new ChildEventListener() {
+    public Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimeline(
+            final TimelineModel lastTimeline) {
+        return Observable.create(
+                new ObservableOnSubscribe<GenericsModel<Integer, TimelineModel>>() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (lastTimeline != null && lastTimeline.getId()
-                                .equals(dataSnapshot.getKey())) {
-                            return;
-                        }
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
-                                .getStatus() == Status.ADD) {
-                            e.onNext(getTimelineData(dataSnapshot));
-                        }
-                    }
+                    public void subscribe(
+                            final ObservableEmitter<GenericsModel<Integer, TimelineModel>> e)
+                            throws Exception {
+                        final Query query = mReference.orderByChild(
+                                Constant.DatabaseTree.CREATED_AT)
+                                .endAt(lastTimeline != null ? -lastTimeline.getCreatedAt()
+                                        : -Calendar.getInstance().getTimeInMillis());
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
+                        query.addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                if (lastTimeline != null && lastTimeline.getId()
+                                        .equals(dataSnapshot.getKey())) {
+                                    return;
+                                }
+                                e.onNext(getTimelineData(dataSnapshot, Status.ADD));
+                            }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                e.onNext(getTimelineData(dataSnapshot, Status.EDIT));
+                            }
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                e.onNext(getTimelineData(dataSnapshot, Status.DELETE));
+                            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        e.onError(databaseError.toException());
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                e.onError(databaseError.toException());
+                            }
+                        });
                     }
                 });
-            }
-        });
     }
 
     @Override
@@ -176,54 +177,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         });
     }
 
-    @Override
-    public Observable<TimelineModel> registerModifyTimeline(final TimelineModel lastTimeline,
-                                                            final UserModel userModel) {
-        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
-            @Override
-            public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
-                Query query = mReference.orderByChild(Constant.DatabaseTree.ID)
-                        .startAt(userModel.getId(),
-                                lastTimeline != null ? lastTimeline.getId() : null)
-                        .endAt(userModel.getId());
-                mUpdataTimeline = new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (lastTimeline != null && lastTimeline.getId()
-                                .equals(dataSnapshot.getKey())) {
-                            return;
-                        }
-                        TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
-                        if (timelineModel.getStatusModel() == null || timelineModel.getStatusModel()
-                                .getStatus() == Status.ADD) {
-                            e.onNext(getTimelineData(dataSnapshot));
-                        }
-                    }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        e.onNext(getTimelineData(dataSnapshot));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        e.onError(databaseError.toException());
-                    }
-                };
-                query.addChildEventListener(mUpdataTimeline);
-            }
-        });
-    }
 
     @Override
     public Observable<TimelineModel> updateTimeline(final TimelineModel timelineModel) {
@@ -245,6 +199,54 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                         });
             }
         });
+    }
+
+    @Override
+    public Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimeline(
+            final TimelineModel lastTimeline, final UserModel userModel) {
+        return Observable.create(
+                new ObservableOnSubscribe<GenericsModel<Integer, TimelineModel>>() {
+                    @Override
+                    public void subscribe(
+                            final ObservableEmitter<GenericsModel<Integer, TimelineModel>> e)
+                            throws Exception {
+                        final Query query = mReference.orderByChild(Constant.DatabaseTree.ID)
+                                .startAt(userModel.getId(),
+                                        lastTimeline != null ? lastTimeline.getId() : null)
+                                .endAt(userModel.getId());
+                        mUpdataTimeline = new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                if (lastTimeline != null && lastTimeline.getId()
+                                        .equals(dataSnapshot.getKey())) {
+                                    return;
+                                }
+                                e.onNext(getTimelineData(dataSnapshot, Status.ADD));
+
+                            }
+
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                e.onNext(getTimelineData(dataSnapshot, Status.EDIT));
+                            }
+
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                getTimelineData(dataSnapshot, Status.DELETE);
+                            }
+
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                e.onError(databaseError.toException());
+                            }
+                        };
+                        query.addChildEventListener(mUpdataTimeline);
+                    }
+                });
     }
 
     @Override
@@ -300,10 +302,6 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         List<TimelineModel> timelineModels = new ArrayList<>();
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             TimelineModel timelineModel = snapshot.getValue(TimelineModel.class);
-            if (timelineModel.getStatusModel() != null
-                    && timelineModel.getStatusModel().getStatus() == Status.DELETE) {
-                continue;
-            }
             timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
             timelineModel.setId(snapshot.getKey());
             if (lastTimeline == null || !lastTimeline.getId().equals(snapshot.getKey())) {
@@ -313,12 +311,13 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         return timelineModels;
     }
 
-    public TimelineModel getTimelineData(DataSnapshot dataSnapshot) {
+    public GenericsModel<Integer, TimelineModel> getTimelineData(DataSnapshot dataSnapshot,
+                                                                 int status) {
         TimelineModel timelineModel = dataSnapshot.getValue(TimelineModel.class);
         timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
         timelineModel.setModifiedAt(Utils.generateOppositeNumber(timelineModel.getModifiedAt()));
         timelineModel.setId(dataSnapshot.getKey());
-        return timelineModel;
+        return new GenericsModel<>(status, timelineModel);
     }
 
     public Observable<TimelineModel> addRevisionTimeline(final TimelineModel timelineModel) {
@@ -329,6 +328,57 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                 mDatabase.getReference(Constant.DatabaseTree.POST_REVISION).child(
                         timelineModel.getId()).push()
                         .setValue(timelineModel)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    observableEmitter.onNext(timelineModel);
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                observableEmitter.onError(e);
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
+    public Observable<TimelineModel> deleteTimeline(final TimelineModel timelineModel) {
+        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
+            @Override
+            public void subscribe(final ObservableEmitter<TimelineModel> observableEmitter)
+                    throws Exception {
+                mReference.child(timelineModel.getId()).removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    observableEmitter.onNext(timelineModel);
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                observableEmitter.onError(e);
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
+    public Observable<TimelineModel> addTimelineToRecycleBin(final TimelineModel timelineModel) {
+        return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
+            @Override
+            public void subscribe(final ObservableEmitter<TimelineModel> observableEmitter)
+                    throws Exception {
+                mDatabase.getReference(Constant.DatabaseTree.DELETED_POST).child(
+                        timelineModel.getId()).setValue(timelineModel)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

@@ -29,6 +29,8 @@ public interface SettingContract {
         GoogleApiClient getGoogleApiCliennt();
 
         void onGetSettingSuccess(Setting setting);
+
+        void setAllowChangePassword(boolean b);
     }
 
     /**
