@@ -145,4 +145,7 @@
     <string name="title_ok">OK</string>
     <string name="flag_editor_choise">Editor\'s Choise</string>
 
+    <string name="msg_change_password_success">Change Password Successful!</string>
+    <string name="msg_change_password_failed">Change Password Failed!</string>
+
 </resources>

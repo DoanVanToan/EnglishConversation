@@ -6,6 +6,7 @@ import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 
@@ -59,4 +60,12 @@ public class AuthenicationRepository {
     public void updateProfile(String userName, Uri photo, DataCallback callback) {
         mRemoteDataSource.updateProfile(userName, photo, callback);
     }
+
+
+    public void changePassword(FirebaseUser firebaseUser, String password, String newPassword,
+                       DataCallback dataCallback, ChangePasswordCallBack changePasswordCallBack) {
+        mRemoteDataSource.changePassword(firebaseUser, password, newPassword, dataCallback,
+                changePasswordCallBack);
+    }
+
 }
