@@ -22,5 +22,5 @@
     <color name="color_black_translucent">#80000000</color>
     <color name="color_black">#1a1a1a</color>
     <color name="color_grey">#FFBEBEBE</color>
-    <color name="colorDark">#000</color>
+    <color name="color_blue_grey_500">#5c8aa1</color>
 </resources>

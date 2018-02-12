@@ -51,4 +51,8 @@ public class TimelineRepository {
     public Observable<TimelineModel> addRevisionTimeline(TimelineModel timelineModel) {
         return mDataSource.addRevisionTimeline(timelineModel);
     }
+
+    public Observable<List<TimelineModel>> getEditorChoiseTimeline(TimelineModel lastTimeline) {
+        return mDataSource.getEditorChoiseTimeline(lastTimeline);
+    }
 }

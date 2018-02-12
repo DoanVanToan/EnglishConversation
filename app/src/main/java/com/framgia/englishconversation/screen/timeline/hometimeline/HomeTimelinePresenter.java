@@ -6,6 +6,7 @@ import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepo
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.framgia.englishconversation.screen.timeline.TimelineContract;
 import com.framgia.englishconversation.screen.timeline.TimelinePresenter;
+import com.framgia.englishconversation.screen.timeline.TimelineViewModel;
 
 import java.util.List;
 
@@ -21,11 +22,20 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomeTimelinePresenter extends TimelinePresenter {
 
+
     public HomeTimelinePresenter(TimelineContract.ViewModel viewModel,
                                  AuthenicationRepository authenicationRepository,
                                  TimelineRepository timelineRepository,
                                  SettingRepository settingRepository) {
         super(viewModel, authenicationRepository, timelineRepository, settingRepository);
+    }
+
+    /**
+     * allow user to create new post in home timeline
+     */
+    @Override
+    protected void initAllowCreatePost() {
+        ((TimelineViewModel) mViewModel).setAllowCreatePost(true);
     }
 
     @Override

@@ -1,15 +1,24 @@
 package com.framgia.englishconversation.data.model;
 
+import android.content.res.Resources;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import com.framgia.englishconversation.AppApplication;
 import com.framgia.englishconversation.BR;
+import com.framgia.englishconversation.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.framgia.englishconversation.data.model.TimelineModel.Flag.EDITOR_CHOISE;
+import static com.framgia.englishconversation.data.model.TimelineModel.Flag.NOMARL;
 
 /**
  * Created by framgia on 16/05/2017.
@@ -54,6 +63,9 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
     private List<ConversationModel> mConversations;
     @SerializedName("status")
     private StatusModel mStatusModel;
+    @SerializedName("flag")
+    @Flag
+    private int mFlag;
 
     public TimelineModel() {
     }
@@ -70,6 +82,7 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
         mDishLikeUser = in.createTypedArrayList(UserModel.CREATOR);
         mReportUser = in.createTypedArrayList(UserModel.CREATOR);
         mConversations = in.createTypedArrayList(ConversationModel.CREATOR);
+        mFlag = in.readInt();
     }
 
     @Override
@@ -85,6 +98,7 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
         dest.writeTypedList(mDishLikeUser);
         dest.writeTypedList(mReportUser);
         dest.writeTypedList(mConversations);
+        dest.writeInt(mFlag);
     }
 
     @Override
@@ -261,6 +275,26 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
         return super.clone();
     }
 
+    @Bindable
+    public int getFlag() {
+        return mFlag;
+    }
+
+    public void setFlag(int flag) {
+        mFlag = flag;
+        notifyPropertyChanged(BR.flag);
+    }
+
+    @Bindable
+    public String getFlagName() {
+        switch (mFlag) {
+            case EDITOR_CHOISE:
+                return AppApplication.getInstance().getString(R.string.flag_editor_choise);
+            default:
+                return null;
+        }
+    }
+
     @Override
     public String toString() {
         return "TimelineModel{"
@@ -273,5 +307,17 @@ public class TimelineModel extends BaseObservable implements Parcelable, Cloneab
                 + ", mCreatedUser="
                 + mCreatedUser
                 + '}';
+    }
+
+    /**
+     * Post Flag
+     * 0 - Normal
+     * 1 - Editor choise
+     * ....
+     */
+    @IntDef({NOMARL, EDITOR_CHOISE})
+    public @interface Flag {
+        int NOMARL = 0;
+        int EDITOR_CHOISE = 1;
     }
 }
