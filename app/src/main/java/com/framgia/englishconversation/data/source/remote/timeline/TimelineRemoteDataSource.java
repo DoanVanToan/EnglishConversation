@@ -23,6 +23,7 @@ import io.reactivex.ObservableOnSubscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         return Observable.create(new ObservableOnSubscribe<List<TimelineModel>>() {
             @Override
             public void subscribe(final ObservableEmitter<List<TimelineModel>> e) throws Exception {
-                final Query query;
+                Query query;
                 if (lastTimeline == null) {
                     query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                             .limitToFirst(NUM_OF_TIMELINE_PER_PAGE);
@@ -81,7 +82,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        e.onNext(getTimelineData(dataSnapshot, lastTimeline, null));
+                        e.onNext(getTimelineData(dataSnapshot, lastTimeline));
                     }
 
                     @Override
@@ -98,7 +99,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
             @Override
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
-                final Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
+                Query query = mReference.orderByChild(Constant.DatabaseTree.CREATED_AT)
                         .endAt(lastTimeline != null ? -lastTimeline.getCreatedAt()
                                 : -Calendar.getInstance().getTimeInMillis());
 
@@ -146,7 +147,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         return Observable.create(new ObservableOnSubscribe<List<TimelineModel>>() {
             @Override
             public void subscribe(final ObservableEmitter<List<TimelineModel>> e) throws Exception {
-                final Query query;
+                Query query;
                 if (lastTimeline == null) {
                     query = mReference.orderByChild(Constant.DatabaseTree.ID)
                             .limitToLast(NUM_OF_TIMELINE_PER_PAGE)
@@ -161,7 +162,9 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        e.onNext(getTimelineData(dataSnapshot, lastTimeline, userModel));
+                        List<TimelineModel> result = getTimelineData(dataSnapshot, lastTimeline);
+                        Collections.reverse(result);
+                        e.onNext(result);
                     }
 
                     @Override
@@ -179,7 +182,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         return Observable.create(new ObservableOnSubscribe<TimelineModel>() {
             @Override
             public void subscribe(final ObservableEmitter<TimelineModel> e) throws Exception {
-                final Query query = mReference.orderByChild(Constant.DatabaseTree.ID)
+                Query query = mReference.orderByChild(Constant.DatabaseTree.ID)
                         .startAt(userModel.getId(),
                                 lastTimeline != null ? lastTimeline.getId() : null)
                         .endAt(userModel.getId());
@@ -252,8 +255,48 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
         mReference.removeEventListener(mUpdataTimeline);
     }
 
+    @Override
+    public Observable<List<TimelineModel>> getEditorChoiseTimeline(
+            final TimelineModel lastTimeline) {
+        return Observable.create(new ObservableOnSubscribe<List<TimelineModel>>() {
+            @Override
+            public void subscribe(final ObservableEmitter<List<TimelineModel>> e) throws Exception {
+                Query query;
+                if (lastTimeline == null) {
+                    query = mReference.orderByChild(Constant.DatabaseTree.FLAG)
+                            .equalTo(TimelineModel.Flag.EDITOR_CHOISE)
+                            .limitToFirst(NUM_OF_TIMELINE_PER_PAGE);
+                } else {
+                    query = mReference.orderByChild(Constant.DatabaseTree.FLAG)
+                            .equalTo(TimelineModel.Flag.EDITOR_CHOISE)
+                            .startAt(-lastTimeline.getCreatedAt(), lastTimeline.getId())
+                            .limitToFirst(NUM_OF_TIMELINE_PER_PAGE);
+                }
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<TimelineModel> result = getTimelineData(dataSnapshot, lastTimeline);
+                        Collections.reverse(result);
+                        e.onNext(result);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        e.onError(databaseError.toException());
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public Observable<TimelineModel> registerModifyEditorChoiseTimeline(TimelineModel timeline) {
+        return null;
+    }
+
     public List<TimelineModel> getTimelineData(DataSnapshot dataSnapshot,
-                                               TimelineModel lastTimeline, UserModel userModel) {
+                                               TimelineModel lastTimeline) {
         List<TimelineModel> timelineModels = new ArrayList<>();
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             TimelineModel timelineModel = snapshot.getValue(TimelineModel.class);
@@ -264,11 +307,7 @@ public class TimelineRemoteDataSource extends BaseFirebaseDataBase implements Ti
             timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
             timelineModel.setId(snapshot.getKey());
             if (lastTimeline == null || !lastTimeline.getId().equals(snapshot.getKey())) {
-                if (userModel != null) {
-                    timelineModels.add(0, timelineModel);
-                } else {
-                    timelineModels.add(timelineModel);
-                }
+                timelineModels.add(timelineModel);
             }
         }
         return timelineModels;

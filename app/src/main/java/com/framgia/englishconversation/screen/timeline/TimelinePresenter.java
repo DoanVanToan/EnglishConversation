@@ -23,6 +23,8 @@ public abstract class TimelinePresenter implements TimelineContract.Presenter {
     protected CompositeDisposable mDisposable;
     protected SettingRepository mSettingRepository;
 
+    protected abstract void initAllowCreatePost();
+
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
             AuthenicationRepository authenicationRepository, TimelineRepository timelineRepository,
             SettingRepository settingRepository) {
@@ -32,6 +34,7 @@ public abstract class TimelinePresenter implements TimelineContract.Presenter {
         mDisposable = new CompositeDisposable();
         mSettingRepository = settingRepository;
         getSetting();
+        initAllowCreatePost();
     }
 
     @Override

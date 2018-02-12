@@ -77,18 +77,6 @@ public class TimelineViewModel extends BaseObservable
     @Override
     public void onGetUserSuccess(UserModel data) {
         setUserModel(data);
-        setAllowCreatePost(allowCreatePost(data));
-    }
-
-    /**
-     * allow show create post button
-     * if this screen is timeline main screen, or this screen is current user profile
-     */
-    private boolean allowCreatePost(UserModel currentUser) {
-        if (mTimelineUser == null) {
-            return true;
-        }
-        return currentUser != null && currentUser.getId().equals(mTimelineUser.getId());
     }
 
     @Override

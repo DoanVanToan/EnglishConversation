@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.framgia.englishconversation.screen.timeline.editorchoise.EditorChoiseTimelineFragment;
 import com.framgia.englishconversation.screen.timeline.hometimeline.HomeTimelineFragment;
 import com.framgia.englishconversation.screen.nextcoming.NextComingFragment;
 import com.framgia.englishconversation.screen.profile.ProfileFragment;
@@ -31,7 +32,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case NEW:
                 return HomeTimelineFragment.newInstance();
             case TOP_VOTE:
-                return NextComingFragment.newInstance();
+                return EditorChoiseTimelineFragment.newInstance();
             case YOUR_POST:
                 return ProfileFragment.newInstance(null);
             case SETTING:
