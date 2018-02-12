@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -229,6 +230,46 @@ public class AuthenicationRemoteDataSource extends BaseAuthRemoteDataSource
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         callback.onGetDataFailed(e.getMessage());
+                    }
+                });
+    }
+
+
+    @Override
+    public AuthCredential credentialUser(String email, String password) {
+        return EmailAuthProvider.getCredential(email, password);
+    }
+
+    @Override
+    public void changePassword(final FirebaseUser firebaseUser, String currentPassword,
+                               final String newPassword, final DataCallback dataCallback,
+                               final ChangePasswordCallBack changePasswordCallBack) {
+        firebaseUser.reauthenticate(credentialUser(firebaseUser.getEmail(), currentPassword)).
+                addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            changePassword(firebaseUser, newPassword, changePasswordCallBack);
+                        } else {
+                            dataCallback.onGetDataFailed(null);
+                        }
+                    }
+                });
+
+    }
+
+    @Override
+    public void changePassword(FirebaseUser firebaseUser, String newPassword,
+                               final ChangePasswordCallBack dataCallback) {
+        firebaseUser.updatePassword(newPassword).addOnCompleteListener(
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            dataCallback.onChangePasswordSuccess();
+                        } else {
+                            dataCallback.onChangePasswordFailed();
+                        }
                     }
                 });
     }

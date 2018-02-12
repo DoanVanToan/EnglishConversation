@@ -6,6 +6,7 @@ import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseUser;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 
@@ -34,6 +35,21 @@ public interface AuthenicationDataSource {
         void resetPassword(String email, DataCallback callback);
 
         void updateProfile(String userName, Uri photo, DataCallback callback);
+
+        /**
+         * change password user when signup with email password
+         * @param firebaseUser
+
+         * @param newPassword
+         * @param callback
+         */
+        void changePassword(FirebaseUser firebaseUser, String newPassword,
+                            ChangePasswordCallBack callback);
+
+        AuthCredential credentialUser(String email, String password);
+
+        void changePassword(FirebaseUser firebaseUser, String currentPassword, String newPassword,
+                        DataCallback dataCallback, ChangePasswordCallBack changePasswordCallBack);
 
     }
 }
