@@ -1,7 +1,6 @@
 package com.framgia.englishconversation.screen.editPost;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.screen.basePost.BasePostViewModel;

@@ -1,12 +1,8 @@
 package com.framgia.englishconversation.screen.dialog;
 
-import com.framgia.englishconversation.data.model.Status;
-import com.framgia.englishconversation.data.model.StatusModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.framgia.englishconversation.utils.Utils;
-
-import java.util.Calendar;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,17 +38,15 @@ public class OptionPostPresenter implements OptionPostContract.Presenter {
 
     @Override
     public void deletePost(TimelineModel timelineModel) {
-        StatusModel statusModel = new StatusModel(timelineModel.getCreatedUser(),
-                Utils.generateOppositeNumber(Calendar.getInstance().getTimeInMillis()),
-                Status.DELETE);
         timelineModel.setCreatedAt(Utils.generateOppositeNumber(timelineModel.getCreatedAt()));
-        timelineModel.setStatusModel(statusModel);
-        mDisposable.add(mTimelineRepository.updateTimeline(timelineModel)
+        mDisposable.add(mTimelineRepository.deleteTimeline(timelineModel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<TimelineModel>() {
                     @Override
                     public void onNext(TimelineModel timelineModel) {
+                        mDisposable.add(mTimelineRepository.addTimelineToRecycleBin(
+                                timelineModel).subscribe());
 
                     }
 

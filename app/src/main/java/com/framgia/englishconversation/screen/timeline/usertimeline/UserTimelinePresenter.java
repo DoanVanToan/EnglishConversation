@@ -1,17 +1,15 @@
 package com.framgia.englishconversation.screen.timeline.usertimeline;
 
-import android.text.TextUtils;
-
+import com.framgia.englishconversation.data.model.GenericsModel;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.SettingRepository;
-import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepository;
 import com.framgia.englishconversation.screen.timeline.TimelineContract;
 import com.framgia.englishconversation.screen.timeline.TimelinePresenter;
 import com.framgia.englishconversation.screen.timeline.TimelineViewModel;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -36,7 +34,16 @@ public class UserTimelinePresenter extends TimelinePresenter {
         super(viewModel, authenicationRepository, timelineRepository, settingRepository);
         mTimelineUser = userModel;
         mViewModel.setTimelineUser(mTimelineUser);
-        initAllowCreatePost();
+    }
+
+    @Override
+    protected void initAllowCreatePost() {
+        ((TimelineViewModel) mViewModel).setAllowCreatePost(true);
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 
     @Override
@@ -50,11 +57,12 @@ public class UserTimelinePresenter extends TimelinePresenter {
                     @Override
                     public void onNext(List<TimelineModel> timelineModels) {
                         mViewModel.onGetTimelinesSuccess(timelineModels);
-                        if (mLastTimelineModel == null) {
-                            mLastTimelineModel =
-                                    timelineModels.isEmpty() ? null : timelineModels.get(0);
-                            registerModifyTimelines(mLastTimelineModel, mTimelineUser);
-                        }
+
+                        mLastTimelineModel = timelineModels.isEmpty() ? null
+                                : timelineModels.get(timelineModels.size() - 1);
+                        mTimelineRepository.removeListener();
+                        registerModifyTimelines(mLastTimelineModel, mTimelineUser);
+
                     }
 
                     @Override
@@ -69,17 +77,25 @@ public class UserTimelinePresenter extends TimelinePresenter {
     }
 
     public void registerModifyTimelines(TimelineModel timelineModel, UserModel userModel) {
-        Observable<TimelineModel> observable = mTimelineRepository
+        Observable<GenericsModel<Integer, TimelineModel>> observable = mTimelineRepository
                 .registerModifyTimelines(timelineModel, userModel);
 
         Disposable disposable = observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribeWith(new DisposableObserver<TimelineModel>() {
+                .subscribeWith(new DisposableObserver<GenericsModel<Integer, TimelineModel>>() {
                     @Override
-                    public void onNext(TimelineModel timelineModel) {
-                        mViewModel.onGetTimelineSuccess(timelineModel);
+                    public void onNext(GenericsModel<Integer, TimelineModel> genericsModel) {
                         if (mLastTimelineModel == null) {
-                            mLastTimelineModel = timelineModel;
+                            mLastTimelineModel = genericsModel.getValue();
+                        }
+                        if (genericsModel.getKey() == Status.ADD) {
+                            mViewModel.onAddTimeline(genericsModel.getValue());
+                        }
+                        if (genericsModel.getKey() == Status.EDIT) {
+                            mViewModel.onEditTimeline(genericsModel.getValue());
+                        }
+                        if (genericsModel.getKey() == Status.DELETE) {
+                            mViewModel.onDeleteTimeline(genericsModel.getValue());
                         }
                     }
 
@@ -95,35 +111,4 @@ public class UserTimelinePresenter extends TimelinePresenter {
                 });
         mDisposable.add(disposable);
     }
-
-    @Override
-    protected void initAllowCreatePost() {
-        mAuthenicationRepository.getCurrentUser(new DataCallback<FirebaseUser>() {
-            @Override
-            public void onGetDataSuccess(FirebaseUser data) {
-                ((TimelineViewModel) mViewModel)
-                        .setAllowCreatePost(allowCreatePost(new UserModel(data)));
-            }
-
-            @Override
-            public void onGetDataFailed(String msg) {
-
-            }
-        });
-    }
-
-
-    /**
-     * allow show create post button
-     * if this screen is timeline main screen, or this screen is current user profile
-     */
-    public boolean allowCreatePost(UserModel currentUser) {
-        if (mTimelineUser == null
-                || currentUser == null
-                || TextUtils.isEmpty(currentUser.getEmail())) {
-            return false;
-        }
-        return currentUser.getId().equals(mTimelineUser.getId());
-    }
-
 }

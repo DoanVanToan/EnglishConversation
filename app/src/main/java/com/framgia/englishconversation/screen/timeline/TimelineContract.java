@@ -23,13 +23,17 @@ public interface TimelineContract {
 
         void onGetTimelinesFailure(String message);
 
-        void onGetTimelineSuccess(TimelineModel timelineModel);
-
         void onDestroy();
 
         void onGetSettingSuccess(Setting setting);
 
         void setTimelineUser(UserModel timelineUser);
+
+        void onAddTimeline(TimelineModel value);
+
+        void onEditTimeline(TimelineModel value);
+
+        void onDeleteTimeline(TimelineModel value);
     }
 
     /**

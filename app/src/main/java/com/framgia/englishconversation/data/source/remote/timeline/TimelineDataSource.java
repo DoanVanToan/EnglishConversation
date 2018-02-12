@@ -1,5 +1,6 @@
 package com.framgia.englishconversation.data.source.remote.timeline;
 
+import com.framgia.englishconversation.data.model.GenericsModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 
@@ -41,7 +42,8 @@ public interface TimelineDataSource {
      * @param lastTimeline  The last timeline want to register
      * @return
      */
-    Observable<TimelineModel> registerModifyTimeline(TimelineModel lastTimeline);
+    Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimeline(
+            TimelineModel lastTimeline);
 
     /**
      * Register all timeline changed listenner
@@ -49,8 +51,8 @@ public interface TimelineDataSource {
      * @param userModel     The user profile want to register
      * @return
      */
-    Observable<TimelineModel> registerModifyTimeline(TimelineModel lastTimeline,
-                                                     UserModel userModel);
+    Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimeline(
+            TimelineModel lastTimeline, UserModel userModel);
 
     /**
      * Update current timeline
@@ -65,6 +67,16 @@ public interface TimelineDataSource {
      * @return
      */
     Observable<TimelineModel> addRevisionTimeline(TimelineModel timelineModel);
+
+    /**
+     *  Delete timeline
+     */
+    Observable<TimelineModel> deleteTimeline(TimelineModel timelineModel);
+
+    /**
+     *  Add timeline to deleted_post
+     */
+    Observable<TimelineModel> addTimelineToRecycleBin(TimelineModel timelineModel);
 
     /**
      * Remove register listenner
@@ -86,3 +98,4 @@ public interface TimelineDataSource {
      */
     Observable<TimelineModel> registerModifyEditorChoiseTimeline(TimelineModel lastTimeline);
 }
+

@@ -1,5 +1,7 @@
 package com.framgia.englishconversation.screen.timeline.editorchoise;
 
+import com.framgia.englishconversation.data.model.GenericsModel;
+import com.framgia.englishconversation.data.model.Status;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.source.SettingRepository;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
@@ -61,31 +63,4 @@ public class EditorChoiseTimelinePresenter extends TimelinePresenter {
                 }));
     }
 
-    public void registerModifyTimelines(TimelineModel timelineModel) {
-        Observable<TimelineModel> observable = mTimelineRepository
-                .registerModifyTimelines(timelineModel);
-
-        Disposable disposable = observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(new DisposableObserver<TimelineModel>() {
-                    @Override
-                    public void onNext(TimelineModel timelineModel) {
-                        mViewModel.onGetTimelineSuccess(timelineModel);
-                        if (mLastTimelineModel == null) {
-                            mLastTimelineModel = timelineModel;
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mViewModel.onGetTimelinesFailure(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-        mDisposable.add(disposable);
-    }
 }

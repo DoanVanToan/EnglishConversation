@@ -1,5 +1,6 @@
 package com.framgia.englishconversation.data.source.remote.timeline;
 
+import com.framgia.englishconversation.data.model.GenericsModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 
@@ -26,7 +27,8 @@ public class TimelineRepository {
         return mDataSource.getTimeline(timelineModel);
     }
 
-    public Observable<TimelineModel> registerModifyTimelines(TimelineModel timelineModel) {
+    public Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimelines(
+            TimelineModel timelineModel) {
         return mDataSource.registerModifyTimeline(timelineModel);
     }
 
@@ -35,8 +37,8 @@ public class TimelineRepository {
         return mDataSource.getTimeline(timelineModel, userModel);
     }
 
-    public Observable<TimelineModel> registerModifyTimelines(TimelineModel timelineModel,
-                                                             UserModel userModel) {
+    public Observable<GenericsModel<Integer, TimelineModel>> registerModifyTimelines(
+            TimelineModel timelineModel, UserModel userModel) {
         return mDataSource.registerModifyTimeline(timelineModel, userModel);
     }
 
@@ -54,5 +56,13 @@ public class TimelineRepository {
 
     public Observable<List<TimelineModel>> getEditorChoiseTimeline(TimelineModel lastTimeline) {
         return mDataSource.getEditorChoiseTimeline(lastTimeline);
+    }
+
+    public Observable<TimelineModel> deleteTimeline(TimelineModel timelineModel) {
+        return mDataSource.deleteTimeline(timelineModel);
+    }
+
+    public Observable<TimelineModel> addTimelineToRecycleBin(TimelineModel timelineModel) {
+        return mDataSource.addTimelineToRecycleBin(timelineModel);
     }
 }

@@ -6,6 +6,7 @@ import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.data.source.SettingRepository;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
+import com.framgia.englishconversation.utils.Constant;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -50,6 +51,7 @@ public class SettingPresenter implements SettingContract.Presenter {
             public void onGetDataSuccess(FirebaseUser data) {
                 mUser = data;
                 mViewModel.onGetCurrentUserSuccess(new UserModel(data));
+                mViewModel.setAllowChangePassword(checkAccountSignUpWithEmailPassword(data));
             }
 
             @Override
@@ -57,6 +59,11 @@ public class SettingPresenter implements SettingContract.Presenter {
                 mViewModel.onGetUserFailed(msg);
             }
         });
+    }
+
+    private boolean checkAccountSignUpWithEmailPassword(FirebaseUser firebaseUser) {
+        return firebaseUser.getProviders().contains(Constant.PASSWORD);
+
     }
 
     @Override
