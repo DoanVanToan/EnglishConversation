@@ -26,8 +26,9 @@ public abstract class TimelinePresenter implements TimelineContract.Presenter {
     protected abstract void initAllowCreatePost();
 
     public TimelinePresenter(TimelineContract.ViewModel viewModel,
-            AuthenicationRepository authenicationRepository, TimelineRepository timelineRepository,
-            SettingRepository settingRepository) {
+                             AuthenicationRepository authenicationRepository,
+                             TimelineRepository timelineRepository,
+                             SettingRepository settingRepository) {
         mViewModel = viewModel;
         mAuthenicationRepository = authenicationRepository;
         mTimelineRepository = timelineRepository;
@@ -42,7 +43,7 @@ public abstract class TimelinePresenter implements TimelineContract.Presenter {
         mAuthenicationRepository.getCurrentUser(new DataCallback<FirebaseUser>() {
             @Override
             public void onGetDataSuccess(FirebaseUser data) {
-                mViewModel.onGetUserSuccess(new UserModel(data));
+                onGetCurrentUserSuccess(data);
             }
 
             @Override
@@ -50,6 +51,10 @@ public abstract class TimelinePresenter implements TimelineContract.Presenter {
 
             }
         });
+    }
+
+    protected void onGetCurrentUserSuccess(FirebaseUser firebaseUser) {
+        mViewModel.onGetUserSuccess(new UserModel(firebaseUser));
     }
 
     private void getSetting() {

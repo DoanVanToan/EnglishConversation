@@ -10,6 +10,7 @@ import com.framgia.englishconversation.data.source.remote.timeline.TimelineRepos
 import com.framgia.englishconversation.screen.timeline.TimelineContract;
 import com.framgia.englishconversation.screen.timeline.TimelinePresenter;
 import com.framgia.englishconversation.screen.timeline.TimelineViewModel;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class UserTimelinePresenter extends TimelinePresenter {
 
     @Override
     protected void initAllowCreatePost() {
-        ((TimelineViewModel) mViewModel).setAllowCreatePost(true);
+        ((TimelineViewModel) mViewModel).setAllowCreatePost(false);
     }
 
     @Override
@@ -111,4 +112,15 @@ public class UserTimelinePresenter extends TimelinePresenter {
                 });
         mDisposable.add(disposable);
     }
+
+    @Override
+    protected void onGetCurrentUserSuccess(FirebaseUser firebaseUser) {
+        super.onGetCurrentUserSuccess(firebaseUser);
+        if (firebaseUser == null || mTimelineUser == null) {
+            return;
+        }
+        boolean allowCreatePost = firebaseUser.getEmail().equals(mTimelineUser.getEmail());
+        ((TimelineViewModel) mViewModel).setAllowCreatePost(allowCreatePost);
+    }
 }
+
