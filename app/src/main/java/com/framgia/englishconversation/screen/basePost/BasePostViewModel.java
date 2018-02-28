@@ -326,6 +326,10 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         updateTimelineModel();
         if (mAdapterType == AdapterType.CONVERSATION) {
             mTimelineModel.setConversations(mConversationAdapter.getValidatedData());
+            mTimelineModel.setMedias(null);
+        }
+        else {
+            mTimelineModel.setConversations(null);
         }
         switch (mTimelineModel.getPostType()) {
             case MediaModel.MediaType.CONVERSATION:
@@ -358,7 +362,9 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
     public List<MediaModel> getListConversationUpload(TimelineModel timelineModel) {
         List<MediaModel> mediaModels = new ArrayList<>();
         for (ConversationModel conversationModel : timelineModel.getConversations()) {
-            if (!conversationModel.getMediaModel().getUrl().startsWith(Constant.HTTPS)) {
+            if (conversationModel.getMediaModel() != null
+                    && conversationModel.getMediaModel().getUrl() != null
+                    && !conversationModel.getMediaModel().getUrl().startsWith(Constant.HTTPS)) {
                 mediaModels.add(conversationModel.getMediaModel());
             }
         }
