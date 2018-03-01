@@ -118,6 +118,14 @@ public class CreateCommentFragment extends BaseFragment {
                 }
                 mViewModel.onGetMultimediaDataDone(data, MediaModel.MediaType.IMAGE);
                 break;
+            case Constant.RequestCode.RECORD_AUDIO:
+                if (resultCode != RESULT_OK) {
+                    return;
+                }
+                mViewModel.onGetMultimediaDataDone(data, MediaModel.MediaType.AUDIO);
+                break;
+            default:
+                break;
         }
     }
 }

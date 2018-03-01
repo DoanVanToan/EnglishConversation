@@ -3,7 +3,6 @@ package com.framgia.englishconversation.screen.createcomment;
 import android.text.TextUtils;
 
 import com.darsh.multipleimageselect.models.Image;
-import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.UserModel;
@@ -12,7 +11,6 @@ import com.framgia.englishconversation.data.source.local.sharedprf.SharedPrefsAp
 import com.framgia.englishconversation.data.source.remote.auth.AuthenicationRepository;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRemoteDataSource;
 import com.framgia.englishconversation.data.source.remote.comment.CommentRepository;
-import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,7 +24,7 @@ import io.reactivex.schedulers.Schedulers;
  * the UI as required.
  */
 public final class CreateCommentPresenter
-        implements CreateCommentContract.Presenter, RecordingAudioDialog.OnRecordingAudioListener {
+        implements CreateCommentContract.Presenter{
 
     private final CreateCommentContract.ViewModel mViewModel;
     private MediaModel mMediaModel;
@@ -179,17 +177,10 @@ public final class CreateCommentPresenter
         mMediaModel = new MediaModel(type);
     }
 
-    //TODO: Consult with Boruto about this method name, this is an after recording event
     @Override
-    public void onRecordingAudioClick(String filePath, String fileName) {
+    public void onSelectedAudioSuccess(String filePath, String fileName){
         mMediaModel.setUrl(filePath);
         mMediaModel.setName(fileName);
         mViewModel.onMultimediaFileAttached(mMediaModel);
-    }
-
-    @Override
-    public void onRecordCancel() {
-        onDeleteItemMediaClicked();
-        mViewModel.showToast(R.string.message_record_cancel);
     }
 }

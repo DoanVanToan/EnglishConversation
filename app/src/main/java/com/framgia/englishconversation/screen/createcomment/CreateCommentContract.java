@@ -66,6 +66,8 @@ public interface CreateCommentContract {
 
         void updateLiteralComment(Comment commentNew, Comment commentOld);
 
+        void onSelectedAudioSuccess(String filePath, String fileName);
+
         void onDestroy();
     }
 }

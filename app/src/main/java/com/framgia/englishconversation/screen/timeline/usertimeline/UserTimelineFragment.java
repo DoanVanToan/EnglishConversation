@@ -40,14 +40,7 @@ public class UserTimelineFragment extends TimelineFragment {
         SettingRepository settingRepository = new SettingRepository(
                 new SettingLocalDataSource(new SharedPrefsImpl(getContext())));
 
-        TimelineContract.Presenter presenter =
-                new UserTimelinePresenter(
-                        viewModel,
-                        repository,
-                        timelineRepository,
-                        settingRepository,
-                        userModel);
-
-        return presenter;
+        return new UserTimelinePresenter(viewModel, repository, timelineRepository,
+                settingRepository, userModel);
     }
 }

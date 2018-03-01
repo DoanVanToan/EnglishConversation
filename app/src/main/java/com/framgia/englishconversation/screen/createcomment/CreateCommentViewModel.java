@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,12 +18,13 @@ import android.widget.PopupMenu;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
+import com.framgia.audioselector.data.model.Audio;
+import com.framgia.audioselector.screen.audioselector.AudioSelectorActivity;
 import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.R;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.UserModel;
-import com.framgia.englishconversation.record.model.AudioSource;
 import com.framgia.englishconversation.screen.comment.CallBack;
 import com.framgia.englishconversation.screen.createPost.UploadBroadcastReceiver;
 import com.framgia.englishconversation.screen.editcomment.EditCommentFragment;
@@ -35,7 +35,6 @@ import com.framgia.englishconversation.utils.FileUtils;
 import com.framgia.englishconversation.utils.Utils;
 import com.framgia.englishconversation.utils.navigator.Navigator;
 import com.framgia.englishconversation.widget.dialog.UploadProgressDialog;
-import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioBuilder;
 import com.framgia.englishconversation.widget.dialog.recordingAudio.RecordingAudioDialog;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -241,18 +240,8 @@ public class CreateCommentViewModel extends BaseObservable
     }
 
     private void showAudioRecordDialog() {
-        if (mContext.getExternalCacheDir() == null) {
-            return;
-        }
-        String fileName =
-                mTimelineModelId + "-" + System.currentTimeMillis() + Constant.DEFAULT_FORMAT_AUDIO;
-        String filePath = mContext.getExternalCacheDir().getAbsolutePath() + "/" + fileName;
-        RecordingAudioBuilder.with((AppCompatActivity) mContext, mRecordingAudioDialog)
-                .setFileName(fileName)
-                .setFilePath(filePath)
-                .setAudioSource(AudioSource.MIC)
-                .showRecordingAudioFromActivity();
-        mRecordingAudioDialog.setOnRecordingAudioClickListener((CreateCommentPresenter) mPresenter);
+        mCommentFragment.startActivityForResult(AudioSelectorActivity.getInstance(mContext),
+                Constant.RequestCode.RECORD_AUDIO);
     }
 
     @Bindable
@@ -298,6 +287,15 @@ public class CreateCommentViewModel extends BaseObservable
                     return;
                 }
                 mPresenter.onImageSelectDone(images.get(0));
+                break;
+            case MediaModel.MediaType.AUDIO:
+                ArrayList<Audio> audios =
+                        intent.getParcelableArrayListExtra(AudioSelectorActivity.EXTRA_AUDIO);
+                Audio audio = audios.get(0);
+                mPresenter.onSelectedAudioSuccess(audio.getPath(), audio.getName());
+                break;
+            default:
+                break;
         }
     }
 
