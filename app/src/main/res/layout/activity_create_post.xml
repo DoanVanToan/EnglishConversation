@@ -103,7 +103,7 @@
                     android:layout_width="@dimen/dp_32"
                     android:layout_height="@dimen/dp_32"
                     android:contentDescription="@string/description_record_audio"
-                    android:onClick="@{(v) -> viewModel.onAudioClick(v)}"
+                    android:onClick="@{() -> viewModel.onAudioClick()}"
                     android:padding="@dimen/dp_4"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/image_video"

@@ -17,9 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.framgia.audioselector.BaseActivity;
 import com.framgia.audioselector.R;
 import com.framgia.audioselector.databinding.ActivityAudioSelectorBinding;
-import com.framgia.audioselector.BaseActivity;
 
 public class AudioSelectorActivity extends BaseActivity implements ActionMode.Callback {
 
@@ -104,9 +104,8 @@ public class AudioSelectorActivity extends BaseActivity implements ActionMode.Ca
 
     @Override
     protected void onStop() {
-        mViewModel.onStop();
-        if (mViewModel == null) {
-            return;
+        if (mViewModel != null) {
+            mViewModel.onStop();
         }
         super.onStop();
     }
