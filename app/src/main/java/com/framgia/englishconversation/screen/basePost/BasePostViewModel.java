@@ -29,7 +29,6 @@ import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.data.model.TimelineModel;
 import com.framgia.englishconversation.data.model.UserModel;
 import com.framgia.englishconversation.record.model.AudioSource;
-import com.framgia.englishconversation.screen.conversationdetail.ConversationDetailActivity;
 import com.framgia.englishconversation.screen.createPost.AdapterType;
 import com.framgia.englishconversation.screen.createPost.ConversationAdapter;
 import com.framgia.englishconversation.screen.createPost.MediaAdapter;
@@ -79,7 +78,9 @@ import static com.framgia.videoselector.screen.VideoSelectorActivity.EXTRA_DATA;
  * Created by Sony on 2/2/2018.
  */
 
-public abstract class BasePostViewModel extends BaseObservable implements BasePostContract.ViewModel {
+public abstract class BasePostViewModel extends BaseObservable
+        implements BasePostContract.ViewModel {
+
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int SELECT_IMAGE_REQUEST = 2;
     private static final int REQUEST_RECORD_VIDEO = 3;
@@ -139,7 +140,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
 
     }
 
-    public void initView(TimelineModel timelineModel) {
+    private void initView(TimelineModel timelineModel) {
         if (timelineModel.getMedias() != null) {
             mAdapterType = AdapterType.MEDIA;
             mMediaAdapter.setData(timelineModel.getMedias());
@@ -148,7 +149,6 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
             mAdapterType = AdapterType.CONVERSATION;
             mConversationAdapter.setData(timelineModel.getConversations());
         }
-
     }
 
     @Override
@@ -209,17 +209,8 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         if (resultCode != RESULT_OK) {
             return;
         }
+        setAdapterType(AdapterType.MEDIA);
         switch (requestCode) {
-            // TODO: handle when user pick location. For now we don't focus into it
-            /*case PLACE_PICKER_REQUEST:
-                Place place = PlacePicker.getPlace(data, mActivity);
-                LocationModel locationModel = new LocationModel();
-                locationModel.setAddress(place.getAddress().toString());
-                locationModel.setLat(place.getLatLng().latitude);
-                locationModel.setLng(place.getLatLng().longitude);
-                setAddress(place.getAddress().toString());
-                mTimelineModel.setLocation(locationModel);
-                break;*/
             case SELECT_IMAGE_REQUEST:
                 List<Image> images =
                         data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
@@ -263,7 +254,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
     }
 
     private void handleUploadConversationFile(MediaModel model) {
-        int totalMediaFile = getTotalMediafile(mTimelineModel.getConversations());
+        int totalMediaFile = getTotalMediaFile(mTimelineModel.getConversations());
         if (mTimelineModel.getConversations() == null || totalMediaFile == 0) {
             return;
         }
@@ -279,7 +270,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         mProgressDialog.setProgressPercent(uploadPercent / totalMediaFile);
     }
 
-    private int getTotalMediafile(List<ConversationModel> conversations) {
+    private int getTotalMediaFile(List<ConversationModel> conversations) {
         if (conversations == null) {
             return 0;
         }
@@ -327,8 +318,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         if (mAdapterType == AdapterType.CONVERSATION) {
             mTimelineModel.setConversations(mConversationAdapter.getValidatedData());
             mTimelineModel.setMedias(null);
-        }
-        else {
+        } else {
             mTimelineModel.setConversations(null);
         }
         switch (mTimelineModel.getPostType()) {
@@ -359,7 +349,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         }
     }
 
-    public List<MediaModel> getListConversationUpload(TimelineModel timelineModel) {
+    private List<MediaModel> getListConversationUpload(TimelineModel timelineModel) {
         List<MediaModel> mediaModels = new ArrayList<>();
         for (ConversationModel conversationModel : timelineModel.getConversations()) {
             if (conversationModel.getMediaModel() != null
@@ -371,7 +361,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         return mediaModels;
     }
 
-    public List<MediaModel> getListMediaUpload(TimelineModel timelineModel) {
+    private List<MediaModel> getListMediaUpload(TimelineModel timelineModel) {
         List<MediaModel> mediaModels = new ArrayList<>();
         for (MediaModel mediaModel : timelineModel.getMedias()) {
             if (!mediaModel.getUrl().startsWith(Constant.HTTPS)) {
@@ -597,7 +587,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
                 .showRecordingAudioFromActivity();
     }
 
-    public void onAudioConversationClick(final ConversationModel conversations) {
+    private void onAudioConversationClick(final ConversationModel conversations) {
         showAudioDialog();
         RecordingAudioDialog.OnRecordingAudioListener recordingAudioClickListener =
                 new RecordingAudioDialog.OnRecordingAudioListener() {
@@ -641,7 +631,7 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         mRecordingAudioDialog.setOnRecordingAudioClickListener(recordingAudioClickListener);
     }
 
-    public void onAudioClick(View view) {
+    public void onAudioClick() {
         mNavigator.startActivityForResult(
                 AudioSelectorActivity.getInstance(mActivity), RC_AUDIO_SELECTOR);
     }
@@ -651,15 +641,8 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
         if (!Utils.isAllowPermision(mActivity, PERMISSION)) {
             return;
         }
-        setAdapterType(AdapterType.MEDIA);
-        //        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         Intent intent = VideoSelectorActivity.getInstance(mActivity);
         mNavigator.startActivityForResult(intent, REQUEST_RECORD_VIDEO);
-    }
-
-    private void previewConversation() {
-        mNavigator.startActivity(
-                ConversationDetailActivity.getInstance(mActivity, mTimelineModel, mUser));
     }
 
     public void onCreateConversationClick() {
@@ -672,7 +655,6 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
 
     @Override
     public void onImagePickerClick() {
-        setAdapterType(AdapterType.MEDIA);
         selectImage();
     }
 
@@ -833,6 +815,4 @@ public abstract class BasePostViewModel extends BaseObservable implements BasePo
 
         }
     }
-
-
 }
